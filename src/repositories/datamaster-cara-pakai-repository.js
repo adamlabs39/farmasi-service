@@ -1,15 +1,15 @@
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
-import KategoriObatModel from "../models/kategori-obat-model.js";
+import CaraiPakaiModel from "../models/cara-pakai-model.js";
 
-export default class DataMasterKategoriObatRepository {
+export default class DataMasterCaraPakaiRepository {
     static async create(req) {
-        return await KategoriObatModel.create({
+        return await CaraiPakaiModel.create({
             code: req.code,
-            name: req.name,
+            cara_pakai: req.cara_pakai,
             status: req.status,
-            faskes_uuid: req.faskes_uuid,
+            faskes_uuid : req.faskes_uuid,
         });
     }
 
@@ -17,20 +17,20 @@ export default class DataMasterKategoriObatRepository {
         const option = {
             where: {
                 faskes_uuid : req.faskes_uuid,
-                name : {[Op.iLike]: `%${req.name || ""}%`},
+                cara_pakai : {[Op.iLike]: `%${req.cara_pakai || ""}%`},
                 deleted_at: {
                     [Op.is]: null,
                 },
             },
         };
 
-        return Pagination.init(KategoriObatModel, req, option);
+        return Pagination.init(CaraiPakaiModel, req, option);
     }
 
     static async update(req) {
-        return await KategoriObatModel.update({
+        return await CaraiPakaiModel.update({
             code: req.code,
-            name: req.name,
+            cara_pakai: req.cara_pakai,
             status: req.status,
         }, {
             where: {
@@ -40,7 +40,7 @@ export default class DataMasterKategoriObatRepository {
     }
 
     static async delete(req) {
-        return await KategoriObatModel.update({
+        return await CaraiPakaiModel.update({
             deleted_at : toEpochDate(new Date())
         },{
             where: {

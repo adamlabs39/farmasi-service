@@ -3,6 +3,7 @@ import DatamasterSatuanController from "../controllers/datamaster-satuan-control
 import DatamasterBentukSediaanController from "../controllers/datamaster-bentuk-sediaan-controller.js";
 import DatamasterKategoriObatController from "../controllers/datamaster-kategori-obat-controller.js";
 import DatamasterManufactureController from "../controllers/datamaster-manufacture-controller.js";
+import DatamasterCaraPakaiController from "../controllers/datamaster-cara-pakai-controller.js";
 
 const apiBase = process.env.API_BASE || "api";
 const apiVersion = process.env.API_VERSION || "v1";
@@ -36,5 +37,11 @@ routes.post(`${baseUrl}/datamaster/manufacture`, DatamasterManufactureController
 routes.get(`${baseUrl}/datamaster/manufacture`, DatamasterManufactureController.getAll);
 routes.put(`${baseUrl}/datamaster/manufacture/:uuid`, DatamasterManufactureController.update);
 routes.delete(`${baseUrl}/datamaster/manufacture`, DatamasterManufactureController.delete);
+
+// DATAMASTER - CARA PAKAI
+routes.post(`${baseUrl}/datamaster/cara-pakai`, DatamasterCaraPakaiController.create);
+routes.get(`${baseUrl}/datamaster/cara-pakai`, DatamasterCaraPakaiController.getAll);
+routes.put(`${baseUrl}/datamaster/cara-pakai/:uuid`, DatamasterCaraPakaiController.update);
+routes.delete(`${baseUrl}/datamaster/cara-pakai`, DatamasterCaraPakaiController.delete);
 
 export default routes;

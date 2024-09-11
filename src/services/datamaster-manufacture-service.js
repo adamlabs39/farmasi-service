@@ -4,7 +4,7 @@ import DataMasterManufactureRepository from "../repositories/datamaster-manufact
 
 export default class DatamasterManufactureService {
     static async create(req) {
-        let validData = ZodValidator.validate(DatamasterValidation.CREATE_SATUAN, req);
+        let validData = ZodValidator.validate(DatamasterValidation.CREATE_MANUFACTURE, req);
         return await DataMasterManufactureRepository.create(validData);
     }
 
@@ -14,7 +14,7 @@ export default class DatamasterManufactureService {
     }
 
     static update(req) {
-        let validData = ZodValidator.validate(DatamasterValidation.UPDATE_SATUAN, req);
+        let validData = ZodValidator.validate(DatamasterValidation.UPDATE_MANUFACTURE, req);
         return DataMasterManufactureRepository.update(validData);
     }
 

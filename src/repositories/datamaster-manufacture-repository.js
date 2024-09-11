@@ -5,12 +5,7 @@ import ManufactureModel from "../models/manufacture-model.js";
 
 export default class DataMasterManufactureRepository {
     static async create(req) {
-        return await ManufactureModel.create({
-            code: req.code,
-            name: req.name,
-            status: req.status,
-            faskes_uuid : req.faskes_uuid,
-        });
+        return await ManufactureModel.create(req);
     }
 
     static async getAll(req) {
@@ -28,11 +23,7 @@ export default class DataMasterManufactureRepository {
     }
 
     static async update(req) {
-        return await ManufactureModel.update({
-            code: req.code,
-            name: req.name,
-            status: req.status,
-        }, {
+        return await ManufactureModel.update(req, {
             where: {
                 uuid: req.uuid,
             }
