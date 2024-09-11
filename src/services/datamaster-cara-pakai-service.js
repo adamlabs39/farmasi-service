@@ -10,7 +10,7 @@ export default class DatamasterCaraPakaiService {
 
     static async getAll(req) {
         let validData = ZodValidator.validate(DatamasterValidation.GET_ALL_SATUAN, req);
-        return await DataMasterCaraPakaiRepository.getAll(validData);
+        return await DataMasterCaraPakaiRepository.getAll(req);
     }
 
     static update(req) {

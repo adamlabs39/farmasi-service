@@ -15,6 +15,7 @@ export default class DatamasterSatuanController {
     static async getAll(req, res, nextFunction) {
         try {
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.name = req.query.name;
             const result = await DatamasterSatuanService.getAll(req.body);
             res.status(200).json(successResponse("data berhasil didapat", result));
         } catch (error) {

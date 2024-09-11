@@ -10,7 +10,7 @@ export default class DatamasterKategoriObatService {
 
     static async getAll(req) {
         let validData = ZodValidator.validate(DatamasterValidation.GET_ALL_SATUAN, req);
-        return await DataMasterKategoriObatRepository.getAll(validData);
+        return await DataMasterKategoriObatRepository.getAll(req);
     }
 
     static update(req) {

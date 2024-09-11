@@ -10,7 +10,7 @@ export default class DatamasterBentukSediaanService {
 
     static async getAll(req) {
         let validData = ZodValidator.validate(DatamasterValidation.GET_ALL_SATUAN, req);
-        return await DatamasterBentukSediaanRepository.getAll(validData);
+        return await DatamasterBentukSediaanRepository.getAll(req);
     }
 
     static update(req) {
