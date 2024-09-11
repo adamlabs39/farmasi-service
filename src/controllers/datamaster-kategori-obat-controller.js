@@ -1,11 +1,11 @@
-import DatamasterSatuanService from "../services/datamaster-satuan-service.js";
 import successResponse from "../responses/success-response.js";
+import DatamasterKategoriObatService from "../services/datamaster-kategori-obat-service.js";
 
-export default class DatamasterSatuanController {
+export default class DatamasterKategoriObatController {
     static async create(req, res, nextFunction) {
         try {
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
-            await DatamasterSatuanService.create(req.body);
+            await DatamasterKategoriObatService.create(req.body);
             res.status(201).json(successResponse("data berhasil dibuat"));
         } catch (error) {
             nextFunction(error);
@@ -15,7 +15,7 @@ export default class DatamasterSatuanController {
     static async getAll(req, res, nextFunction) {
         try {
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
-            const result = await DatamasterSatuanService.getAll(req.body);
+            const result = await DatamasterKategoriObatService.getAll(req.body);
             res.status(200).json(successResponse("data berhasil didapat", result));
         } catch (error) {
             nextFunction(error);
@@ -26,7 +26,7 @@ export default class DatamasterSatuanController {
         try {
             const { uuid } = req.params;
             req.body.uuid = uuid;
-            await DatamasterSatuanService.update(req.body);
+            await DatamasterKategoriObatService.update(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);
@@ -35,7 +35,7 @@ export default class DatamasterSatuanController {
 
     static async delete(req, res, nextFunction) {
         try {
-            await DatamasterSatuanService.delete(req.body);
+            await DatamasterKategoriObatService.delete(req.body);
             res.status(200).json(successResponse("data berhasil dihapus"));
         } catch (error) {
             nextFunction(error);
