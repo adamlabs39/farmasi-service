@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+  app:
+    build: .
+    container_name: adameds-farmasi
+    ports:
+      - ${APPLICATION_PORT}:${APPLICATION_PORT}
+    restart: always
+    networks:
+        - adameds-network
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_DIALECT=${DB_DIALECT}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - APPLICATION_PORT=${APPLICATION_PORT}
+      - APPLICATION_HOST=${APPLICATION_HOST}
+networks:
+    adameds-network:
+        driver: bridge
