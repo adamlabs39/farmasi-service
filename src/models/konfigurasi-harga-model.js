@@ -11,11 +11,9 @@ KonfigurasiHargaModel.init({
         ...identifierModel,
         metode_pemotongan_stok: {
             type: DataTypes.STRING(255),
-            allowNull: false,
         },
         metode_hpp: {
             type: DataTypes.STRING(255),
-            allowNull: false,
         },
         ppn: {
             type: DataTypes.FLOAT,
