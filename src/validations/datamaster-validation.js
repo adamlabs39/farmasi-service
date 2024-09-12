@@ -9,6 +9,14 @@ export default class DatamasterValidation {
         code : z.string().min(1, required),
     });
 
+    static CREATE_BENTUK_RACIKAN = z.object({
+        faskes_uuid : z.string().min(1, faskesUuidRequired),
+        nama_bentuk_racikan:  z.string().min(1, required),
+        jumlah: z.number(),
+        tarif_embalase: z.number(),
+        tarif_racik: z.number()
+    });
+
     static CREATE_ATURAN_PAKAI = z.object({
         faskes_uuid : z.string().min(1, faskesUuidRequired),
         status : z.boolean(),
@@ -47,6 +55,14 @@ export default class DatamasterValidation {
         status : z.boolean(),
         name : z.string().min(1, required),
         code : z.string().min(1, required),
+    });
+
+    static UPDATE_BENTUK_RACIKAN = z.object({
+        uuid : z.string().min(1, uuidRequired),
+        nama_bentuk_racikan:  z.string().min(1, required),
+        jumlah: z.number(),
+        tarif_embalase: z.number(),
+        tarif_racik: z.number()
     });
 
     static UPDATE_ATURAN_PAKAI = z.object({

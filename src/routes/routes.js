@@ -9,6 +9,7 @@ import DatamasterLokasiStokController from "../controllers/datamaster-lokasi-sto
 import DatamasterAturanPakaiController from "../controllers/datamaster-aturan-pakai-controller.js";
 import DatamasterIngredientController from "../controllers/datamaster-ingredient-controller.js";
 import KonfigurasiHargaController from "../controllers/konfigurasi-harga-controller.js";
+import DatamasterBentukRacikanController from "../controllers/datamaster-bentuk-racikan-controller.js";
 
 const apiBase = process.env.API_BASE || "api";
 const apiVersion = process.env.API_VERSION || "v1";
@@ -72,6 +73,12 @@ routes.post(`${baseUrl}/datamaster/ingredient`, DatamasterIngredientController.c
 routes.get(`${baseUrl}/datamaster/ingredient`, DatamasterIngredientController.getAll);
 routes.put(`${baseUrl}/datamaster/ingredient/:uuid`, DatamasterIngredientController.update);
 routes.delete(`${baseUrl}/datamaster/ingredient`, DatamasterIngredientController.delete);
+
+// DATAMASTER - BENTUK RACIKAN
+routes.post(`${baseUrl}/datamaster/bentuk-racikan`, DatamasterBentukRacikanController.create);
+routes.get(`${baseUrl}/datamaster/bentuk-racikan`, DatamasterBentukRacikanController.getAll);
+routes.put(`${baseUrl}/datamaster/bentuk-racikan/:uuid`, DatamasterBentukRacikanController.update);
+routes.delete(`${baseUrl}/datamaster/bentuk-racikan`, DatamasterBentukRacikanController.delete);
 
 // KONFIGURASI HARGA
 routes.get(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.get);
