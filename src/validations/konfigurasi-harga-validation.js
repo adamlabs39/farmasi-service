@@ -1,5 +1,5 @@
 import { z } from "zod";
-import {faskesUuidRequired, required, uuidRequired} from "./message-validation-error.js";
+import {faskesUuidRequired, required} from "./message-validation-error.js";
 
 export default class KonfigurasiHargaValidation {
     static UPDATE = z.object({

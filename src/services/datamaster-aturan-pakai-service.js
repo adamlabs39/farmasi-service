@@ -9,7 +9,7 @@ export default class DatamasterAturanPakaiService {
     }
 
     static async getAll(req) {
-        let validData = ZodValidator.validate(DatamasterValidation.GET_ALL_SATUAN, req);
+        ZodValidator.validate(DatamasterValidation.GET_ALL_SATUAN, req);
         return await DataMasterAturanPakaiRepository.getAll(req);
     }
 
