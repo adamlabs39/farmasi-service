@@ -1,0 +1,45 @@
+import successResponse from "../responses/success-response.js";
+import DatamasterAturanPakaiService from "../services/datamaster-aturan-pakai-service.js";
+
+export default class DatamasterAturanPakaiController {
+    static async create(req, res, nextFunction) {
+        try {
+            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            await DatamasterAturanPakaiService.create(req.body);
+            res.status(201).json(successResponse("data berhasil dibuat"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async getAll(req, res, nextFunction) {
+        try {
+            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.name = req.query.name;
+            const result = await DatamasterAturanPakaiService.getAll(req.body);
+            res.status(200).json(successResponse("data berhasil didapat", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async update(req, res, nextFunction) {
+        try {
+            const { uuid } = req.params;
+            req.body.uuid = uuid;
+            await DatamasterAturanPakaiService.update(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async delete(req, res, nextFunction) {
+        try {
+            await DatamasterAturanPakaiService.delete(req.body);
+            res.status(200).json(successResponse("data berhasil dihapus"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+}

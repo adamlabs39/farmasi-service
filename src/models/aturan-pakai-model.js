@@ -25,6 +25,10 @@ AturanPakaiModel.init({
             type: DataTypes.INTEGER,
             allowNull: true,
         },
+        name: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
         status: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

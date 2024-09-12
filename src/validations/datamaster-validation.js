@@ -9,6 +9,16 @@ export default class DatamasterValidation {
         code : z.string().min(1, required),
     });
 
+    static CREATE_ATURAN_PAKAI = z.object({
+        faskes_uuid : z.string().min(1, faskesUuidRequired),
+        status : z.boolean(),
+        frekuensi : z.number(),
+        name : z.string().min(1, required),
+        periode_unit : z.string().min(1, required),
+        periode : z.number(),
+        code : z.string().min(1, required),
+    });
+
     static CREATE_MANUFACTURE = z.object({
         faskes_uuid : z.string().min(1, faskesUuidRequired),
         status : z.boolean(),
@@ -36,6 +46,16 @@ export default class DatamasterValidation {
         uuid : z.string().min(1, uuidRequired),
         status : z.boolean(),
         name : z.string().min(1, required),
+        code : z.string().min(1, required),
+    });
+
+    static UPDATE_ATURAN_PAKAI = z.object({
+        uuid : z.string().min(1, uuidRequired),
+        status : z.boolean(),
+        frekuensi : z.number(),
+        periode_unit : z.string().min(1, required),
+        name : z.string().min(1, required),
+        periode : z.number(),
         code : z.string().min(1, required),
     });
 
