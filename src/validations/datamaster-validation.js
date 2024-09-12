@@ -23,12 +23,30 @@ export default class DatamasterValidation {
         provinsi : z.string().min(1, required),
     });
 
+    static CREATE_LOKASI_STOK = z.object({
+        faskes_uuid : z.string().min(1, faskesUuidRequired),
+        status : z.boolean(),
+        name : z.string().min(1, required),
+        code : z.string().min(1, required),
+        jenis_lokasi : z.string().min(1, required),
+        default_tujuan_order_permintaan : z.string().min(1, required),
+    });
+
     static UPDATE_SATUAN = z.object({
         uuid : z.string().min(1, uuidRequired),
         status : z.boolean(),
         name : z.string().min(1, required),
         code : z.string().min(1, required),
     });
+
+    static UPDATE_LOKASI_STOK = z.object({
+        uuid : z.string().min(1, uuidRequired),
+        status : z.boolean(),
+        name : z.string().min(1, required),
+        code : z.string().min(1, required),
+        jenis_lokasi : z.string().min(1, required),
+        default_tujuan_order_permintaan : z.string().min(1, required),
+    })
 
     static UPDATE_MANUFACTURE = z.object({
         uuid : z.string().min(1, uuidRequired),

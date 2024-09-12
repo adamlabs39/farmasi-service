@@ -5,6 +5,7 @@ import DatamasterKategoriObatController from "../controllers/datamaster-kategori
 import DatamasterManufactureController from "../controllers/datamaster-manufacture-controller.js";
 import DatamasterCaraPakaiController from "../controllers/datamaster-cara-pakai-controller.js";
 import DatamasterJenisStokController from "../controllers/datamaster-jenis-stok-controller.js";
+import DatamasterLokasiStokController from "../controllers/datamaster-lokasi-stok-controller.js";
 
 const apiBase = process.env.API_BASE || "api";
 const apiVersion = process.env.API_VERSION || "v1";
@@ -50,5 +51,11 @@ routes.post(`${baseUrl}/datamaster/jenis-stok`, DatamasterJenisStokController.cr
 routes.get(`${baseUrl}/datamaster/jenis-stok`, DatamasterJenisStokController.getAll);
 routes.put(`${baseUrl}/datamaster/jenis-stok/:uuid`, DatamasterJenisStokController.update);
 routes.delete(`${baseUrl}/datamaster/jenis-stok`, DatamasterJenisStokController.delete);
+
+// DATAMASTER - LOKASI STOK
+routes.post(`${baseUrl}/datamaster/lokasi-stok`, DatamasterLokasiStokController.create);
+routes.get(`${baseUrl}/datamaster/lokasi-stok`, DatamasterLokasiStokController.getAll);
+routes.put(`${baseUrl}/datamaster/lokasi-stok/:uuid`, DatamasterLokasiStokController.update);
+routes.delete(`${baseUrl}/datamaster/lokasi-stok`, DatamasterLokasiStokController.delete);
 
 export default routes;

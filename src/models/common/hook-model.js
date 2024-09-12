@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {toEpochDate} from "../../helpers/date-helper.js";
 
 export const hookModel = {
     beforeCreate: (instance, options) => {
@@ -7,7 +8,10 @@ export const hookModel = {
         instance.updatedAt = unixTimestamp;
     },
     beforeUpdate: (instance, options) => {
-        instance.updatedAt = moment().unix();
+        instance.updated_at = toEpochDate(new Date());
+    },
+    beforeSave : (instance, options) => {
+        instance.updated_at = toEpochDate(new Date());
     },
     beforeDefine(attributes, options) {
         Object.keys(attributes).forEach((key) => {
