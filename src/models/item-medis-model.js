@@ -3,6 +3,7 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import ManufactureModel from "./manufacture-model.js";
 
 export default class ItemMedisModel extends Model {
 }
@@ -72,16 +73,27 @@ ItemMedisModel.init({
             type: DataTypes.STRING(255),
             allowNull: false,
         },
-        ingredient_uuid: {
-            type: DataTypes.STRING(255),
-        },
+        // ingredient_uuid: {
+        //     type: DataTypes.STRING(255),
+        // },
         exp_date: {
             type: DataTypes.DATE,
             allowNull: false,
         },
-        supplier_uuid: {
-            type: DataTypes.STRING(255),
+        // supplier_uuid: {
+        //     type: DataTypes.STRING(255),
+        //     allowNull: false,
+        // },
+        jenis_stocks: {
+            type: DataTypes.JSON,
+        },
+        ingridients: {
+            type: DataTypes.JSON,
+        },
+        status: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
+            defaultValue: true,
         },
         ...fieldTime
     }, {
@@ -103,3 +115,9 @@ ItemMedisModel.init({
         }
     }
 )
+
+ItemMedisModel.belongsTo(ManufactureModel, {
+    foreignKey: "manufacture_uuid",
+    as: "manufacture",
+    constraints: false
+})

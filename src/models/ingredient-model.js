@@ -1,17 +1,32 @@
 import {DataTypes, Model} from "sequelize";
-import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import {uuidv7} from "uuidv7";
 
 export default class IngredientModel extends Model {
 }
 
 IngredientModel.init({
-        ...identifierModel,
+        id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            autoIncrement: true,
+            unique: true,
+        },
+        uuid: {
+            type: DataTypes.STRING(255),
+            primaryKey: true,
+            defaultValue: function () {
+                return uuidv7();
+            },
+            allowNull: false,
+            unique: true,
+        },
         code: {
             type: DataTypes.STRING(255),
             allowNull: false,
+            unique: true,
         },
         name: {
             type: DataTypes.STRING(255),
@@ -29,15 +44,5 @@ IngredientModel.init({
         hooks: hookModel,
         underscored: true,
         timestamps: false,
-        indexes: [
-            {
-                fields: ['faskes_uuid'],
-            },
-        ],
-        uniqueKeys: {
-            uniq_scores: {
-                fields: ['code', 'faskes_uuid']
-            }
-        }
     }
 )

@@ -17,7 +17,15 @@ ConversionModel.init({
             type: DataTypes.STRING(255),
             allowNull: false,
         },
+        satuan_pembelian: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
         satuan_penggunaan_uuid: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        satuan_penggunaan: {
             type: DataTypes.STRING(255),
             allowNull: false,
         },

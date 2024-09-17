@@ -10,6 +10,7 @@ import DatamasterAturanPakaiController from "../controllers/datamaster-aturan-pa
 import DatamasterIngredientController from "../controllers/datamaster-ingredient-controller.js";
 import KonfigurasiHargaController from "../controllers/konfigurasi-harga-controller.js";
 import DatamasterBentukRacikanController from "../controllers/datamaster-bentuk-racikan-controller.js";
+import DatamasterItemMedisController from "../controllers/datamaster-item-medis-controller.js";
 
 const apiBase = process.env.API_BASE || "api";
 const apiVersion = process.env.API_VERSION || "v1";
@@ -79,6 +80,13 @@ routes.post(`${baseUrl}/datamaster/bentuk-racikan`, DatamasterBentukRacikanContr
 routes.get(`${baseUrl}/datamaster/bentuk-racikan`, DatamasterBentukRacikanController.getAll);
 routes.put(`${baseUrl}/datamaster/bentuk-racikan/:uuid`, DatamasterBentukRacikanController.update);
 routes.delete(`${baseUrl}/datamaster/bentuk-racikan`, DatamasterBentukRacikanController.delete);
+
+// DATAMASTER - ITEM MEDIS
+routes.post(`${baseUrl}/datamaster/item-medis`, DatamasterItemMedisController.create);
+routes.put(`${baseUrl}/datamaster/item-medis/:uuid`, DatamasterItemMedisController.update);
+routes.get(`${baseUrl}/datamaster/item-medis`, DatamasterItemMedisController.getAll);
+routes.delete(`${baseUrl}/datamaster/item-medis`, DatamasterItemMedisController.delete);
+routes.get(`${baseUrl}/datamaster/item-medis/:uuid/conversions`, DatamasterItemMedisController.getConversions);
 
 // KONFIGURASI HARGA
 routes.get(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.get);

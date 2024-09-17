@@ -9,14 +9,12 @@ export default class DataMasterIngredientRepository {
             code: req.code,
             name: req.name,
             status: req.status,
-            faskes_uuid : req.faskes_uuid,
         });
     }
 
     static async getAll(req) {
         const option = {
             where: {
-                faskes_uuid : req.faskes_uuid,
                 name : {[Op.iLike]: `%${req.name || ""}%`},
                 deleted_at: {
                     [Op.is]: null,

@@ -20,6 +20,7 @@ export default class DataMasterLokasiStokRepository {
             where: {
                 faskes_uuid : req.faskes_uuid,
                 name : {[Op.iLike]: `%${req.name || ""}%`},
+                jenis_lokasi : req.jenis_lokasi,
                 deleted_at: {
                     [Op.is]: null,
                 },

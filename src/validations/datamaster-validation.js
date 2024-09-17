@@ -9,6 +9,12 @@ export default class DatamasterValidation {
         code : z.string().min(1, required),
     });
 
+    static CREATE_INGREDIENT = z.object({
+        status : z.boolean(),
+        name : z.string().min(1, required),
+        code : z.string().min(1, required),
+    });
+
     static CREATE_BENTUK_RACIKAN = z.object({
         faskes_uuid : z.string().min(1, faskesUuidRequired),
         nama_bentuk_racikan:  z.string().min(1, required),
@@ -119,4 +125,57 @@ export default class DatamasterValidation {
         cara_pakai : z.string().min(1, required),
         code : z.string().min(1, required),
     });
+
+    static CREATE_ITEM_MEDIS = z.object({
+        faskes_uuid : z.string().min(1, faskesUuidRequired),
+        code : z.string().min(1, required),
+        name : z.string().min(1, required),
+        jenis_item : z.string().min(1, required),
+        satuan_penggunaan_uuid : z.string().min(1, required),
+        manufacture_uuid : z.string().min(1, required),
+        bentuk_sediaan_uuid : z.string().min(1, required),
+        dosis : z.number(),
+        satuan_dosis_uuid : z.string().min(1, required),
+        isi_kemasan : z.number(),
+        satuan_kemasan_uuid : z.string().min(1, required),
+        kategori_obat_uuid : z.string().min(1, required),
+        supplier_uuid : z.string().min(1, required),
+        exp_date : z.string().min(1, required),
+        satuan_pembelian_uuid : z.string().min(1, required),
+        harga_dasar : z.number(),
+        hna : z.number(),
+        hja : z.number(),
+        stock_min : z.number(),
+        stock_max : z.number(),
+        status : z.boolean(),
+    });
+
+    static UPDATE_ITEM_MEDIS = z.object({
+        uuid : z.string().min(1, uuidRequired),
+        faskes_uuid : z.string().min(1, faskesUuidRequired),
+        code : z.string().min(1, required),
+        name : z.string().min(1, required),
+        jenis_item : z.string().min(1, required),
+        satuan_penggunaan_uuid : z.string().min(1, required),
+        manufacture_uuid : z.string().min(1, required),
+        bentuk_sediaan_uuid : z.string().min(1, required),
+        dosis : z.number(),
+        satuan_dosis_uuid : z.string().min(1, required),
+        isi_kemasan : z.number(),
+        satuan_kemasan_uuid : z.string().min(1, required),
+        kategori_obat_uuid : z.string().min(1, required),
+        supplier_uuid : z.string().min(1, required),
+        exp_date : z.string().min(1, required),
+        satuan_pembelian_uuid : z.string().min(1, required),
+        harga_dasar : z.number(),
+        hna : z.number(),
+        hja : z.number(),
+        stock_min : z.number(),
+        stock_max : z.number(),
+        status : z.boolean(),
+    });
+
+    static GET_CONVERSIONS = z.object({
+        item_medis_uuid : z.string().min(1, uuidRequired),
+    })
 }

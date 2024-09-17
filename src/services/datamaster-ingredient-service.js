@@ -4,12 +4,12 @@ import DataMasterIngredientRepository from "../repositories/datamaster-ingredien
 
 export default class DatamasterIngredientService {
     static async create(req) {
-        let validData = ZodValidator.validate(DatamasterValidation.CREATE_SATUAN, req);
+        let validData = ZodValidator.validate(DatamasterValidation.CREATE_INGREDIENT, req);
         return await DataMasterIngredientRepository.create(validData);
     }
 
     static async getAll(req) {
-        let validData = ZodValidator.validate(DatamasterValidation.GET_ALL_SATUAN, req);
+        ZodValidator.validate(DatamasterValidation.GET_ALL_SATUAN, req);
         return await DataMasterIngredientRepository.getAll(req);
     }
 
