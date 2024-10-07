@@ -9,6 +9,10 @@ export default class DatamasterValidation {
         code : z.string().min(1, required),
     });
 
+    static SATUAN_DOSIS = z.object({
+        satuan_dosis : z.boolean(),
+    });
+
     static CREATE_INGREDIENT = z.object({
         status : z.boolean(),
         name : z.string().min(1, required),

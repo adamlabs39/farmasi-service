@@ -21,6 +21,11 @@ SatuanModel.init({
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
+        satuan_dosis: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,

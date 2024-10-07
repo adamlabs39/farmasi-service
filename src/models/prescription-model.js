@@ -19,7 +19,6 @@ PrescriptionModel.init({
         },
         rekam_medis_uuid: {
             type: DataTypes.STRING(255),
-            allowNull: false,
         },
         patient_uuid: {
             type: DataTypes.STRING(255),

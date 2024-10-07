@@ -48,4 +48,14 @@ export default class DataMasterCaraPakaiRepository {
             }
         });
     }
+
+    static async getAllWithoutPagination(faskes_uuid) {
+        return await CaraiPakaiModel.findAll(
+            {
+                where: {
+                    faskes_uuid: faskes_uuid
+                }
+            }
+        );
+    }
 }

@@ -10,6 +10,7 @@ export default class DataMasterSatuanRepository {
             name: req.name,
             status: req.status,
             faskes_uuid : req.faskes_uuid,
+            satuan_dosis : req.satuan_dosis
         });
     }
 
@@ -32,6 +33,7 @@ export default class DataMasterSatuanRepository {
             code: req.code,
             name: req.name,
             status: req.status,
+            satuan_dosis : req.satuan_dosis
         }, {
             where: {
                 uuid: req.uuid,
@@ -47,5 +49,16 @@ export default class DataMasterSatuanRepository {
                 uuid: req.uuid,
             }
         });
+    }
+
+    static async getAllWithoutPagination(faskes_uuid) {
+        return await SatuanModel.findAll(
+            {
+                where: {
+                    faskes_uuid: faskes_uuid,
+                    satuan_dosis : true,
+                }
+            }
+        );
     }
 }

@@ -51,4 +51,14 @@ export default class DataMasterItemMedisRepository {
             }
         });
     }
+
+    static async getAllWithoutPagination(faskes_uuid) {
+        return await ItemMedisModel.findAll(
+            {
+                where: {
+                    faskes_uuid: faskes_uuid
+                }
+            }
+        );
+    }
 }
