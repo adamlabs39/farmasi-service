@@ -5,13 +5,7 @@ import {toEpochDate} from "../helpers/date-helper.js";
 
 export default class DataMasterSatuanRepository {
     static async create(req) {
-        return await SatuanModel.create({
-            code: req.code,
-            name: req.name,
-            status: req.status,
-            faskes_uuid : req.faskes_uuid,
-            satuan_dosis : req.satuan_dosis
-        });
+        return await SatuanModel.create(req);
     }
 
     static async getAll(req) {

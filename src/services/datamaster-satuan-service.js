@@ -5,7 +5,6 @@ import DataMasterSatuanRepository from "../repositories/datamaster-satuan-reposi
 export default class DatamasterSatuanService {
     static async create(req) {
         ZodValidator.validate(DatamasterValidation.CREATE_SATUAN, req);
-        ZodValidator.validate(DatamasterValidation.SATUAN_DOSIS, req);
         return await DataMasterSatuanRepository.create(req);
     }
 
@@ -16,7 +15,6 @@ export default class DatamasterSatuanService {
 
     static update(req) {
         ZodValidator.validate(DatamasterValidation.UPDATE_SATUAN, req);
-        ZodValidator.validate(DatamasterValidation.SATUAN_DOSIS, req);
         return DataMasterSatuanRepository.update(req);
     }
 
