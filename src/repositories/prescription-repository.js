@@ -4,18 +4,18 @@ import PrescriptionItemRacikanModel from "../models/prescription-item-racikan-mo
 
 export default class PrescriptionRepository {
     // create prescription
-    static async createPrescription(req) {
-        return await PrescriptionModel.create(req);
+    static async createPrescription(req, transaction) {
+        return await PrescriptionModel.create(req, {transaction});
     }
 
     // create prescription item
-    static async createPrescriptionItem(req) {
-        return await PrescriptionItemModel.create(req);
+    static async createPrescriptionItem(req, transaction) {
+        return await PrescriptionItemModel.create(req, {transaction});
     }
 
     // create prescription item racikan
-    static async createPrescriptionItemRacikan(req) {
-        return await PrescriptionItemRacikanModel.create(req);
+    static async createPrescriptionItemRacikan(req, transaction) {
+        return await PrescriptionItemRacikanModel.create(req, transaction);
     }
 
     // get all prescription

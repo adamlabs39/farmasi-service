@@ -3,6 +3,7 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import {toEpochDate} from "../helpers/date-helper.js";
 
 export default class PrescriptionModel extends Model {
 }
@@ -29,8 +30,9 @@ PrescriptionModel.init({
             allowNull: false,
         },
         order_date: {
-            type: DataTypes.DATE,
+            type: DataTypes.BIGINT,
             allowNull: false,
+            defaultValue: toEpochDate(new Date())
         },
         order_status: {
             type: DataTypes.INTEGER,
@@ -99,6 +101,10 @@ PrescriptionModel.init({
         },
         petugas_edukasi: {
             type: DataTypes.STRING(255),
+        },
+        jenis_pelayanan: {
+            type: DataTypes.ENUM("rj", "ri", "fisio", "igd"),
+            allowNull: false,
         },
         ...fieldTime
     }, {

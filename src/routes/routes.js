@@ -11,6 +11,7 @@ import DatamasterIngredientController from "../controllers/datamaster-ingredient
 import KonfigurasiHargaController from "../controllers/konfigurasi-harga-controller.js";
 import DatamasterBentukRacikanController from "../controllers/datamaster-bentuk-racikan-controller.js";
 import DatamasterItemMedisController from "../controllers/datamaster-item-medis-controller.js";
+import PrescriptionController from "../controllers/prescription-controller.js";
 
 const apiBase = process.env.API_BASE || "api";
 const apiVersion = process.env.API_VERSION || "v1";
@@ -92,5 +93,7 @@ routes.get(`${baseUrl}/datamaster/item-medis/:uuid/conversions`, DatamasterItemM
 routes.get(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.get);
 routes.put(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.update);
 
+// ORDER OBAT
+routes.post(`${baseUrl}/prescriptions`, PrescriptionController.orderObat);
 
 export default routes;

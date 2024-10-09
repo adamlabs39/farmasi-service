@@ -43,7 +43,6 @@ PrescriptionItemModel.init({
         },
         prescription_notes: {
             type: DataTypes.STRING(255),
-            allowNull: false,
         },
         is_chronic: {
             type: DataTypes.BOOLEAN,
@@ -56,6 +55,7 @@ PrescriptionItemModel.init({
         is_compound: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
+            defaultValue: false,
         },
         nama_racikan: {
             type: DataTypes.STRING(255),
@@ -69,6 +69,12 @@ PrescriptionItemModel.init({
         sisa_qty_order: {
             type: DataTypes.FLOAT,
             allowNull: false,
+        },
+        stok_medis_uuid: {
+            type: DataTypes.STRING(255),
+        },
+        jenis_stok_uuid: {
+            type: DataTypes.STRING(255),
         },
         ...fieldTime
     }, {
