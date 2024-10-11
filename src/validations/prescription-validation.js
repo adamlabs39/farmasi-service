@@ -11,11 +11,11 @@ export default class PrescriptionValidation {
         order_status : z.number(),
         is_takeaway : z.boolean(),
         dokter_order : z.string().min(1, required),
-        lokasi_stok_uuid : z.string().min(1, required),
         jenis_pelayanan : z.string().min(1, required),
     });
 
     static CREATE_PRESCRIPTION_ITEM = z.object({
+        prescription_uuid : z.string().min(1, required),
         item_medis_uuid : z.string().min(1, required),
         medication_qty : z.number(),
         medication_dose_qty : z.number(),
@@ -31,4 +31,19 @@ export default class PrescriptionValidation {
         item_medis_uuid : z.string().min(1, required),
         medication_qty : z.number(),
     });
+
+    static DELETE_PRESCRIPTION_ITEM = z.object({
+        prescription_uuid : z.string().min(1, required),
+    });
+
+    static UPDATE_PRESCRIPTION = z.object({
+        uuid : z.string().min(1, required),
+        is_takeaway : z.boolean(),
+        lokasi_stok_uuid : z.string().min(1, required),
+    })
+
+    static UPDATE_OBAT = z.object({
+        uuid : z.string().min(1, required),
+        type : z.string().min(1, required),
+    })
 }

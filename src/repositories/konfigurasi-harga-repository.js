@@ -15,7 +15,6 @@ export default class KonfigurasiHargaRepository {
     }
 
     static async update(req) {
-        console.log(req);
         const affectedRow = await KonfigurasiHargaModel.update(req, {
             where: {
                 faskes_uuid: req.faskes_uuid,

@@ -44,4 +44,19 @@ export default class Utils {
             prev_page: prev
         };
     }
+
+    static pelayananToJenisStockCode(pelayanan){
+        switch(pelayanan){
+            case 'ri':
+                return '0';
+            case 'rj':
+                return '1';
+            case 'igd':
+                return '2';
+            case 'fisio':
+                return '3';
+            default:
+                return '9';
+        }
+    }
 }

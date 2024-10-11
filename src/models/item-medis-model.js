@@ -4,6 +4,7 @@ import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import ManufactureModel from "./manufacture-model.js";
+import ConversionModel from "./conversion-model.js";
 
 export default class ItemMedisModel extends Model {
 }
@@ -76,10 +77,6 @@ ItemMedisModel.init({
         // ingredient_uuid: {
         //     type: DataTypes.STRING(255),
         // },
-        exp_date: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
         // supplier_uuid: {
         //     type: DataTypes.STRING(255),
         //     allowNull: false,
@@ -119,5 +116,11 @@ ItemMedisModel.init({
 ItemMedisModel.belongsTo(ManufactureModel, {
     foreignKey: "manufacture_uuid",
     as: "manufacture",
+    constraints: false
+})
+
+ItemMedisModel.hasMany(ConversionModel, {
+    foreignKey: "item_medis_uuid",
+    as: "conversions",
     constraints: false
 })

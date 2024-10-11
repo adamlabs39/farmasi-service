@@ -3,6 +3,7 @@ import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import ItemMedisModel from "../models/item-medis-model.js";
 import ManufactureModel from "../models/manufacture-model.js";
+import ConversionModel from "../models/conversion-model.js";
 
 export default class DataMasterItemMedisRepository {
     static async create(req) {
@@ -20,12 +21,12 @@ export default class DataMasterItemMedisRepository {
             },
             include:[
                 {
-                    model: ManufactureModel,
-                    as: "manufacture",
-                    required: true,
+                    model: ConversionModel,
+                    as: "conversions",
+                    required: false,
                     where: { deleted_at: { [Op.is]: null } },
                     attributes: [
-                        "name", "uuid"
+                        "satuan_pembelian", "satuan_penggunaan", "konversi", "uuid"
                     ]
                 }
             ]

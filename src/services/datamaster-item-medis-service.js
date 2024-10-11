@@ -10,7 +10,7 @@ export default class DatamasterItemMedisService {
         const itemMedis = await DataMasterItemMedisRepository.create(req);
 
         if(req.conversion !== undefined && Array.isArray(req.conversion)){
-            const newConversion = req.conversion.filter(item => item.uuid === "").map(item => ({
+            const newConversion = req.conversion.filter(item => (item.uuid === "" || item.uuid === null || item.uuid === undefined) ).map(item => ({
                 ...item,
                 item_medis_uuid: itemMedis.dataValues.uuid,
                 faskes_uuid: req.faskes_uuid,

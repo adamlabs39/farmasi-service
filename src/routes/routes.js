@@ -94,6 +94,12 @@ routes.get(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.get)
 routes.put(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.update);
 
 // ORDER OBAT
-routes.post(`${baseUrl}/prescriptions`, PrescriptionController.orderObat);
+routes.post(`${baseUrl}/prescriptions/first-order`, PrescriptionController.orderObat);
+routes.post(`${baseUrl}/prescriptions/add-obat`, PrescriptionController.addObat);
+routes.delete(`${baseUrl}/prescriptions/obat/:prescription_uuid`, PrescriptionController.deleteObat);
+routes.get(`${baseUrl}/prescriptions/:uuid`, PrescriptionController.getByUuid);
+routes.put(`${baseUrl}/prescriptions/:uuid`, PrescriptionController.updatePrescription);
+routes.put(`${baseUrl}/prescriptions/obat/:uuid`, PrescriptionController.updateObat);
+routes.get(`${baseUrl}/prescriptions/obat/history`, PrescriptionController.getHistoryObat);
 
 export default routes;

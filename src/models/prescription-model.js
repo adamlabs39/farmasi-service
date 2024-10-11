@@ -4,6 +4,8 @@ import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import {toEpochDate} from "../helpers/date-helper.js";
+import PrescriptionItemModel from "./prescription-item-model.js";
+import AturanPakaiModel from "./aturan-pakai-model.js";
 
 export default class PrescriptionModel extends Model {
 }
@@ -126,3 +128,9 @@ PrescriptionModel.init({
         }
     }
 )
+
+PrescriptionModel.hasMany(PrescriptionItemModel, {
+    foreignKey: "prescription_uuid",
+    as: "obat",
+    constraints: false
+})
