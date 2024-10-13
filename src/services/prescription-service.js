@@ -6,6 +6,8 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import DataMasterLokasiStokRepository from "../repositories/datamaster-lokasi-stok-repository.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import Utils from "../helpers/utils.js";
+import axiosInstance from "../configurations/axios-instance.js";
+import { REKAM_MEDIS_URL } from "../helpers/constants.js";
 
 export default class PrescriptionService {
     static async getByUuid(uuid) {
@@ -88,6 +90,16 @@ export default class PrescriptionService {
                     }
                 }
             }
+
+            // insert into rekam medis
+            await axiosInstance.post(`${REKAM_MEDIS_URL}/rekam-medis/order-obat`, {
+                session_uuid: req.session_uuid,
+                order_obat_uuid: prescription_uuid
+            }, {
+                headers: {
+                    Authorization: req.token
+                }
+            });
 
             await transaction.commit();
 

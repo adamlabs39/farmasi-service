@@ -6,7 +6,10 @@ export default class PrescriptionController {
         try {
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
             req.body.dokter_order = res.locals.jwtData.username;
+            req.body.token = req.get("Authorization");
+
             const result = await PrescriptionService.orderObat(req.body);
+
             res.status(200).json(successResponse("data berhasil dibuat", result));
         } catch (error) {
             nextFunction(error);

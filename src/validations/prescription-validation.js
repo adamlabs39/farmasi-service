@@ -12,6 +12,7 @@ export default class PrescriptionValidation {
         is_takeaway : z.boolean(),
         dokter_order : z.string().min(1, required),
         jenis_pelayanan : z.string().min(1, required),
+        session_uuid : z.string().min(1, required),
     });
 
     static CREATE_PRESCRIPTION_ITEM = z.object({
