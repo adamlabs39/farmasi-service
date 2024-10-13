@@ -27,8 +27,8 @@ export default class DatamasterItemMedisController {
         try {
             req.query.faskes_uuid = res.locals.jwtData.faskesUuid;
             req.body.name = req.query.name;
-            const data = await DatamasterItemMedisService.getAll(req.query);
-            res.status(200).json(successResponse(data));
+            const result = await DatamasterItemMedisService.getAll(req.query);
+            res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
         } catch (error) {
             nextFunction(error);
         }

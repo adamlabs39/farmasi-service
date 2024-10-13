@@ -32,14 +32,14 @@ export default class Utils {
     }
 
     static paginationHelper(page, limit, total) {
-        const total_page = Math.ceil(total / limit);
-        const next = page < total_page ? page + 1 : null;
+        const total_pages = Math.ceil(total / limit);
+        const next = page < total_pages ? page + 1 : null;
         const prev = page > 1 ? page - 1 : null;
         return {
             page: parseInt(page),
             page_size: parseInt(limit),
-            total_page,
-            total_data: total,
+            total_pages,
+            total: total,
             next_page: next,
             prev_page: prev
         };

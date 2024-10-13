@@ -18,7 +18,7 @@ export default class DatamasterLokasiStokController {
             req.body.name = req.query.name;
             req.body.jenis_lokasi = req.query.jenis_lokasi;
             const result = await DatamasterLokasiStokService.getAll(req.body);
-            res.status(200).json(successResponse("data berhasil didapat", result));
+            res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
         } catch (error) {
             nextFunction(error);
         }
