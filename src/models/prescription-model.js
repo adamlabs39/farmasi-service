@@ -6,6 +6,7 @@ import {hookModel} from "./common/hook-model.js";
 import {toEpochDate} from "../helpers/date-helper.js";
 import PrescriptionItemModel from "./prescription-item-model.js";
 import AturanPakaiModel from "./aturan-pakai-model.js";
+import LokasiStokModel from "./lokasi-stok-model.js";
 
 export default class PrescriptionModel extends Model {
 }
@@ -132,5 +133,11 @@ PrescriptionModel.init({
 PrescriptionModel.hasMany(PrescriptionItemModel, {
     foreignKey: "prescription_uuid",
     as: "obat",
+    constraints: false
+})
+
+PrescriptionModel.belongsTo(LokasiStokModel, {
+    foreignKey: "lokasi_stok_uuid",
+    as: "lokasi_stok",
     constraints: false
 })

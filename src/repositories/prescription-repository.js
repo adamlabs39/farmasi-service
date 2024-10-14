@@ -8,6 +8,8 @@ import BadRequestException from "../errors/bad-request-exception.js";
 import AturanPakaiModel from "../models/aturan-pakai-model.js";
 import ItemMedisModel from "../models/item-medis-model.js";
 import SatuanModel from "../models/satuan-model.js";
+import {Op} from "sequelize";
+import LokasiStokModel from "../models/lokasi-stok-model.js";
 
 export default class PrescriptionRepository {
     // get prescription by uuid
@@ -21,6 +23,7 @@ export default class PrescriptionRepository {
                     {
                         model: PrescriptionItemModel,
                         as: 'obat',
+                        required: false,
                         include: [
                             {
                                 model: PrescriptionItemRacikanModel,
@@ -177,20 +180,24 @@ export default class PrescriptionRepository {
                     model: PrescriptionItemModel,
                     as: 'obat',
                     attributes : ['medication_qty'],
+                    required: false,
                     include: [
                         {
                             model : AturanPakaiModel,
                             as : 'aturan_pakai',
+                            required: false,
                             attributes: ['name']
                         },
                         {
                             model : ItemMedisModel,
                             as : 'item_medis',
+                            required: false,
                             attributes: ['name']
                         },
                         {
                             model : SatuanModel,
                             as : 'satuan_dosis',
+                            required: false,
                             attributes: ['name']
                         }
                     ]
@@ -229,5 +236,30 @@ export default class PrescriptionRepository {
                 page : parseInt(req.group_index) + 1
             }
         };
+    }
+
+
+    static async getOrderBySomeUuid(uuidArray){
+        return await PrescriptionModel.findAll({
+            where: {
+                uuid: {
+                    [Op.in]: uuidArray,
+                },
+            },
+            attributes : ['uuid','no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', "is_takeaway", "order_status"],
+            include: [
+                {
+                    model: PrescriptionItemModel,
+                    as: 'obat',
+                    required: false,
+                },
+                {
+                    model : LokasiStokModel,
+                    as : 'lokasi_stok',
+                    required: false,
+                    attributes : ["name"]
+                }
+            ],
+        });
     }
 }

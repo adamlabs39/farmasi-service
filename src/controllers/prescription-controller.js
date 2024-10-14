@@ -78,4 +78,13 @@ export default class PrescriptionController {
             nextFunction(error);
         }
     }
+
+    static async getOrderBySomeUuid(req, res, nextFunction){
+        try {
+            const result = await PrescriptionService.getOrderBySomeUuid(req.body);
+            res.status(200).json(successResponse("data berhasil ditemukan", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }

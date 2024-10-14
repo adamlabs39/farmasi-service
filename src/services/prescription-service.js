@@ -7,7 +7,7 @@ import DataMasterLokasiStokRepository from "../repositories/datamaster-lokasi-st
 import InternalServerException from "../errors/internal-server-exception.js";
 import Utils from "../helpers/utils.js";
 import axiosInstance from "../configurations/axios-instance.js";
-import { REKAM_MEDIS_URL } from "../helpers/constants.js";
+import {REKAM_MEDIS_URL} from "../helpers/constants.js";
 
 export default class PrescriptionService {
     static async getByUuid(uuid) {
@@ -196,5 +196,33 @@ export default class PrescriptionService {
 
     static async getHistoryObat(req){
         return await PrescriptionRepository.getHistoryObat(req);
+    }
+
+    static async getOrderBySomeUuid(req){
+        ZodValidator.validate(PrescriptionValidation.GET_SOME_ORDER, req);
+        const rawData = await PrescriptionRepository.getOrderBySomeUuid(req.uuides);
+        let data = [];
+
+        for (const resep of rawData) {
+            resep.dataValues.jumlah_obat = resep.dataValues.obat.length;
+
+            resep.dataValues.lokasi_stok = resep.dataValues.lokasi_stok.name;
+
+            for (const obatItem of resep.dataValues.obat) {
+                if (obatItem.is_compound) {
+                    resep.dataValues.is_racikan = true;
+                }
+
+                if (obatItem.is_chronic){
+                    resep.dataValues.is_chronic = true;
+                }
+            }
+
+            resep.dataValues.obat = undefined;
+
+            data.push(resep.dataValues);
+        }
+
+        return data;
     }
 }

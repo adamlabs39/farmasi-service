@@ -47,4 +47,8 @@ export default class PrescriptionValidation {
         uuid : z.string().min(1, required),
         type : z.string().min(1, required),
     })
+
+    static GET_SOME_ORDER = z.object({
+        uuides : z.array(z.string().min(1, required))
+    })
 }

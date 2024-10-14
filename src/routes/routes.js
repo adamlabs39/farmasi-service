@@ -101,5 +101,5 @@ routes.get(`${baseUrl}/prescriptions/:uuid`, PrescriptionController.getByUuid);
 routes.put(`${baseUrl}/prescriptions/:uuid`, PrescriptionController.updatePrescription);
 routes.put(`${baseUrl}/prescriptions/obat/:uuid`, PrescriptionController.updateObat);
 routes.get(`${baseUrl}/prescriptions/obat/history`, PrescriptionController.getHistoryObat);
-
+routes.post(`${baseUrl}/prescriptions/some-order`, PrescriptionController.getOrderBySomeUuid);
 export default routes;
