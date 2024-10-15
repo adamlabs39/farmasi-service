@@ -59,4 +59,30 @@ export default class Utils {
                 return '9';
         }
     }
+
+    static nullToType(key, dataType = String) {
+        if (key === null || key === undefined){
+            switch (dataType)
+            {
+                case String:
+                    return ''
+                case Number:
+                    return 0
+                case Boolean:
+                    return false
+                case Object:
+                    return {}
+                case Array:
+                    return []
+                }
+        }
+
+        return key
+    }
+
+    static numberTo13Digit(num){
+        const power = (num.toString().length - 13) * -1
+
+        return num * Math.pow(10, power)
+    }
 }

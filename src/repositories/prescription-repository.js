@@ -10,6 +10,7 @@ import ItemMedisModel from "../models/item-medis-model.js";
 import SatuanModel from "../models/satuan-model.js";
 import {Op} from "sequelize";
 import LokasiStokModel from "../models/lokasi-stok-model.js";
+import Utils from "../helpers/utils.js";
 
 export default class PrescriptionRepository {
     // get prescription by uuid
@@ -34,7 +35,7 @@ export default class PrescriptionRepository {
                                         model : ItemMedisModel,
                                         as : 'item_medis',
                                         required: false,
-                                        attributes : ['name', 'hja'],
+                                        attributes : ['name', 'hja', 'jenis_stocks'],
                                     },
                                 ]
                             },
@@ -42,7 +43,7 @@ export default class PrescriptionRepository {
                                 model : ItemMedisModel,
                                 as : 'item_medis',
                                 required: false,
-                                attributes : ['name', 'hja'],
+                                attributes : ['name', 'hja', 'jenis_stocks' ],
                             },
                         ],
                     },
@@ -67,13 +68,64 @@ export default class PrescriptionRepository {
     }
 
     // get all prescription
-    static async getAllPrescription(faskes_uuid) {
+    static async getAllPrescription(req) {
+        req.search = Utils.nullToType(req.search)
+        req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
+        req.jenis_pelayanan = Utils.nullToType(req.jenis_pelayanan)
+        req.racikan = Utils.nullToType(req.racikan)
+        req.takeaway = Utils.nullToType(req.takeaway)
+        req.is_chronic = Utils.nullToType(req.is_chronic)
+
+        req.start_date = Utils.numberTo13Digit(req.start_date)
+        req.end_date = Utils.numberTo13Digit(req.end_date)
+
+        let wherePrescription =  {
+            faskes_uuid: req.faskes_uuid,
+                [Op.or]: [
+                { no_resep: { [Op.iLike]: `%${req.search}%` } },
+                { no_rm: { [Op.iLike]: `%${req.search}%` } }
+            ],
+                lokasi_stok_uuid : { [Op.like]: `%${req.lokasi_stok_uuid}%` },
+            order_date : {
+                [Op.between]: [req.start_date, req.end_date]
+            },
+            order_status : {
+                [Op.between]: [1, 4]
+            }
+        }
+
+        if (req.jenis_pelayanan !== ""){
+            wherePrescription.jenis_pelayanan = req.jenis_pelayanan
+        }
+
+        if(req.takeaway !== ""){
+            wherePrescription.is_takeaway = true
+        }
+
+        let wherePrescriptionItem = {}
+
+        if (req.racikan !== ""){
+            wherePrescriptionItem.is_compound = true
+        }
+
+        if (req.is_chronic !== "") {
+            wherePrescriptionItem.is_chronic = true
+        }
+
         return await PrescriptionModel.findAll(
             {
-                where: {
-                    faskes_uuid: faskes_uuid
-                }
-            }
+                where : wherePrescription,
+                attributes : ['uuid','no_rm', 'no_reg' ,'no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', 'is_takeaway', 'order_status'],
+                include : [
+                    {
+                        model: PrescriptionItemModel,
+                        as: 'obat',
+                        required : (req.is_chronic === true) || (req.racikan === true),
+                        attributes : ["is_chronic", "is_compound"],
+                        where : wherePrescriptionItem,
+                    }
+                ]
+            },
         );
     }
 

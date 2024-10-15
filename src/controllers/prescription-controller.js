@@ -148,7 +148,27 @@ export default class PrescriptionController {
 
     static async updateLokasiStok(req, res, nextFunction){
         try {
-            await PrescriptionService.batalSiapDiserahkan(req.body);
+            await PrescriptionService.updateLokasiStok(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async getAll(req, res, nextFunction) {
+        try {
+            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            const result = await PrescriptionService.getAll(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async updateJenisStokItem(req, res, nextFunction){
+        try {
+            req.body.uuid = req.params.uuid;
+            await PrescriptionService.updateJenisItem(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);

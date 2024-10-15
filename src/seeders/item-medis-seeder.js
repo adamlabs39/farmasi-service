@@ -19,6 +19,10 @@ export default class ItemMedisSeeder {
                 "hja" : 7000,
                 "jenis_item" : "obat",
                 "kategori_obat_uuid" : "skmfskfmkf",
+                "jenis_stocks" : {
+                    "name" : "tunai",
+                    "uuid" : "9d403ufjh43ufh3uf8430ihg"
+                }
             },
         ];
 

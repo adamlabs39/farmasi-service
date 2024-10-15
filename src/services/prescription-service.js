@@ -195,11 +195,11 @@ export default class PrescriptionService {
         return await PrescriptionRepository.editPrescriptionItem(req);
     }
 
-    static async getHistoryObat(req){
+    static async getHistoryObat(req) {
         return await PrescriptionRepository.getHistoryObat(req);
     }
 
-    static async getOrderBySomeUuid(req){
+    static async getOrderBySomeUuid(req) {
         ZodValidator.validate(PrescriptionValidation.GET_SOME_ORDER, req);
         const rawData = await PrescriptionRepository.getOrderBySomeUuid(req.uuides);
         let data = [];
@@ -214,7 +214,7 @@ export default class PrescriptionService {
                     resep.dataValues.is_racikan = true;
                 }
 
-                if (obatItem.is_chronic){
+                if (obatItem.is_chronic) {
                     resep.dataValues.is_chronic = true;
                 }
             }
@@ -227,32 +227,32 @@ export default class PrescriptionService {
         return data;
     }
 
-    static async updateTelaah(req){
+    static async updateTelaah(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_TELAAH, req);
         return await PrescriptionRepository.editPrescription(req);
     }
 
-    static async batalOrder(req){
+    static async batalOrder(req) {
         ZodValidator.validate(PrescriptionValidation.BATAL_ORDER, req);
         req.order_status = 1;
         return await PrescriptionRepository.editPrescription(req);
     }
 
-    static async updateVerifikasi(req){
+    static async updateVerifikasi(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_VERIFIKASI, req);
         req.order_status = 3;
         req.waktu_verifikasi = toEpochDate(new Date());
         return await PrescriptionRepository.editPrescription(req);
     }
 
-    static async updateSiapDiserahkan(req){
+    static async updateSiapDiserahkan(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_SIAP_DISERAHKAN, req);
         req.order_status = 4;
         req.waktu_penyiapan = toEpochDate(new Date());
         return await PrescriptionRepository.editPrescription(req);
     }
 
-    static async batalSiapDiserahkan(req){
+    static async batalSiapDiserahkan(req) {
         ZodValidator.validate(PrescriptionValidation.BATAL_DISERAHKAN, req);
         req.order_status = 4;
         return await PrescriptionRepository.editPrescription(req);
@@ -268,5 +268,52 @@ export default class PrescriptionService {
     static async updateLokasiStok(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_LOKASI_STOK, req);
         return await PrescriptionRepository.editPrescription(req);
+    }
+
+    static async getAll(req) {
+        ZodValidator.validate(PrescriptionValidation.GET_ALL, req);
+        const rawData = await PrescriptionRepository.getAllPrescription(req);
+
+        let resep_masuk = [];
+        let obat_disiapkan = [];
+        let penyerahan_obat = [];
+
+        for (const resep of rawData) {
+            for (const obat of resep.obat) {
+                if (obat.is_chronic) {
+                    resep.dataValues.is_chronic = true;
+                }
+
+                if (obat.is_compound) {
+                    resep.dataValues.is_compound = true;
+                }
+
+                resep.dataValues.obat = undefined;
+            }
+
+            if (resep.order_status === 1) {
+                resep_masuk.push(resep);
+            } else if (resep.order_status === 3) {
+                obat_disiapkan.push(resep);
+            } else if (resep.order_status === 4) {
+                penyerahan_obat.push(resep);
+            }
+        }
+
+        return {
+            resep_masuk,
+            obat_disiapkan,
+            penyerahan_obat
+        }
+    }
+
+    static async updateJenisItem(req) {
+        ZodValidator.validate(PrescriptionValidation.UPDATE_JENIS_ITEM, req);
+
+        if (req.is_racikan) {
+            return await PrescriptionRepository.editPrescriptionItemRacikan(req);
+        } else {
+            return await PrescriptionRepository.editPrescriptionItem(req);
+        }
     }
 }

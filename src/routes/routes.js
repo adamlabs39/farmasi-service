@@ -109,5 +109,7 @@ routes.post(`${baseUrl}/prescriptions/status-verifikasi`, PrescriptionController
 routes.post(`${baseUrl}/prescriptions/status-diserahkan`, PrescriptionController.updateDiserahkan);
 routes.post(`${baseUrl}/prescriptions/batal-siap-diserahkan`, PrescriptionController.batalSiapDiserahkan);
 routes.post(`${baseUrl}/prescriptions/lokasi-stok`, PrescriptionController.updateLokasiStok);
+routes.post(`${baseUrl}/prescriptions/all`, PrescriptionController.getAll);
+routes.put(`${baseUrl}/prescriptions/obat/:uuid/jenis-stok`, PrescriptionController.updateJenisStokItem);
 
 export default routes;
