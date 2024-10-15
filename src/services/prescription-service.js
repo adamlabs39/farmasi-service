@@ -8,6 +8,7 @@ import InternalServerException from "../errors/internal-server-exception.js";
 import Utils from "../helpers/utils.js";
 import axiosInstance from "../configurations/axios-instance.js";
 import {REKAM_MEDIS_URL} from "../helpers/constants.js";
+import {toEpochDate} from "../helpers/date-helper.js";
 
 export default class PrescriptionService {
     static async getByUuid(uuid) {
@@ -224,5 +225,48 @@ export default class PrescriptionService {
         }
 
         return data;
+    }
+
+    static async updateTelaah(req){
+        ZodValidator.validate(PrescriptionValidation.UPDATE_TELAAH, req);
+        return await PrescriptionRepository.editPrescription(req);
+    }
+
+    static async batalOrder(req){
+        ZodValidator.validate(PrescriptionValidation.BATAL_ORDER, req);
+        req.order_status = 1;
+        return await PrescriptionRepository.editPrescription(req);
+    }
+
+    static async updateVerifikasi(req){
+        ZodValidator.validate(PrescriptionValidation.UPDATE_VERIFIKASI, req);
+        req.order_status = 3;
+        req.waktu_verifikasi = toEpochDate(new Date());
+        return await PrescriptionRepository.editPrescription(req);
+    }
+
+    static async updateSiapDiserahkan(req){
+        ZodValidator.validate(PrescriptionValidation.UPDATE_SIAP_DISERAHKAN, req);
+        req.order_status = 4;
+        req.waktu_penyiapan = toEpochDate(new Date());
+        return await PrescriptionRepository.editPrescription(req);
+    }
+
+    static async batalSiapDiserahkan(req){
+        ZodValidator.validate(PrescriptionValidation.BATAL_DISERAHKAN, req);
+        req.order_status = 4;
+        return await PrescriptionRepository.editPrescription(req);
+    }
+
+    static async updateDiserahkan(req) {
+        ZodValidator.validate(PrescriptionValidation.UPDATE_SERAHKAN, req);
+        req.order_status = 5;
+        req.waktu_pemberian = toEpochDate(new Date());
+        return await PrescriptionRepository.editPrescription(req);
+    }
+
+    static async updateLokasiStok(req) {
+        ZodValidator.validate(PrescriptionValidation.UPDATE_LOKASI_STOK, req);
+        return await PrescriptionRepository.editPrescription(req);
     }
 }

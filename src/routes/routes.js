@@ -102,4 +102,12 @@ routes.put(`${baseUrl}/prescriptions/:uuid`, PrescriptionController.updatePrescr
 routes.put(`${baseUrl}/prescriptions/obat/:uuid`, PrescriptionController.updateObat);
 routes.get(`${baseUrl}/prescriptions/obat/history`, PrescriptionController.getHistoryObat);
 routes.post(`${baseUrl}/prescriptions/some-order`, PrescriptionController.getOrderBySomeUuid);
+routes.post(`${baseUrl}/prescriptions/status-telaah`, PrescriptionController.updateTelaah);
+routes.post(`${baseUrl}/prescriptions/batal-order`, PrescriptionController.batalOrder);
+routes.post(`${baseUrl}/prescriptions/status-siap-diserahkan`, PrescriptionController.updateSiapDiserahkan);
+routes.post(`${baseUrl}/prescriptions/status-verifikasi`, PrescriptionController.updateVerifikasi);
+routes.post(`${baseUrl}/prescriptions/status-diserahkan`, PrescriptionController.updateDiserahkan);
+routes.post(`${baseUrl}/prescriptions/batal-siap-diserahkan`, PrescriptionController.batalSiapDiserahkan);
+routes.post(`${baseUrl}/prescriptions/lokasi-stok`, PrescriptionController.updateLokasiStok);
+
 export default routes;

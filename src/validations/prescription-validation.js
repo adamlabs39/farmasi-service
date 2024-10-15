@@ -51,4 +51,40 @@ export default class PrescriptionValidation {
     static GET_SOME_ORDER = z.object({
         uuides : z.array(z.string().min(1, required))
     })
+
+    static UPDATE_TELAAH = z.object({
+        uuid : z.string().min(1, required),
+        status_telaah : z.boolean(),
+        petugas_telaah : z.string().min(1, required),
+    })
+
+    static BATAL_ORDER = z.object({
+        uuid : z.string().min(1, required),
+        petugas_pembatalan : z.string().min(1, required),
+        alasan_batal : z.string().min(1, required),
+    })
+
+    static UPDATE_VERIFIKASI = z.object({
+        uuid : z.string().min(1, required),
+    })
+
+    static UPDATE_SIAP_DISERAHKAN  = z.object({
+        uuid : z.string().min(1, required),
+    })
+
+    static BATAL_DISERAHKAN   = z.object({
+        uuid : z.string().min(1, required),
+    })
+
+    static UPDATE_SERAHKAN  = z.object({
+        uuid : z.string().min(1, required),
+        penerima : z.string().min(1, required),
+        no_hp_penerima : z.string().min(1, required),
+        petugas_edukasi : z.string().min(1, required),
+    })
+
+    static UPDATE_LOKASI_STOK  = z.object({
+        uuid : z.string().min(1, required),
+        lokasi_stok_uuid : z.string().min(1, required)
+    })
 }

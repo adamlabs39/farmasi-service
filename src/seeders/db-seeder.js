@@ -5,6 +5,7 @@ import ItemMedisSeeder from "./item-medis-seeder.js";
 import SatuanSeeder from "./satuan-seeder.js";
 import PrescriptionSeeder from "./prescription-seeder.js";
 import PrescriptionItemSeeder from "./prescription-item-seeder.js";
+import PrescriptionItemRacikanSeeder from "./prescription-item-racikan-seeder.js";
 
 export const dbSeeder = async () => {
     const transaction = await sequelizeInstance.transaction();
@@ -15,6 +16,7 @@ export const dbSeeder = async () => {
         await SatuanSeeder.seed(transaction);
         await PrescriptionSeeder.seed(transaction);
         await PrescriptionItemSeeder.seed(transaction);
+        await PrescriptionItemRacikanSeeder.seed(transaction);
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();

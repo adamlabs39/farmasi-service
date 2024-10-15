@@ -33,6 +33,7 @@ export default class PrescriptionItemSeeder {
                 "prescription_notes" : "",
                 "is_chronic" : true,
                 "route" : "anal",
+                "is_compound" : true,
                 "prescription_uuid" : "9d403ufjh43ufh3uf8430ihg",
             },
         ];

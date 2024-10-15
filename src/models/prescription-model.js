@@ -5,7 +5,6 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import {toEpochDate} from "../helpers/date-helper.js";
 import PrescriptionItemModel from "./prescription-item-model.js";
-import AturanPakaiModel from "./aturan-pakai-model.js";
 import LokasiStokModel from "./lokasi-stok-model.js";
 
 export default class PrescriptionModel extends Model {
@@ -85,13 +84,13 @@ PrescriptionModel.init({
             defaultValue: 0
         },
         waktu_verifikasi: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         waktu_penyiapan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         waktu_pemberian: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         status_telaah: {
             type: DataTypes.BOOLEAN,

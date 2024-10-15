@@ -29,7 +29,7 @@ export default class PrescriptionController {
     static async deleteObat(req, res, nextFunction) {
         try {
             req.body.prescription_uuid = req.params.prescription_uuid;
-            const result = await PrescriptionService.deleteObat(req.body);
+            await PrescriptionService.deleteObat(req.body);
             res.status(200).json(successResponse("data berhasil dihapus"));
         } catch (error) {
             nextFunction(error);
@@ -83,6 +83,73 @@ export default class PrescriptionController {
         try {
             const result = await PrescriptionService.getOrderBySomeUuid(req.body);
             res.status(200).json(successResponse("data berhasil ditemukan", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async updateTelaah(req, res, nextFunction){
+        try {
+            await PrescriptionService.updateTelaah(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async batalOrder(req, res, nextFunction){
+        try {
+            req.body.petugas_pembatalan = res.locals.jwtData.username;
+            await PrescriptionService.batalOrder(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async updateVerifikasi(req, res, nextFunction){
+        try {
+            req.body.petugas_verifikasi = res.locals.jwtData.username;
+            await PrescriptionService.updateVerifikasi(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async updateSiapDiserahkan(req, res, nextFunction){
+        try {
+            req.body.petugas_penyiapan_obat = res.locals.jwtData.username;
+            await PrescriptionService.updateSiapDiserahkan(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async updateDiserahkan(req, res, nextFunction){
+        try {
+            req.body.petugas_pemberi = res.locals.jwtData.username;
+            await PrescriptionService.updateDiserahkan(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async batalSiapDiserahkan(req, res, nextFunction){
+        try {
+            await PrescriptionService.batalSiapDiserahkan(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async updateLokasiStok(req, res, nextFunction){
+        try {
+            await PrescriptionService.batalSiapDiserahkan(req.body);
+            res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);
         }

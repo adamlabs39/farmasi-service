@@ -3,6 +3,7 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import ItemMedisModel from "./item-medis-model.js";
 
 export default class PrescriptionItemRacikanModel extends Model {
 }
@@ -39,3 +40,9 @@ PrescriptionItemRacikanModel.init({
         ],
     }
 )
+
+PrescriptionItemRacikanModel.belongsTo(ItemMedisModel, {
+    foreignKey: "item_medis_uuid",
+    as: "item_medis",
+    constraints: false
+})

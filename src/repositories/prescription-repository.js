@@ -29,6 +29,20 @@ export default class PrescriptionRepository {
                                 model: PrescriptionItemRacikanModel,
                                 as: 'racikan',
                                 required: false,
+                                include : [
+                                    {
+                                        model : ItemMedisModel,
+                                        as : 'item_medis',
+                                        required: false,
+                                        attributes : ['name', 'hja'],
+                                    },
+                                ]
+                            },
+                            {
+                                model : ItemMedisModel,
+                                as : 'item_medis',
+                                required: false,
+                                attributes : ['name', 'hja'],
                             },
                         ],
                     },
