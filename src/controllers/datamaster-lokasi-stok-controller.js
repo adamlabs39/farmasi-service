@@ -17,6 +17,7 @@ export default class DatamasterLokasiStokController {
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
             req.body.name = req.query.name;
             req.body.jenis_lokasi = req.query.jenis_lokasi;
+            req.body.kode_tujuan = req.query.kode_tujuan;
             const result = await DatamasterLokasiStokService.getAll(req.body);
             res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
         } catch (error) {

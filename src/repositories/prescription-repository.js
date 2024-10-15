@@ -252,7 +252,6 @@ export default class PrescriptionRepository {
         };
     }
 
-
     static async getOrderBySomeUuid(uuidArray){
         return await PrescriptionModel.findAll({
             where: {
