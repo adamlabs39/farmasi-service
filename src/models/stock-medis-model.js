@@ -4,45 +4,48 @@ import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 
-export default class KonfigurasiHargaModel extends Model {
+export default class StockMedisModel extends Model {
 }
 
-KonfigurasiHargaModel.init({
+StockMedisModel.init({
         ...identifierModel,
-        metode_pemotongan_stok: {
+        item_medis_uuid: {
             type: DataTypes.STRING(255),
-            defaultValue: "FIFO"
+            allowNull: false,
         },
-        metode_hpp: {
+        exp_date: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        stok: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        sisa_stok: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        konversi_uuid: {
             type: DataTypes.STRING(255),
-            defaultValue : "last"
+            allowNull: false,
         },
-        ppn: {
+        lokasi_stok_uuid: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        harga_satuan: {
             type: DataTypes.FLOAT,
             allowNull: false,
-            defaultValue: 0
         },
-        margin: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-            defaultValue: 0,
-        },
-        biaya_embalase_racik: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: false,
-        },
-        metode_biaya_racikan: {
-            type: DataTypes.ENUM('paket', 'item'),
-        },
-        petugas: {
+        jenis_stok_uuid: {
             type: DataTypes.STRING(255),
+            allowNull: false,
         },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,
-        tableName: "konfigurasi_harga",
-        className: "KonfigurasiHarga",
+        tableName: "stock_medis",
+        className: "StockMedis",
         hooks: hookModel,
         underscored: true,
         timestamps: false,

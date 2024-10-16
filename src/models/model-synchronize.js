@@ -22,6 +22,7 @@ import PrescriptionModel from "./prescription-model.js";
 import ReturItemModel from "./retur-item-model.js";
 import ReturModel from "./retur-model.js";
 import SatuanModel from "./satuan-model.js";
+import StockMedisModel from "./stock-medis-model.js";
 
 const MODELMERGE = [
     JenisStokModel,
@@ -47,7 +48,8 @@ const MODELMERGE = [
     PrescriptionModel,
     ReturItemModel,
     ReturModel,
-    SatuanModel
+    SatuanModel,
+    StockMedisModel
 ];
 
 export default MODELMERGE;

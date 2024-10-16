@@ -187,13 +187,14 @@ export default class PrescriptionRepository {
     }
 
     // edit prescription
-    static async editPrescription(req) {
+    static async editPrescription(req, transaction) {
         return await PrescriptionModel.update(
             req,
             {
                 where: {
                     uuid: req.uuid
-                }
+                },
+                transaction: transaction
             }
         );
     }

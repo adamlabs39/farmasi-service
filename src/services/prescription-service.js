@@ -9,6 +9,9 @@ import Utils from "../helpers/utils.js";
 import axiosInstance from "../configurations/axios-instance.js";
 import {REKAM_MEDIS_URL} from "../helpers/constants.js";
 import {toEpochDate} from "../helpers/date-helper.js";
+import KonfigurasiHargaService from "./konfigurasi-harga-service.js";
+import StockMedisModel from "../models/stock-medis-model.js";
+import StockMedisRepository from "../repositories/stock-medis-repository.js";
 
 export default class PrescriptionService {
     static async getByUuid(uuid) {
@@ -240,9 +243,52 @@ export default class PrescriptionService {
 
     static async updateVerifikasi(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_VERIFIKASI, req);
-        req.order_status = 3;
-        req.waktu_verifikasi = toEpochDate(new Date());
-        return await PrescriptionRepository.editPrescription(req);
+
+        const transaction = await sequelizeInstance.transaction();
+
+        // get konfigurasi harga
+        const konfigurasiHarga = await KonfigurasiHargaService.get(req);
+
+        // get all prescription item
+        const prescription = await PrescriptionRepository.getByUuid(req.uuid);
+
+        try {
+            // loop for reduce stock
+            for (const obat of prescription.obat) {
+                if(obat.is_compound){
+                    for (const racikan of obat.racikan) {
+                        await StockMedisRepository.reduceQuantity({
+                            item_medis_uuid : racikan.item_medis_uuid,
+                            jenis_stok_uuid : racikan.jenis_stok_uuid,
+                            quantity : racikan.medication_qty,
+                            metode_pemotongan_stok : konfigurasiHarga.metode_pemotongan_stok,
+                            name : racikan.item_medis.name
+                        }, transaction)
+                    }
+                }
+                else {
+                    await StockMedisRepository.reduceQuantity({
+                        item_medis_uuid : obat.item_medis_uuid,
+                        jenis_stok_uuid : obat.jenis_stok_uuid,
+                        quantity : obat.medication_qty,
+                        metode_pemotongan_stok : konfigurasiHarga.metode_pemotongan_stok,
+                        name : obat.item_medis.name
+                    }, transaction)
+                }
+            }
+
+            // update prescription
+            req.order_status = 3;
+            req.waktu_verifikasi = toEpochDate(new Date());
+            await PrescriptionRepository.editPrescription(req, transaction);
+
+            await transaction.commit();
+        } catch (e) {
+            await transaction.rollback();
+            throw e;
+        }
+
+        return prescription;
     }
 
     static async updateSiapDiserahkan(req) {
