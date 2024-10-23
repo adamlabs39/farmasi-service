@@ -21,30 +21,14 @@ ManufactureModel.init({
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
-    provinsi_uuid: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
-    kabupaten_uuid: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
-    kecamatan_uuid: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
-    alamat: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
-    kabupaten: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
-    kecamatan: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
+        demografi_wilayah_code: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        alamat: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,

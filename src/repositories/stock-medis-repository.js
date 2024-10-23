@@ -1,8 +1,4 @@
-import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
-import {toEpochDate} from "../helpers/date-helper.js";
-import CaraiPakaiModel from "../models/cara-pakai-model.js";
-import SequelizeInstance from "../configurations/sequelize-instance.js";
 import StockMedisModel from "../models/stock-medis-model.js";
 
 export default class StockMedisRepository {

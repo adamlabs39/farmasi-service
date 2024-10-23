@@ -39,12 +39,7 @@ export default class DatamasterValidation {
         name : z.string().min(1, required),
         code : z.string().min(1, required),
         alamat : z.string().min(1, required),
-        kecamatan_uuid : z.string().min(1, required),
-        kabupaten_uuid : z.string().min(1, required),
-        provinsi_uuid : z.string().min(1, required),
-        kecamatan : z.string().min(1, required),
-        kabupaten : z.string().min(1, required),
-        provinsi : z.string().min(1, required),
+        demografi_wilayah_code : z.string().min(1, required),
     });
 
     static CREATE_LOKASI_STOK = z.object({
@@ -96,12 +91,7 @@ export default class DatamasterValidation {
         name : z.string().min(1, required),
         code : z.string().min(1, required),
         alamat : z.string().min(1, required),
-        kecamatan_uuid : z.string().min(1, required),
-        kabupaten_uuid : z.string().min(1, required),
-        provinsi_uuid : z.string().min(1, required),
-        kecamatan : z.string().min(1, required),
-        kabupaten : z.string().min(1, required),
-        provinsi : z.string().min(1, required),
+        demografi_wilayah_code : z.string().min(1, required),
     });
 
     static GET_ALL_SATUAN = z.object({

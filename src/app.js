@@ -25,7 +25,7 @@ app.listen(APPLICATION_PORT, APPLICATION_HOST, async () => {
         // for (const model of MODELMERGE) {
         //     await model.sync({ alter: false, force: true });
         // }
-        //
+
         // await dbSeeder();
     } catch (error) {
         console.error("Failed to synchronize the database:", error);

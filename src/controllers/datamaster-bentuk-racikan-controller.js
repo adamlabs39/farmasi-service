@@ -36,6 +36,8 @@ export default class DatamasterBentukRacikanController {
 
     static async delete(req, res, nextFunction) {
         try {
+            const { uuid } = req.params;
+            req.body.uuid = uuid;
             await DatamasterBentukRacikanService.delete(req.body);
             res.status(200).json(successResponse("data berhasil dihapus"));
         } catch (error) {

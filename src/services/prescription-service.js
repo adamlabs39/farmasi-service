@@ -10,7 +10,6 @@ import axiosInstance from "../configurations/axios-instance.js";
 import {REKAM_MEDIS_URL} from "../helpers/constants.js";
 import {toEpochDate} from "../helpers/date-helper.js";
 import KonfigurasiHargaService from "./konfigurasi-harga-service.js";
-import StockMedisModel from "../models/stock-medis-model.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
 
 export default class PrescriptionService {

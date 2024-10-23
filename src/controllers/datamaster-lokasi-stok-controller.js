@@ -38,6 +38,8 @@ export default class DatamasterLokasiStokController {
 
     static async delete(req, res, nextFunction) {
         try {
+            const { uuid } = req.params;
+            req.body.uuid = uuid;
             await DatamasterLokasiStokService.delete(req.body);
             res.status(200).json(successResponse("data berhasil dihapus"));
         } catch (error) {
