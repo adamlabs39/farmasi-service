@@ -1,6 +1,7 @@
 import {Op} from "sequelize";
 import StockMedisModel from "../models/stock-medis-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class StockMedisRepository {
     static async reduceQuantity(req, t) {
@@ -20,6 +21,24 @@ export default class StockMedisRepository {
             order.push(["created_at", "DESC"]);
         }
 
+        const totalStock = await StockMedisModel.sum('sisa_stok', {
+            where: {
+                item_medis_uuid: req.item_medis_uuid,
+                sisa_stok: {
+                    [Op.gt]: 0
+                },
+                exp_date: {
+                    [Op.gt]: today
+                },
+                jenis_stok_uuid : req.jenis_stok_uuid
+            },
+            transaction: t
+        });
+
+        if (totalStock < req.quantity) {
+            throw new BadRequestException(`${req.name} not enough or empty (total stock : ${totalStock})`);
+        }
+
         while (remainingQuantity > 0) {
             stock = await StockMedisModel.findOne({
                 where: {
@@ -36,10 +55,6 @@ export default class StockMedisRepository {
                 order: order,
                 transaction: t
             });
-
-            if (!stock) {
-                throw new Error(`${req.name} not enough or empty`);
-            }
 
             const newStock = stock.sisa_stok - remainingQuantity;
 
