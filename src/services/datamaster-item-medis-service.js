@@ -6,7 +6,6 @@ import {uuidv7} from "uuidv7";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import KonfigurasiHargaRepository from "../repositories/konfigurasi-harga-repository.js";
-import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class DatamasterItemMedisService {
     static async create(req) {

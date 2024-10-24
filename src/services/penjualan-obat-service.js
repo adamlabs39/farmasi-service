@@ -36,19 +36,19 @@ export default class PenjualanObatService {
 
                 // get harga satuan for penjualan item
                 const itemMedis = await DataMasterItemMedisRepository.getItemMedisJenisStok({
-                    item_medis_uuid : item.item_medis_uuid,
-                    jenis_stok_uuid : item.jenis_stok_uuid
+                    item_medis_uuid: item.item_medis_uuid,
+                    jenis_stok_uuid: item.jenis_stok_uuid
                 })
 
-                if (!itemMedis){
+                if (!itemMedis) {
                     throw new BadRequestException(`Item medis uuid tidak cocok dengan jenis stok uuid`);
                 }
 
-                if (!itemMedis.detail_harga){
+                if (!itemMedis.detail_harga) {
                     throw new BadRequestException(`Item medis tidak memiliki harga`);
                 }
 
-                if(konfigurasiHarga.metode_hpp === 'last'){
+                if (konfigurasiHarga.metode_hpp === 'last') {
                     item.harga_satuan = itemMedis.detail_harga[0].harga_terakhir;
                 } else {
                     item.harga_satuan = itemMedis.detail_harga[0].harga_avg;
@@ -74,9 +74,26 @@ export default class PenjualanObatService {
     }
 
     static async batalOtc(req) {
-        ZodValidator.validate(PenjualanObatValidation.BATAL_OTC, req);
-        req.status = 'cancel';
-        return await PenjualanObatRepository.updateOtc(req);
+        const transaction = await sequelizeInstance.transaction();
+
+        try {
+            ZodValidator.validate(PenjualanObatValidation.BATAL_OTC, req);
+            req.status = 'cancel';
+            await PenjualanObatRepository.updateOtc(req);
+
+            // bring back the stock
+            const items = await PenjualanObatRepository.getAllCatatanStok(req);
+            for(const item of items){
+                for (const catatan of item.catatan_stok){
+                    await StockMedisRepository.addQuantity(catatan, transaction);
+                }
+            }
+
+            await transaction.commit();
+        } catch (e) {
+            await transaction.rollback();
+            throw e;
+        }
     }
 
     static async getAll(req) {

@@ -1,5 +1,6 @@
 import {Op} from "sequelize";
 import StockMedisModel from "../models/stock-medis-model.js";
+import sequelizeInstance from "../configurations/sequelize-instance.js";
 
 export default class StockMedisRepository {
     static async reduceQuantity(req, t) {
@@ -77,5 +78,16 @@ export default class StockMedisRepository {
         }
 
         return result;
+    }
+
+    static async addQuantity(req, transaction){
+        await StockMedisModel.update({
+            sisa_stok: sequelizeInstance.literal(`sisa_stok + ${req.quantity}`)
+        }, {
+            where: {
+                uuid: req.stock_medis_uuid
+            },
+            transaction
+        });
     }
 }

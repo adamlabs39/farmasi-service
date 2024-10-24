@@ -44,13 +44,23 @@ export default class PenjualanObatRepository {
         return Pagination.init(PenjualanObatModel, req, option);
     }
 
-    static async updateOtc(req){
+    static async updateOtc(req, transaction){
         await PenjualanObatModel.update(req, {
-            where: {uuid: req.uuid}
+            where: {uuid: req.uuid},
+            transaction
         });
     }
 
     static async getOtcByUuid(){
 
+    }
+
+    static async getAllCatatanStok(req){
+        return await ItemPenjualanObatModel.findAll({
+            where : {
+                penjualan_obat_uuid : req.uuid
+            },
+            attributes : ["catatan_stok"]
+        })
     }
 }
