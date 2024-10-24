@@ -31,6 +31,8 @@ export default class PenjualanObatService {
                 item.penjualan_obat_uuid = penjualan.uuid;
                 item.faskes_uuid = req.faskes_uuid;
 
+                req.total_item+= 1;
+
                 // get konfigurasi harga
                 const konfigurasiHarga = await KonfigurasiHargaRepository.get(req.faskes_uuid);
 
@@ -54,6 +56,8 @@ export default class PenjualanObatService {
                     item.harga_satuan = itemMedis.detail_harga[0].harga_avg;
                 }
 
+                req.total_harga += (item.harga_satuan - item.diskon) * item.qty;
+
                 item.catatan_stok = await StockMedisRepository.reduceQuantity({
                     item_medis_uuid: item.item_medis_uuid,
                     jenis_stok_uuid: item.jenis_stok_uuid,
@@ -65,6 +69,12 @@ export default class PenjualanObatService {
 
                 await PenjualanObatRepository.createOtcItem(item, transaction);
             }
+
+            await PenjualanObatRepository.updateOtc({
+                uuid: penjualan.uuid,
+                total_item: req.total_item,
+                total_harga: req.total_harga
+            }, transaction);
 
             await transaction.commit();
         } catch (error) {
