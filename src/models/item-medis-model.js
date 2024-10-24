@@ -5,6 +5,7 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import ManufactureModel from "./manufacture-model.js";
 import ConversionModel from "./conversion-model.js";
+import ItemMedisJenisStokModel from "./item-medis-jenis-stok-model.js";
 
 export default class ItemMedisModel extends Model {
 }
@@ -54,18 +55,6 @@ ItemMedisModel.init({
         stock_max: {
             type: DataTypes.INTEGER,
         },
-        harga_dasar: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        hna: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        hja: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
         jenis_item: {
             type: DataTypes.ENUM('obat', 'alkes'),
             allowNull: false,
@@ -74,13 +63,6 @@ ItemMedisModel.init({
             type: DataTypes.STRING(255),
             allowNull: false,
         },
-        // ingredient_uuid: {
-        //     type: DataTypes.STRING(255),
-        // },
-        // supplier_uuid: {
-        //     type: DataTypes.STRING(255),
-        //     allowNull: false,
-        // },
         jenis_stocks: {
             type: DataTypes.JSON,
         },
@@ -122,5 +104,11 @@ ItemMedisModel.belongsTo(ManufactureModel, {
 ItemMedisModel.hasMany(ConversionModel, {
     foreignKey: "item_medis_uuid",
     as: "conversions",
+    constraints: false
+})
+
+ItemMedisModel.hasMany(ItemMedisJenisStokModel, {
+    foreignKey: "item_medis_uuid",
+    as: "jenis_stok",
     constraints: false
 })

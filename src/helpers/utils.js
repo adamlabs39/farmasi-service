@@ -81,8 +81,22 @@ export default class Utils {
     }
 
     static numberTo13Digit(num){
+        if (num instanceof String){
+            num = parseInt(num)
+        }
+
         const power = (num.toString().length - 13) * -1
 
         return num * Math.pow(10, power)
+    }
+
+    static generate4Code(initialCode = ""){
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const charactersLength = characters.length;
+        for (let i = 0; i < 4; i++) {
+            initialCode += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        return initialCode
     }
 }

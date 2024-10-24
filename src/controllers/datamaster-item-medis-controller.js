@@ -55,4 +55,14 @@ export default class DatamasterItemMedisController {
             nextFunction(error);
         }
     }
+
+    static async getAllWithoutPagination(req, res, nextFunction) {
+        try {
+            req.query.faskes_uuid = res.locals.jwtData.faskesUuid;
+            const result = await DatamasterItemMedisService.getAllWithoutPagination(req.query);
+            res.status(200).json(successResponse("data berhasil didapat", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }

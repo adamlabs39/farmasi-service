@@ -130,9 +130,6 @@ export default class DatamasterValidation {
         satuan_kemasan_uuid : z.string().min(1, required),
         kategori_obat_uuid : z.string().min(1, required),
         satuan_pembelian_uuid : z.string().min(1, required),
-        harga_dasar : z.number(),
-        hna : z.number(),
-        hja : z.number(),
         stock_min : z.number(),
         stock_max : z.number(),
         status : z.boolean(),
@@ -153,9 +150,6 @@ export default class DatamasterValidation {
         satuan_kemasan_uuid : z.string().min(1, required),
         kategori_obat_uuid : z.string().min(1, required),
         satuan_pembelian_uuid : z.string().min(1, required),
-        harga_dasar : z.number(),
-        hna : z.number(),
-        hja : z.number(),
         stock_min : z.number(),
         stock_max : z.number(),
         status : z.boolean(),
@@ -163,5 +157,18 @@ export default class DatamasterValidation {
 
     static GET_CONVERSIONS = z.object({
         item_medis_uuid : z.string().min(1, uuidRequired),
-    })
+    });
+
+    static INSERT_JENIS_STOK_ITEM_MEDIS = z.object({
+        jenis_stok_uuid : z.string().min(1, required),
+    });
+
+    static UPDATE_JENIS_STOK_ITEM_MEDIS = z.object({
+        jenis_stok_uuid : z.string().min(1, required),
+        uuid : z.string().min(1, required),
+    });
+
+    static DELETE_JENIS_STOK_ITEM_MEDIS = z.object({
+        uuid : z.string().min(1, required),
+    });
 }

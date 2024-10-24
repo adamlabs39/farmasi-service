@@ -26,13 +26,7 @@ export default class PrescriptionService {
         const transaction = await sequelizeInstance.transaction();
 
         // generate no prescription
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let prescriptionNumber = 'RSP';
-        const charactersLength = characters.length;
-        for (let i = 0; i < 4; i++) {
-            prescriptionNumber += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        req.no_resep = prescriptionNumber;
+        req.no_resep = Utils.generate4Code('RSP');
 
         // validate input
         ZodValidator.validate(PrescriptionValidation.CREATE_PRESCRIPTION, req);

@@ -12,6 +12,7 @@ import KonfigurasiHargaController from "../controllers/konfigurasi-harga-control
 import DatamasterBentukRacikanController from "../controllers/datamaster-bentuk-racikan-controller.js";
 import DatamasterItemMedisController from "../controllers/datamaster-item-medis-controller.js";
 import PrescriptionController from "../controllers/prescription-controller.js";
+import PenjualanObatController from "../controllers/penjualan-obat-controller.js";
 
 const apiBase = process.env.API_BASE || "api";
 const apiVersion = process.env.API_VERSION || "v1";
@@ -88,6 +89,7 @@ routes.put(`${baseUrl}/datamaster/item-medis/:uuid`, DatamasterItemMedisControll
 routes.get(`${baseUrl}/datamaster/item-medis`, DatamasterItemMedisController.getAll);
 routes.delete(`${baseUrl}/datamaster/item-medis/:uuid`, DatamasterItemMedisController.delete);
 routes.get(`${baseUrl}/datamaster/item-medis/:uuid/conversions`, DatamasterItemMedisController.getConversions);
+routes.get(`${baseUrl}/datamaster/item-medis/without-pagination`, DatamasterItemMedisController.getAllWithoutPagination);
 
 // KONFIGURASI HARGA
 routes.get(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.get);
@@ -111,5 +113,10 @@ routes.post(`${baseUrl}/prescriptions/batal-siap-diserahkan`, PrescriptionContro
 routes.post(`${baseUrl}/prescriptions/lokasi-stok`, PrescriptionController.updateLokasiStok);
 routes.post(`${baseUrl}/prescriptions/all`, PrescriptionController.getAll);
 routes.put(`${baseUrl}/prescriptions/obat/:uuid/jenis-stok`, PrescriptionController.updateJenisStokItem);
+
+// PENJUALAN OBAT
+routes.post(`${baseUrl}/penjualan-obat`, PenjualanObatController.create);
+routes.delete(`${baseUrl}/penjualan-obat/:uuid`, PenjualanObatController.batalOtc);
+routes.get(`${baseUrl}/penjualan-obat`, PenjualanObatController.getAll);
 
 export default routes;

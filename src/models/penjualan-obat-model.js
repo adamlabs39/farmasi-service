@@ -3,6 +3,7 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import LokasiStokModel from "./lokasi-stok-model.js";
 
 export default class PenjualanObatModel extends Model {
 }
@@ -14,7 +15,7 @@ PenjualanObatModel.init({
             allowNull: false,
         },
         tanggal_pembelian: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             allowNull: false,
         },
         lokasi_stok_uuid: {
@@ -71,3 +72,9 @@ PenjualanObatModel.init({
         }
     }
 )
+
+PenjualanObatModel.belongsTo(LokasiStokModel, {
+    foreignKey: 'lokasi_stok_uuid',
+    as: 'lokasi_stok',
+    constraints: false
+});

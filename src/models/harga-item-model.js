@@ -4,36 +4,39 @@ import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 
-export default class JenisStokItemMedisModel extends Model {
+export default class HargaItemModel extends Model {
 }
 
-JenisStokItemMedisModel.init({
+HargaItemModel.init({
         ...identifierModel,
-        jenis_stok_uuid: {
+        item_medis_jenis_stok_uuid: {
             type: DataTypes.STRING(255),
             allowNull: false,
         },
-        item_medis_uuid: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
+        harga_terakhir: {
+            type: DataTypes.FLOAT,
+        },
+        harga_avg: {
+            type: DataTypes.FLOAT,
+        },
+        hna: {
+            type: DataTypes.FLOAT,
+        },
+        harga_dasar: {
+            type: DataTypes.FLOAT,
         },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,
-        tableName: "jenis_stok_item_medis",
-        className: "JenisStokItemMedis",
-        underscored: true,
+        tableName: "harga_item",
+        className: "HargaItem",
         hooks: hookModel,
+        underscored: true,
         timestamps: false,
         indexes: [
             {
                 fields: ['faskes_uuid'],
             },
         ],
-        uniqueKeys: {
-            uniq_scores: {
-                fields: ['jenis_stok_uuid', 'item_medis_uuid']
-            }
-        }
     }
 )
