@@ -1,4 +1,3 @@
-import ItemMedisModel from "../models/item-medis-model.js";
 import JenisStokModel from "../models/jenis-stok-model.js";
 
 export default class JenisStokSeeder {

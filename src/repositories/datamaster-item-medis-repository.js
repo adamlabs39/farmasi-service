@@ -2,7 +2,6 @@ import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import ItemMedisModel from "../models/item-medis-model.js";
-import ManufactureModel from "../models/manufacture-model.js";
 import ConversionModel from "../models/conversion-model.js";
 import ItemMedisJenisStokModel from "../models/item-medis-jenis-stok-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
@@ -68,7 +67,7 @@ export default class DataMasterItemMedisRepository {
     }
 
     static async delete(req) {
-        const result = await sequelizeInstance.transaction(async tr => {
+        return await sequelizeInstance.transaction(async tr => {
 
             await ItemMedisJenisStokModel.update({
                 deleted_at: toEpochDate(new Date())

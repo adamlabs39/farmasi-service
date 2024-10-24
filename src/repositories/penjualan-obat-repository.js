@@ -1,7 +1,6 @@
 import PenjualanObatModel from "../models/penjualan-obat-model.js";
 import ItemPenjualanObatModel from "../models/item-penjualan-obat-model.js";
 import Pagination from "../helpers/pagination.js";
-import SatuanModel from "../models/satuan-model.js";
 import {Op} from "sequelize";
 import LokasiStokModel from "../models/lokasi-stok-model.js";
 import Utils from "../helpers/utils.js";

@@ -54,8 +54,6 @@ export default class PenjualanObatService {
         req.start_date = Utils.numberTo13Digit(req.start_date)
         req.end_date = Utils.numberTo13Digit(req.end_date)
 
-        const data = await PenjualanObatRepository.getAllOtc(req);
-        console.log(data);
-        return data;
+        return await PenjualanObatRepository.getAllOtc(req);
     }
 }

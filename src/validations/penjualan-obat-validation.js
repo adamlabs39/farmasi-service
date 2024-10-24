@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {faskesUuidRequired, required} from "./message-validation-error.js";
+import {required} from "./message-validation-error.js";
 
 export default class PenjualanObatValidation {
     static CREATE_OTC = z.object({
