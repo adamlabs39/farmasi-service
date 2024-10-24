@@ -118,5 +118,6 @@ routes.put(`${baseUrl}/prescriptions/obat/:uuid/jenis-stok`, PrescriptionControl
 routes.post(`${baseUrl}/penjualan-obat`, PenjualanObatController.create);
 routes.delete(`${baseUrl}/penjualan-obat/:uuid`, PenjualanObatController.batalOtc);
 routes.get(`${baseUrl}/penjualan-obat`, PenjualanObatController.getAll);
+routes.get(`${baseUrl}/penjualan-obat/:uuid`, PenjualanObatController.getDetail);
 
 export default routes;

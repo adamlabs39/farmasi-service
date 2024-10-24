@@ -36,4 +36,16 @@ export default class PenjualanObatController {
             nextFunction(error);
         }
     }
+
+    static async getDetail(req, res, nextFunction) {
+        try {
+            const { uuid } = req.params;
+            req.query.uuid = uuid;
+
+            const result = await PenjualanObatService.getByUuid(req.query);
+            res.status(200).json(successResponse("data berhasil didapat", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }

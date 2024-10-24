@@ -4,6 +4,9 @@ import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import LokasiStokModel from "../models/lokasi-stok-model.js";
 import Utils from "../helpers/utils.js";
+import ItemMedisModel from "../models/item-medis-model.js";
+import SatuanModel from "../models/satuan-model.js";
+import JenisStokModel from "../models/jenis-stok-model.js";
 
 export default class PenjualanObatRepository {
     static async createOtc(req,transaction){
@@ -51,8 +54,47 @@ export default class PenjualanObatRepository {
         });
     }
 
-    static async getOtcByUuid(){
+    static async getOtcByUuid(req){
+       return await PenjualanObatModel.findOne({
+            where : {
+                uuid : req.uuid
+            },
+           attributes : {
+               exclude: ['deleted_at', 'created_at', 'updated_at', 'status', 'faskes_uuid', 'id']
+           },
+            include : [
+                {
+                    model : ItemPenjualanObatModel,
+                    as : "items",
+                    attributes : {
+                        exclude: ['deleted_at', 'created_at', 'updated_at', 'catatan_stok']
+                    },
+                    include : [
+                        {
+                            model : JenisStokModel,
+                            as : "jenis_stok",
+                            attributes : ["name"],
+                        },
+                        {
+                            model : ItemMedisModel,
+                            as : "item_medis",
+                            attributes : ["name"],
+                        },
+                        {
+                            model : SatuanModel,
+                            as : "satuan",
+                            attributes : ["name"],
+                        }
+                    ]
+                },
+                {
+                    model : LokasiStokModel,
+                    as : "lokasi_stok",
+                    attributes : ["name"],
+                },
 
+            ]
+        })
     }
 
     static async getAllCatatanStok(req){

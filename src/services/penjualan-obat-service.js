@@ -114,4 +114,8 @@ export default class PenjualanObatService {
 
         return await PenjualanObatRepository.getAllOtc(req);
     }
+
+    static async getByUuid(req){
+        return await PenjualanObatRepository.getOtcByUuid(req);
+    }
 }
