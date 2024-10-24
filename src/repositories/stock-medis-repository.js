@@ -9,6 +9,8 @@ export default class StockMedisRepository {
 
         let order = [];
 
+        let result = [];
+
         if (req.metode_pemotongan_stok === "FEFO") {
             order.push(["exp_date", "ASC"]);
         } else if (req.metode_pemotongan_stok === "FIFO") {
@@ -48,6 +50,12 @@ export default class StockMedisRepository {
                         transaction: t
                     }
                 );
+
+                result.push({
+                    stock_medis_uuid: stock.uuid,
+                    quantity: remainingQuantity
+                });
+
                 remainingQuantity = 0;
             } else {
                 await StockMedisModel.update(
@@ -59,9 +67,15 @@ export default class StockMedisRepository {
                         transaction: t
                     }
                 );
+                result.push({
+                    stock_medis_uuid: stock.uuid,
+                    quantity:  stock.sisa_stok
+                });
+
                 remainingQuantity = Math.abs(newStock);
             }
         }
 
+        return result;
     }
 }

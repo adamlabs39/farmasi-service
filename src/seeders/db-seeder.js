@@ -22,10 +22,10 @@ export const dbSeeder = async () => {
         // await PrescriptionItemSeeder.seed(transaction);
         // await PrescriptionItemRacikanSeeder.seed(transaction);
         // await StockMedisSeeder.seed(transaction);
-        await HargaItemSeeder.seed(transaction);
-        await JenisStokSeeder.seed(transaction);
-        await ItemMedisJenisStokSeeder.seed(transaction);
-        await ItemMedisSeeder.seed(transaction);
+        // await HargaItemSeeder.seed(transaction);
+        // await JenisStokSeeder.seed(transaction);
+        // await ItemMedisJenisStokSeeder.seed(transaction);
+        // await ItemMedisSeeder.seed(transaction);
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();

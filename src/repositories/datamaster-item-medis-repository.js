@@ -159,4 +159,32 @@ export default class DataMasterItemMedisRepository {
             transaction
         });
     }
+
+    static async getItemMedisJenisStok(req) {
+        const result = await ItemMedisJenisStokModel.findOne({
+            where : {
+                item_medis_uuid : req.item_medis_uuid,
+                jenis_stok_uuid : req.jenis_stok_uuid,
+                deleted_at : {
+                    [Op.is] : null
+                },
+            },
+            include : [
+                {
+                    model : HargaItemModel,
+                    as : "detail_harga",
+                    required : true,
+                    where : {
+                        deleted_at : {
+                            [Op.is] : null
+                        }
+                    },
+                    limit : 1,
+                    order: [['created_at', 'DESC']],
+                }
+            ]
+        })
+
+    return result;
+    }
 }

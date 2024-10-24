@@ -138,9 +138,6 @@ export default class DatamasterItemMedisService {
 
     static async getAllWithoutPagination(req) {
         const configInfo = await KonfigurasiHargaRepository.get(req.faskes_uuid);
-        if (!configInfo){
-            throw new BadRequestException("Konfigurasi harga belum di set");
-        }
 
         return await DataMasterItemMedisRepository.getAllWithoutPagination(req, configInfo.metode_hpp === "avg");
     }

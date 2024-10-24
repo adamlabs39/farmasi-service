@@ -4,6 +4,10 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import PenjualanObatRepository from "../repositories/penjualan-obat-repository.js";
 import Utils from "../helpers/utils.js";
 import {toEpochDate} from "../helpers/date-helper.js";
+import StockMedisRepository from "../repositories/stock-medis-repository.js";
+import KonfigurasiHargaRepository from "../repositories/konfigurasi-harga-repository.js";
+import DataMasterItemMedisRepository from "../repositories/datamaster-item-medis-repository.js";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class PenjualanObatService {
 
@@ -27,13 +31,40 @@ export default class PenjualanObatService {
                 item.penjualan_obat_uuid = penjualan.uuid;
                 item.faskes_uuid = req.faskes_uuid;
 
+                // get konfigurasi harga
+                const konfigurasiHarga = await KonfigurasiHargaRepository.get(req.faskes_uuid);
+
                 // get harga satuan for penjualan item
-                item.harga_satuan = 0;
+                const itemMedis = await DataMasterItemMedisRepository.getItemMedisJenisStok({
+                    item_medis_uuid : item.item_medis_uuid,
+                    jenis_stok_uuid : item.jenis_stok_uuid
+                })
+
+                if (!itemMedis){
+                    throw new BadRequestException(`Item medis uuid tidak cocok dengan jenis stok uuid`);
+                }
+
+                if (!itemMedis.detail_harga){
+                    throw new BadRequestException(`Item medis tidak memiliki harga`);
+                }
+
+                if(konfigurasiHarga.metode_hpp === 'last'){
+                    item.harga_satuan = itemMedis.detail_harga[0].harga_terakhir;
+                } else {
+                    item.harga_satuan = itemMedis.detail_harga[0].harga_avg;
+                }
+
+                item.catatan_stok = await StockMedisRepository.reduceQuantity({
+                    item_medis_uuid: item.item_medis_uuid,
+                    jenis_stok_uuid: item.jenis_stok_uuid,
+                    quantity: item.qty,
+                    metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
+                    name: item.name
+                }, transaction);
+
 
                 await PenjualanObatRepository.createOtcItem(item, transaction);
             }
-
-            // update price and stock
 
             await transaction.commit();
         } catch (error) {

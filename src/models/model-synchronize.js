@@ -51,10 +51,10 @@ const MODELMERGE = [
     // ReturModel,
     // SatuanModel,
     // StockMedisModel
-    HargaItemModel,
-    ItemMedisJenisStokModel,
-    JenisStokModel,
-    ItemMedisModel,
+    // HargaItemModel,
+    // ItemMedisJenisStokModel,
+    // JenisStokModel,
+    // ItemMedisModel,
 
 ];
 

@@ -36,6 +36,9 @@ ItemPenjualanObatModel.init({
         diskon: {
             type: DataTypes.FLOAT,
         },
+        catatan_stok: {
+            type: DataTypes.JSON
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,
