@@ -5,6 +5,7 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import JenisStokModel from "./jenis-stok-model.js";
 import HargaItemModel from "./harga-item-model.js";
+import StockMedisModel from "./stock-medis-model.js";
 
 export default class ItemMedisJenisStokModel extends Model {
 }
@@ -49,4 +50,10 @@ ItemMedisJenisStokModel.belongsTo(JenisStokModel, {
 ItemMedisJenisStokModel.hasMany(HargaItemModel, {
     foreignKey: "item_medis_jenis_stok_uuid",
     as: "detail_harga",
+})
+
+ItemMedisJenisStokModel.hasMany(StockMedisModel, {
+    foreignKey: "item_medis_uuid",
+    as: "stocks",
+    constraints: false
 })

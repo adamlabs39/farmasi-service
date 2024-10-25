@@ -30,7 +30,9 @@ export default class StockMedisRepository {
                 exp_date: {
                     [Op.gt]: today
                 },
-                jenis_stok_uuid : req.jenis_stok_uuid
+                jenis_stok_uuid : req.jenis_stok_uuid,
+                lokasi_stok_uuid : req.lokasi_stok_uuid,
+                lock: t.LOCK.UPDATE,
             },
             transaction: t
         });
@@ -49,9 +51,10 @@ export default class StockMedisRepository {
                     exp_date: {
                         [Op.gt]: today
                     },
-                    jenis_stok_uuid : req.jenis_stok_uuid
+                    jenis_stok_uuid : req.jenis_stok_uuid,
+                    lokasi_stok_uuid : req.lokasi_stok_uuid,
+                    lock: t.LOCK.UPDATE,
                 },
-                lock: t.LOCK.UPDATE,
                 order: order,
                 transaction: t
             });

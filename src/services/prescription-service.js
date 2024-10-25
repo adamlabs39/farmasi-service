@@ -225,6 +225,7 @@ export default class PrescriptionService {
 
     static async updateTelaah(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_TELAAH, req);
+        req.status_telaah = true;
         return await PrescriptionRepository.editPrescription(req);
     }
 
@@ -255,7 +256,8 @@ export default class PrescriptionService {
                             jenis_stok_uuid : racikan.jenis_stok_uuid,
                             quantity : racikan.medication_qty,
                             metode_pemotongan_stok : konfigurasiHarga.metode_pemotongan_stok,
-                            name : racikan.item_medis.name
+                            name : racikan.item_medis.name,
+                            lokasi_stok_uuid : prescription.lokasi_stok_uuid
                         }, transaction)
                     }
                 }
@@ -264,6 +266,7 @@ export default class PrescriptionService {
                         item_medis_uuid : obat.item_medis_uuid,
                         jenis_stok_uuid : obat.jenis_stok_uuid,
                         quantity : obat.medication_qty,
+                        lokasi_stok_uuid : prescription.lokasi_stok_uuid,
                         metode_pemotongan_stok : konfigurasiHarga.metode_pemotongan_stok,
                         name : obat.item_medis.name
                     }, transaction)

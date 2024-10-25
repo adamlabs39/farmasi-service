@@ -171,4 +171,8 @@ export default class DatamasterValidation {
     static DELETE_JENIS_STOK_ITEM_MEDIS = z.object({
         uuid : z.string().min(1, required),
     });
+
+    static GET_AVAILABLE_JENIS_STOK = z.object({
+        item_medis_uuid : z.string().min(1, required),
+    });
 }

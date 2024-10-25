@@ -7,6 +7,7 @@ import ManufactureModel from "./manufacture-model.js";
 import ConversionModel from "./conversion-model.js";
 import ItemMedisJenisStokModel from "./item-medis-jenis-stok-model.js";
 import SatuanModel from "./satuan-model.js";
+import StockMedisModel from "./stock-medis-model.js";
 
 export default class ItemMedisModel extends Model {
 }
@@ -117,5 +118,11 @@ ItemMedisModel.hasMany(ItemMedisJenisStokModel, {
 ItemMedisModel.belongsTo(SatuanModel, {
     foreignKey: "satuan_penggunaan_uuid",
     as: "satuan_penggunaan",
+    constraints: false
+})
+
+ItemMedisModel.hasMany(StockMedisModel, {
+    foreignKey: "item_medis_uuid",
+    as: "stocks",
     constraints: false
 })

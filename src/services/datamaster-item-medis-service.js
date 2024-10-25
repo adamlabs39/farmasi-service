@@ -6,6 +6,7 @@ import {uuidv7} from "uuidv7";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import KonfigurasiHargaRepository from "../repositories/konfigurasi-harga-repository.js";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class DatamasterItemMedisService {
     static async create(req) {
@@ -139,5 +140,32 @@ export default class DatamasterItemMedisService {
         const configInfo = await KonfigurasiHargaRepository.get(req.faskes_uuid);
 
         return await DataMasterItemMedisRepository.getAllWithoutPagination(req, configInfo.metode_hpp === "avg");
+    }
+
+    static async getAvailableJenisStok(req){
+        ZodValidator.validate(DatamasterValidation.GET_AVAILABLE_JENIS_STOK, req);
+
+        const configInfo = await KonfigurasiHargaRepository.get(req.faskes_uuid);
+
+        const result = await DataMasterItemMedisRepository.getAvailableJenisStok(req, configInfo.metode_hpp === "avg");
+
+        if (result.length === 0){
+            throw new BadRequestException("Tidak ada jenis stok yang tersedia");
+        }
+
+        for (const item of result){
+            let total_stock = 0;
+
+            for (const stock of item.detail_stok.stocks){
+                total_stock += stock.sisa_stok;
+            }
+
+            item.dataValues.harga = item.detail_harga[0].dataValues.harga;
+            item.dataValues.total_stok = total_stock;
+            item.dataValues.detail_harga = undefined;
+            item.dataValues.detail_stok.dataValues.stocks = undefined;
+        }
+
+        return result;
     }
 }

@@ -90,6 +90,7 @@ routes.get(`${baseUrl}/datamaster/item-medis`, DatamasterItemMedisController.get
 routes.delete(`${baseUrl}/datamaster/item-medis/:uuid`, DatamasterItemMedisController.delete);
 routes.get(`${baseUrl}/datamaster/item-medis/:uuid/conversions`, DatamasterItemMedisController.getConversions);
 routes.get(`${baseUrl}/datamaster/item-medis/without-pagination`, DatamasterItemMedisController.getAllWithoutPagination);
+routes.get(`${baseUrl}/datamaster/item-medis/available-jenis-stock/:uuid`, DatamasterItemMedisController.getAvailableJenisStok);
 
 // KONFIGURASI HARGA
 routes.get(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.get);

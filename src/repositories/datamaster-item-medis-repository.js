@@ -8,6 +8,7 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import JenisStokModel from "../models/jenis-stok-model.js";
 import HargaItemModel from "../models/harga-item-model.js";
 import ManufactureModel from "../models/manufacture-model.js";
+import StockMedisModel from "../models/stock-medis-model.js";
 
 export default class DataMasterItemMedisRepository {
     static async create(req, transaction) {
@@ -194,5 +195,62 @@ export default class DataMasterItemMedisRepository {
             }
         ]
     });
+    }
+
+    static async getAvailableJenisStok(req, isAvg = false){
+        return await ItemMedisJenisStokModel.findAll({
+            where: {
+                item_medis_uuid: req.item_medis_uuid,
+                deleted_at: {
+                    [Op.is]: null
+                },
+            },
+            attributes : ["uuid"],
+            include: [
+                {
+                    model: JenisStokModel,
+                    as: "detail_stok",
+                    required: true,
+                    attributes : ["uuid", "name"],
+                    where: {
+                        deleted_at: {
+                            [Op.is]: null
+                        },
+                        status : true
+                    },
+                    include : [
+                        {
+                            model : StockMedisModel,
+                            as : "stocks",
+                            required: true,
+                            attributes : ["sisa_stok", "exp_date"],
+                            where: {
+                                deleted_at: {
+                                    [Op.is]: null
+                                },
+                                exp_date: {
+                                    [Op.gt]: new Date()
+                                },
+                                lokasi_stok_uuid : {[Op.iLike]: `%${req.lokasi_stok_uuid || ""}%`}
+                            }
+                        }
+                    ],
+                },
+                {
+                    model: HargaItemModel,
+                    as: "detail_harga",
+                    required: false,
+                    limit: 1,
+                    order: [['created_at', 'DESC']],
+                    where: {deleted_at: {[Op.is]: null}},
+                    attributes: [
+                        [
+                            sequelizeInstance.literal(`CASE WHEN ${isAvg} THEN harga_avg ELSE harga_terakhir END`),
+                            'harga'
+                        ]
+                    ],
+                },
+            ]
+        });
     }
 }

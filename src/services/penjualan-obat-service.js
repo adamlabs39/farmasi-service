@@ -63,7 +63,8 @@ export default class PenjualanObatService {
                     jenis_stok_uuid: item.jenis_stok_uuid,
                     quantity: item.qty,
                     metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
-                    name: item.name
+                    name: item.name,
+                    lokasi_stok_uuid : penjualan.lokasi_stok_uuid
                 }, transaction);
 
 

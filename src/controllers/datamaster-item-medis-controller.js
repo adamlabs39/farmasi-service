@@ -65,4 +65,15 @@ export default class DatamasterItemMedisController {
             nextFunction(error);
         }
     }
+
+    static async getAvailableJenisStok(req, res, nextFunction){
+        try {
+            req.query.item_medis_uuid = req.params.uuid;
+            req.query.faskes_uuid = res.locals.jwtData.faskesUuid;
+            const result = await DatamasterItemMedisService.getAvailableJenisStok(req.query);
+            res.status(200).json(successResponse("data berhasil didapat", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }
