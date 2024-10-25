@@ -11,6 +11,7 @@ import SatuanModel from "../models/satuan-model.js";
 import {Op} from "sequelize";
 import LokasiStokModel from "../models/lokasi-stok-model.js";
 import Utils from "../helpers/utils.js";
+import CaraiPakaiModel from "../models/cara-pakai-model.js";
 
 export default class PrescriptionRepository {
     // get prescription by uuid
@@ -20,22 +21,39 @@ export default class PrescriptionRepository {
                 where: {
                     uuid: uuid
                 },
+                attributes : {
+                  exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
+                },
                 include: [
                     {
                         model: PrescriptionItemModel,
                         as: 'obat',
                         required: false,
+                        attributes : {
+                            exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
+                        },
                         include: [
                             {
                                 model: PrescriptionItemRacikanModel,
                                 as: 'racikan',
                                 required: false,
+                                attributes : {
+                                    exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
+                                },
                                 include : [
                                     {
                                         model : ItemMedisModel,
                                         as : 'item_medis',
                                         required: false,
-                                        attributes : ['name', 'hja', 'jenis_stocks'],
+                                        attributes : ['name', 'uuid'],
+                                        include : [
+                                            {
+                                                model : SatuanModel,
+                                                as : 'satuan_penggunaan',
+                                                required: false,
+                                                attributes : ['name']
+                                            }
+                                        ]
                                     },
                                 ]
                             },
@@ -43,8 +61,34 @@ export default class PrescriptionRepository {
                                 model : ItemMedisModel,
                                 as : 'item_medis',
                                 required: false,
-                                attributes : ['name', 'hja', 'jenis_stocks' ],
+                                attributes : ['name', 'uuid'],
+                                include : [
+                                    {
+                                        model : SatuanModel,
+                                        as : 'satuan_penggunaan',
+                                        required: false,
+                                        attributes : ['name']
+                                    }
+                                ]
                             },
+                            {
+                                model : AturanPakaiModel,
+                                as : 'aturan_pakai',
+                                required: false,
+                                attributes : ['name']
+                            },
+                            {
+                                model : CaraiPakaiModel,
+                                as : 'cara_pakai',
+                                required: false,
+                                attributes : ['cara_pakai']
+                            },
+                            {
+                                model : SatuanModel,
+                                as : 'bentuk_racikan',
+                                required: false,
+                                attributes : ['name']
+                            }
                         ],
                     },
                 ],

@@ -10,17 +10,19 @@ import StockMedisSeeder from "./stock-medis-seeder.js";
 import HargaItemSeeder from "./harga-item-seeder.js";
 import JenisStokSeeder from "./jenis-stok-seeder.js";
 import ItemMedisJenisStokSeeder from "./item-medis-jenis-stok-seeder.js";
+import CaraPakaiSeeder from "./cara-pakai-seeder.js";
 
 export const dbSeeder = async () => {
     const transaction = await sequelizeInstance.transaction();
     try {
-        // await AturanPakaiSeeder.seed(transaction);
+        await AturanPakaiSeeder.seed(transaction);
+        await CaraPakaiSeeder.seed(transaction);
         // await LokasiStokSeeder.seed(transaction);
         // await ItemMedisSeeder.seed(transaction);
         // await SatuanSeeder.seed(transaction);
-        // await PrescriptionSeeder.seed(transaction);
-        // await PrescriptionItemSeeder.seed(transaction);
-        // await PrescriptionItemRacikanSeeder.seed(transaction);
+        await PrescriptionSeeder.seed(transaction);
+        await PrescriptionItemSeeder.seed(transaction);
+        await PrescriptionItemRacikanSeeder.seed(transaction);
         // await StockMedisSeeder.seed(transaction);
         // await HargaItemSeeder.seed(transaction);
         // await JenisStokSeeder.seed(transaction);

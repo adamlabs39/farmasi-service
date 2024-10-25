@@ -4,25 +4,25 @@ export default class PrescriptionItemRacikanSeeder {
     static async seed(transaction) {
         const racikan = [
             {
-                "faskes_uuid": "9d403ufjh43ufh3uf8430ihf",
-                "uuid": "9d403ufjh43ufh3uf8430ihg",
-                "item_medis_uuid": "9d403ufjh43ufh3uf8430ihg",
+                "faskes_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475r",
+                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "medication_qty": 5,
-                "prescription_item_uuid": "9d403ufjh43ufh3uf8430ihj"
+                "prescription_item_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e"
             },
             {
-                "faskes_uuid": "9d403ufjh43ufh3uf8430ihf",
-                "uuid": "afmksffgjnefgmsfosfmefjkvsdl",
-                "item_medis_uuid": "9d403ufjh43ufh3uf8430ihg",
+                "faskes_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "medication_qty": 5,
-                "prescription_item_uuid": "9d403ufjh43ufh3uf8430ihj"
+                "prescription_item_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e"
             },
             {
-                "faskes_uuid": "9d403ufjh43ufh3uf8430ihf",
-                "uuid": "akfmfwepfkwfmrofmqkdqpfkwefkm",
-                "item_medis_uuid": "9d403ufjh43ufh3uf8430ihg",
+                "faskes_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475t",
+                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "medication_qty": 5,
-                "prescription_item_uuid": "9d403ufjh43ufh3uf8430ihj"
+                "prescription_item_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e"
             }
         ];
 

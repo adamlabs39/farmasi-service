@@ -7,6 +7,7 @@ import PrescriptionItemRacikanModel from "./prescription-item-racikan-model.js";
 import AturanPakaiModel from "./aturan-pakai-model.js";
 import ItemMedisModel from "./item-medis-model.js";
 import SatuanModel from "./satuan-model.js";
+import CaraiPakaiModel from "./cara-pakai-model.js";
 
 export default class PrescriptionItemModel extends Model {
 }
@@ -79,6 +80,15 @@ PrescriptionItemModel.init({
         jenis_stok_uuid: {
             type: DataTypes.STRING(255),
         },
+        harga_satuan: {
+            type: DataTypes.FLOAT,
+        },
+        biaya_embalase: {
+            type: DataTypes.FLOAT,
+        },
+        biaya_racik: {
+            type: DataTypes.FLOAT,
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,
@@ -98,12 +108,18 @@ PrescriptionItemModel.init({
 PrescriptionItemModel.hasMany(PrescriptionItemRacikanModel, {
     foreignKey: "prescription_item_uuid",
     as: "racikan",
-    constraints : false
+    constraints: false
 })
 
 PrescriptionItemModel.belongsTo(AturanPakaiModel, {
     foreignKey: "aturan_pakai_uuid",
     as: "aturan_pakai",
+    constraints: false
+})
+
+PrescriptionItemModel.belongsTo(CaraiPakaiModel, {
+    foreignKey: "cara_pakai_uuid",
+    as: "cara_pakai",
     constraints: false
 })
 
@@ -116,5 +132,11 @@ PrescriptionItemModel.belongsTo(ItemMedisModel, {
 PrescriptionItemModel.belongsTo(SatuanModel, {
     foreignKey: "medication_dose_satuan_uuid",
     as: "satuan_dosis",
+    constraints: false
+})
+
+PrescriptionItemModel.belongsTo(SatuanModel, {
+    foreignKey: "bentuk_racikan_uuid",
+    as: "bentuk_racikan",
     constraints: false
 })

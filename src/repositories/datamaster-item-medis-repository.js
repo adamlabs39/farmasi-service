@@ -7,6 +7,7 @@ import ItemMedisJenisStokModel from "../models/item-medis-jenis-stok-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import JenisStokModel from "../models/jenis-stok-model.js";
 import HargaItemModel from "../models/harga-item-model.js";
+import ManufactureModel from "../models/manufacture-model.js";
 
 export default class DataMasterItemMedisRepository {
     static async create(req, transaction) {
@@ -30,6 +31,15 @@ export default class DataMasterItemMedisRepository {
                     where: {deleted_at: {[Op.is]: null}},
                     attributes: [
                         "satuan_pembelian", "satuan_penggunaan", "konversi", "uuid"
+                    ]
+                },
+                {
+                    model: ManufactureModel,
+                    as: "manufacture",
+                    required: false,
+                    where: {deleted_at: {[Op.is]: null}},
+                    attributes: [
+                        "code", "name"
                     ]
                 },
                 {

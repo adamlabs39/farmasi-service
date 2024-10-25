@@ -6,6 +6,7 @@ import {hookModel} from "./common/hook-model.js";
 import ManufactureModel from "./manufacture-model.js";
 import ConversionModel from "./conversion-model.js";
 import ItemMedisJenisStokModel from "./item-medis-jenis-stok-model.js";
+import SatuanModel from "./satuan-model.js";
 
 export default class ItemMedisModel extends Model {
 }
@@ -110,5 +111,11 @@ ItemMedisModel.hasMany(ConversionModel, {
 ItemMedisModel.hasMany(ItemMedisJenisStokModel, {
     foreignKey: "item_medis_uuid",
     as: "jenis_stok",
+    constraints: false
+})
+
+ItemMedisModel.belongsTo(SatuanModel, {
+    foreignKey: "satuan_penggunaan_uuid",
+    as: "satuan_penggunaan",
     constraints: false
 })

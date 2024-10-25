@@ -25,6 +25,9 @@ PrescriptionItemRacikanModel.init({
         jenis_stok_uuid: {
             type: DataTypes.STRING(255),
         },
+        harga_satuan: {
+            type: DataTypes.FLOAT,
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,
