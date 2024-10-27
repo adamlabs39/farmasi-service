@@ -7,7 +7,7 @@ build-image:
   before_script:
     - docker compose --env-file /home/admin/adameds/.env-farmasi down --rmi all
   script:
-    - docker build -t @adameds/faramsi-service:dev ./ --no-cache
+    - docker build -t adameds/faramsi-service:dev ./ --no-cache
   only:
     - dev-deployment
 
