@@ -1,7 +1,7 @@
-FROM node:16-alpine
-
+FROM node:19.5.0-alpine
 WORKDIR /adameds-farmasi
-COPY package.json .
-RUN npm install
+ENV APPLICATION_PORT=80856
+ENV APPLICATION_HOST=0.0.0.0
 COPY . .
-CMD npm start
+RUN npm install
+CMD ["npm", "run", "start"]
