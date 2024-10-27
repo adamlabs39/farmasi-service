@@ -1,13 +1,13 @@
 version: '3.3'
 services:
-  app:
-    build: .
+  adameds-farmasi:
+    image: @adameds/faramsi-service:dev
     container_name: adameds-farmasi
     ports:
-      - ${APPLICATION_PORT}:${APPLICATION_PORT}
+      - 8086:8086
     restart: always
     networks:
-        - adameds-network
+        - farmasi-network
     environment:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_USERNAME=${DB_USERNAME}
@@ -15,8 +15,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
-      - APPLICATION_PORT=${APPLICATION_PORT}
-      - APPLICATION_HOST=${APPLICATION_HOST}
+      - DB_POOL=${DB_POOL}
 networks:
-    adameds-network:
-        driver: bridge
+  farmasi-network:
+    driver: bridge
