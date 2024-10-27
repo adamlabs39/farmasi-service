@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   adameds-farmasi:
-    image: @adameds/faramsi-service:dev
+    image: "@adameds/faramsi-service:dev"
     container_name: adameds-farmasi
     ports:
       - 8086:8086
