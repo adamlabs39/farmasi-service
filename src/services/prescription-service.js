@@ -248,31 +248,31 @@ export default class PrescriptionService {
         // get all prescription item
         const prescription = await PrescriptionRepository.getByUuid(req.uuid);
 
-        await this.setPriceInPrescription(prescription, konfigurasiHarga, transaction);
 
         try {
+            req.total_harga = await this.setPriceInPrescription(prescription, konfigurasiHarga, transaction);
+
             // loop for reduce stock
             for (const obat of prescription.obat) {
-                if(obat.is_compound){
+                if (obat.is_compound) {
                     for (const racikan of obat.racikan) {
                         await StockMedisRepository.reduceQuantity({
-                            item_medis_uuid : racikan.item_medis_uuid,
-                            jenis_stok_uuid : racikan.jenis_stok_uuid,
-                            quantity : racikan.medication_qty,
-                            metode_pemotongan_stok : konfigurasiHarga.metode_pemotongan_stok,
-                            name : racikan.item_medis.name,
-                            lokasi_stok_uuid : prescription.lokasi_stok_uuid
+                            item_medis_uuid: racikan.item_medis_uuid,
+                            jenis_stok_uuid: racikan.jenis_stok_uuid,
+                            quantity: racikan.medication_qty,
+                            metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
+                            name: racikan.item_medis.name,
+                            lokasi_stok_uuid: prescription.lokasi_stok_uuid
                         }, transaction)
                     }
-                }
-                else {
+                } else {
                     await StockMedisRepository.reduceQuantity({
-                        item_medis_uuid : obat.item_medis_uuid,
-                        jenis_stok_uuid : obat.jenis_stok_uuid,
-                        quantity : obat.medication_qty,
-                        lokasi_stok_uuid : prescription.lokasi_stok_uuid,
-                        metode_pemotongan_stok : konfigurasiHarga.metode_pemotongan_stok,
-                        name : obat.item_medis.name
+                        item_medis_uuid: obat.item_medis_uuid,
+                        jenis_stok_uuid: obat.jenis_stok_uuid,
+                        quantity: obat.medication_qty,
+                        lokasi_stok_uuid: prescription.lokasi_stok_uuid,
+                        metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
+                        name: obat.item_medis.name
                     }, transaction)
                 }
             }
@@ -363,29 +363,32 @@ export default class PrescriptionService {
         }
     }
 
-    static async setPriceInPrescription(prescription, konfigurasiHarga, transaction){
+    static async setPriceInPrescription(prescription, konfigurasiHarga, transaction) {
+        let totalHarga = 0;
 
-        for (const item of prescription.obat){
-            if (item.is_compound){
-                for (const racikan of item.racikan){
+        for (const item of prescription.obat) {
+            if (item.is_compound) {
+                for (const racikan of item.racikan) {
                     const hargaItem = await DataMasterItemMedisRepository.getPrice({
-                        item_medis_uuid : racikan.item_medis_uuid,
-                        jenis_stok_uuid : racikan.jenis_stok_uuid
+                        item_medis_uuid: racikan.item_medis_uuid,
+                        jenis_stok_uuid: racikan.jenis_stok_uuid
                     });
 
-                    if (hargaItem === null){
+                    if (hargaItem === null) {
                         throw new BadRequestException(`harga item medis ${racikan.item_medis.name} tidak ditemukan`);
                     }
 
-                    if (konfigurasiHarga.metode_hpp === "avg"){
+                    if (konfigurasiHarga.metode_hpp === "avg") {
                         racikan.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_avg;
                     } else {
                         racikan.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
                     }
 
+                    totalHarga += racikan.harga_satuan * racikan.medication_qty;
+
                     await PrescriptionRepository.editPrescriptionItemRacikan({
-                        uuid : racikan.uuid,
-                        harga_satuan : racikan.harga_satuan,
+                        uuid: racikan.uuid,
+                        harga_satuan: racikan.harga_satuan,
                     }, transaction)
                 }
 
@@ -393,41 +396,47 @@ export default class PrescriptionService {
                 const tarif = await DataMasterBentukRacikanRepository.getByUuid(item.bentuk_racikan_uuid);
                 let multiplier = 1;
 
-                if (konfigurasiHarga.metode_biaya_racikan === "paket"){
+                if (konfigurasiHarga.metode_biaya_racikan === "paket") {
                     multiplier = 1 + (item.medication_qty % tarif.jumlah);
-                } else if (konfigurasiHarga.metode_biaya_racikan === "item"){
+                } else if (konfigurasiHarga.metode_biaya_racikan === "item") {
                     multiplier = item.racikan.length;
                 } else {
                     throw new BadRequestException(`metode biaya racikan belum di set`);
                 }
 
+                totalHarga += ((tarif.tarif_racik * multiplier) + (tarif.tarif_embalase * multiplier));
+
                 await PrescriptionRepository.editPrescriptionItem({
-                    uuid : item.uuid,
-                    biaya_racik : tarif.tarif_racik * multiplier,
-                    biaya_embalase : tarif.tarif_embalase * multiplier
+                    uuid: item.uuid,
+                    biaya_racik: tarif.tarif_racik * multiplier,
+                    biaya_embalase: tarif.tarif_embalase * multiplier
                 }, transaction);
 
             } else {
                 const hargaItem = await DataMasterItemMedisRepository.getPrice({
-                    item_medis_uuid : item.item_medis_uuid,
-                    jenis_stok_uuid : item.jenis_stok_uuid
+                    item_medis_uuid: item.item_medis_uuid,
+                    jenis_stok_uuid: item.jenis_stok_uuid
                 });
 
-                if (hargaItem === null){
+                if (hargaItem === null) {
                     throw new BadRequestException(`harga item medis ${item.item_medis.name} tidak ditemukan`);
                 }
 
-                if (konfigurasiHarga.metode_hpp === "avg"){
+                if (konfigurasiHarga.metode_hpp === "avg") {
                     item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_avg;
                 } else {
                     item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
                 }
 
+                totalHarga += item.harga_satuan * item.medication_qty;
+
                 await PrescriptionRepository.editPrescriptionItem({
-                    uuid : item.uuid,
-                    harga_satuan : item.harga_satuan,
+                    uuid: item.uuid,
+                    harga_satuan: item.harga_satuan,
                 }, transaction)
             }
         }
+
+        return totalHarga;
     }
 }
