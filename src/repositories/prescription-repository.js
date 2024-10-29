@@ -12,6 +12,7 @@ import {Op} from "sequelize";
 import LokasiStokModel from "../models/lokasi-stok-model.js";
 import Utils from "../helpers/utils.js";
 import CaraiPakaiModel from "../models/cara-pakai-model.js";
+import BentukRacikanModel from "../models/bentuk-racikan-model.js";
 
 export default class PrescriptionRepository {
     // get prescription by uuid
@@ -84,10 +85,10 @@ export default class PrescriptionRepository {
                                 attributes : ['cara_pakai']
                             },
                             {
-                                model : SatuanModel,
+                                model : BentukRacikanModel,
                                 as : 'bentuk_racikan',
                                 required: false,
-                                attributes : ['name']
+                                attributes : ['nama_bentuk_racikan']
                             }
                         ],
                     },

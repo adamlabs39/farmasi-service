@@ -8,6 +8,7 @@ import AturanPakaiModel from "./aturan-pakai-model.js";
 import ItemMedisModel from "./item-medis-model.js";
 import SatuanModel from "./satuan-model.js";
 import CaraiPakaiModel from "./cara-pakai-model.js";
+import BentukRacikanModel from "./bentuk-racikan-model.js";
 
 export default class PrescriptionItemModel extends Model {
 }
@@ -135,7 +136,7 @@ PrescriptionItemModel.belongsTo(SatuanModel, {
     constraints: false
 })
 
-PrescriptionItemModel.belongsTo(SatuanModel, {
+PrescriptionItemModel.belongsTo(BentukRacikanModel, {
     foreignKey: "bentuk_racikan_uuid",
     as: "bentuk_racikan",
     constraints: false

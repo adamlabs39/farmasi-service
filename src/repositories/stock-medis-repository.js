@@ -32,9 +32,8 @@ export default class StockMedisRepository {
                 },
                 jenis_stok_uuid : req.jenis_stok_uuid,
                 lokasi_stok_uuid : req.lokasi_stok_uuid,
-                lock: t.LOCK.UPDATE,
             },
-            transaction: t
+            transaction: t,
         });
 
         if (totalStock < req.quantity) {
@@ -53,10 +52,10 @@ export default class StockMedisRepository {
                     },
                     jenis_stok_uuid : req.jenis_stok_uuid,
                     lokasi_stok_uuid : req.lokasi_stok_uuid,
-                    lock: t.LOCK.UPDATE,
                 },
                 order: order,
-                transaction: t
+                transaction: t,
+                lock: t.LOCK.UPDATE,
             });
 
             const newStock = stock.sisa_stok - remainingQuantity;

@@ -11,6 +11,8 @@ import {REKAM_MEDIS_URL} from "../helpers/constants.js";
 import {toEpochDate} from "../helpers/date-helper.js";
 import KonfigurasiHargaService from "./konfigurasi-harga-service.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
+import DataMasterItemMedisRepository from "../repositories/datamaster-item-medis-repository.js";
+import DataMasterBentukRacikanRepository from "../repositories/datamaster-bentuk-racikan-repository.js";
 
 export default class PrescriptionService {
     static async getByUuid(uuid) {
@@ -246,6 +248,8 @@ export default class PrescriptionService {
         // get all prescription item
         const prescription = await PrescriptionRepository.getByUuid(req.uuid);
 
+        await this.setPriceInPrescription(prescription, konfigurasiHarga, transaction);
+
         try {
             // loop for reduce stock
             for (const obat of prescription.obat) {
@@ -356,6 +360,74 @@ export default class PrescriptionService {
             return await PrescriptionRepository.editPrescriptionItemRacikan(req);
         } else {
             return await PrescriptionRepository.editPrescriptionItem(req);
+        }
+    }
+
+    static async setPriceInPrescription(prescription, konfigurasiHarga, transaction){
+
+        for (const item of prescription.obat){
+            if (item.is_compound){
+                for (const racikan of item.racikan){
+                    const hargaItem = await DataMasterItemMedisRepository.getPrice({
+                        item_medis_uuid : racikan.item_medis_uuid,
+                        jenis_stok_uuid : racikan.jenis_stok_uuid
+                    });
+
+                    if (hargaItem === null){
+                        throw new BadRequestException(`harga item medis ${racikan.item_medis.name} tidak ditemukan`);
+                    }
+
+                    if (konfigurasiHarga.metode_hpp === "avg"){
+                        racikan.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_avg;
+                    } else {
+                        racikan.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
+                    }
+
+                    await PrescriptionRepository.editPrescriptionItemRacikan({
+                        uuid : racikan.uuid,
+                        harga_satuan : racikan.harga_satuan,
+                    }, transaction)
+                }
+
+                // set tarif price
+                const tarif = await DataMasterBentukRacikanRepository.getByUuid(item.bentuk_racikan_uuid);
+                let multiplier = 1;
+
+                if (konfigurasiHarga.metode_biaya_racikan === "paket"){
+                    multiplier = 1 + (item.medication_qty % tarif.jumlah);
+                } else if (konfigurasiHarga.metode_biaya_racikan === "item"){
+                    multiplier = item.racikan.length;
+                } else {
+                    throw new BadRequestException(`metode biaya racikan belum di set`);
+                }
+
+                await PrescriptionRepository.editPrescriptionItem({
+                    uuid : item.uuid,
+                    biaya_racik : tarif.tarif_racik * multiplier,
+                    biaya_embalase : tarif.tarif_embalase * multiplier
+                }, transaction);
+
+            } else {
+                const hargaItem = await DataMasterItemMedisRepository.getPrice({
+                    item_medis_uuid : item.item_medis_uuid,
+                    jenis_stok_uuid : item.jenis_stok_uuid
+                });
+
+                if (hargaItem === null){
+                    throw new BadRequestException(`harga item medis ${item.item_medis.name} tidak ditemukan`);
+                }
+
+                if (konfigurasiHarga.metode_hpp === "avg"){
+                    item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_avg;
+                } else {
+                    item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
+                }
+
+                await PrescriptionRepository.editPrescriptionItem({
+                    uuid : item.uuid,
+                    harga_satuan : item.harga_satuan,
+                }, transaction)
+            }
         }
     }
 }
