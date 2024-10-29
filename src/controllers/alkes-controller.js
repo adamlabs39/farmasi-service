@@ -7,7 +7,6 @@ export default class AlkesController {
         try {
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
             req.body.petugas_order = res.locals.jwtData.username;
-            req.body.token = req.get("Authorization");
 
             const result = await AlkesService.orderAlkes(req.body);
 
@@ -39,7 +38,7 @@ export default class AlkesController {
 
     static async getByUuid(req, res, nextFunction) {
         try {
-            const result = await PrescriptionService.getByUuid(req.params.uuid);
+            const result = await AlkesService.getByUuid(req.params.uuid);
             res.status(200).json(successResponse("data berhasil ditemukan", result));
         } catch (error) {
             nextFunction(error);

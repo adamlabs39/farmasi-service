@@ -3,6 +3,7 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import OrderAlkesItemModel from "./order-alkes-item-model.js";
 
 export default class OrderAlkesModel extends Model {
 }
@@ -100,3 +101,8 @@ OrderAlkesModel.init({
         }
     }
 )
+
+OrderAlkesModel.hasMany(OrderAlkesItemModel, {
+    foreignKey: "order_alkes_uuid",
+    as: "alkes_items"
+})

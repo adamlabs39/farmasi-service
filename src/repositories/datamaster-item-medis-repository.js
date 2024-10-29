@@ -9,6 +9,7 @@ import JenisStokModel from "../models/jenis-stok-model.js";
 import HargaItemModel from "../models/harga-item-model.js";
 import ManufactureModel from "../models/manufacture-model.js";
 import StockMedisModel from "../models/stock-medis-model.js";
+import SatuanModel from "../models/satuan-model.js";
 
 export default class DataMasterItemMedisRepository {
     static async create(req, transaction) {
@@ -113,6 +114,12 @@ export default class DataMasterItemMedisRepository {
                 },
                 attributes : ["uuid", "name", "code"],
                 include: [
+                    {
+                        model : SatuanModel,
+                        as : 'satuan_penggunaan',
+                        required: false,
+                        attributes : ['name']
+                    },
                     {
                         model: ItemMedisJenisStokModel,
                         as: "jenis_stok",

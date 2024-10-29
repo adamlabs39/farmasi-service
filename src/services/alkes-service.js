@@ -18,11 +18,11 @@ import AlkesRepository from "../repositories/alkes-repository.js";
 
 export default class AlkesService {
     static async getByUuid(uuid) {
-        const prescription = await PrescriptionRepository.getByUuid(uuid);
-        if (prescription === null) {
+        const alkes = await AlkesRepository.getByUuid(uuid);
+        if (alkes === null) {
             throw new BadRequestException("data tidak ditemukan");
         }
-        return prescription;
+        return alkes;
     }
 
     static async orderAlkes(req) {

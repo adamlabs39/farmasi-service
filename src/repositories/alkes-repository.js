@@ -27,74 +27,32 @@ export default class AlkesRepository {
                 attributes : {
                   exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
                 },
-                // include: [
-                //     {
-                //         model: PrescriptionItemModel,
-                //         as: 'obat',
-                //         required: false,
-                //         attributes : {
-                //             exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
-                //         },
-                //         include: [
-                //             {
-                //                 model: PrescriptionItemRacikanModel,
-                //                 as: 'racikan',
-                //                 required: false,
-                //                 attributes : {
-                //                     exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
-                //                 },
-                //                 include : [
-                //                     {
-                //                         model : ItemMedisModel,
-                //                         as : 'item_medis',
-                //                         required: false,
-                //                         attributes : ['name', 'uuid'],
-                //                         include : [
-                //                             {
-                //                                 model : SatuanModel,
-                //                                 as : 'satuan_penggunaan',
-                //                                 required: false,
-                //                                 attributes : ['name']
-                //                             }
-                //                         ]
-                //                     },
-                //                 ]
-                //             },
-                //             {
-                //                 model : ItemMedisModel,
-                //                 as : 'item_medis',
-                //                 required: false,
-                //                 attributes : ['name', 'uuid'],
-                //                 include : [
-                //                     {
-                //                         model : SatuanModel,
-                //                         as : 'satuan_penggunaan',
-                //                         required: false,
-                //                         attributes : ['name']
-                //                     }
-                //                 ]
-                //             },
-                //             {
-                //                 model : AturanPakaiModel,
-                //                 as : 'aturan_pakai',
-                //                 required: false,
-                //                 attributes : ['name']
-                //             },
-                //             {
-                //                 model : CaraiPakaiModel,
-                //                 as : 'cara_pakai',
-                //                 required: false,
-                //                 attributes : ['cara_pakai']
-                //             },
-                //             {
-                //                 model : BentukRacikanModel,
-                //                 as : 'bentuk_racikan',
-                //                 required: false,
-                //                 attributes : ['nama_bentuk_racikan']
-                //             }
-                //         ],
-                //     },
-                // ],
+                include : [
+                    {
+                        model : OrderAlkesItemModel,
+                        as : 'alkes_items',
+                        required : false,
+                        attributes : {
+                            exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid', 'item_medis_uuid']
+                        },
+                        include : [
+                            {
+                                model : ItemMedisModel,
+                                as : 'item_medis',
+                                required: false,
+                                attributes : ['name', 'uuid'],
+                                include : [
+                                    {
+                                        model : SatuanModel,
+                                        as : 'satuan_penggunaan',
+                                        required: false,
+                                        attributes : ['name']
+                                    }
+                                ]
+                            },
+                        ]
+                    }
+                ]
             }
         );
     }
