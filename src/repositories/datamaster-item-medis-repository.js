@@ -109,6 +109,7 @@ export default class DataMasterItemMedisRepository {
                     deleted_at: {
                         [Op.is]: null,
                     },
+                    jenis_item : req.jenis_item
                 },
                 attributes : ["uuid", "name", "code"],
                 include: [
