@@ -9,10 +9,6 @@ export default class OrderAlkesModel extends Model {
 
 OrderAlkesModel.init({
         ...identifierModel,
-        item_medis_uuid: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
         no_order_alkes: {
             type: DataTypes.STRING(255),
             allowNull: false,
@@ -34,7 +30,7 @@ OrderAlkesModel.init({
             allowNull: false,
         },
         rekam_medis_date: {
-            type: DataTypes.DATE,
+            type: DataTypes.STRING(20),
             allowNull: false,
         },
         order_status: {
@@ -51,10 +47,6 @@ OrderAlkesModel.init({
         },
         alasan_batal: {
             type: DataTypes.STRING(255),
-        },
-        dokter_order: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
         },
         petugas_verifikasi: {
             type: DataTypes.STRING(255),
@@ -79,6 +71,14 @@ OrderAlkesModel.init({
         },
         waktu_pemberian: {
             type: DataTypes.INTEGER,
+        },
+        lokasi_stok_uuid: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        jenis_pelayanan: {
+            type: DataTypes.ENUM("rj", "ri", "fisio", "igd"),
+            allowNull: false,
         },
         ...fieldTime
     }, {

@@ -13,6 +13,7 @@ import DatamasterBentukRacikanController from "../controllers/datamaster-bentuk-
 import DatamasterItemMedisController from "../controllers/datamaster-item-medis-controller.js";
 import PrescriptionController from "../controllers/prescription-controller.js";
 import PenjualanObatController from "../controllers/penjualan-obat-controller.js";
+import AlkesController from "../controllers/alkes-controller.js";
 
 const apiBase = process.env.API_BASE || "api";
 const apiVersion = process.env.API_VERSION || "v1";
@@ -120,5 +121,8 @@ routes.post(`${baseUrl}/penjualan-obat`, PenjualanObatController.create);
 routes.delete(`${baseUrl}/penjualan-obat/:uuid`, PenjualanObatController.batalOtc);
 routes.get(`${baseUrl}/penjualan-obat`, PenjualanObatController.getAll);
 routes.get(`${baseUrl}/penjualan-obat/:uuid`, PenjualanObatController.getDetail);
+
+// ALKES
+routes.post(`${baseUrl}/alkes`, AlkesController.orderAlkes);
 
 export default routes;

@@ -21,10 +21,6 @@ OrderAlkesItemModel.init({
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        satuan_uuid: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
         harga_satuan: {
             type: DataTypes.FLOAT,
             allowNull: false,
