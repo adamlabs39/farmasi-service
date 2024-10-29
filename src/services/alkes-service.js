@@ -90,34 +90,22 @@ export default class AlkesService {
         }
     }
 
-    static async addAlkes(req) {
+    static async addAlkesItems(req) {
         const transaction = await sequelizeInstance.transaction();
 
-        if (req.obat === null || req.obat === undefined) {
-            throw new BadRequestException("'obat' tidak boleh kosong");
+        if (req.alkes_items === null || req.alkes_items === undefined) {
+            throw new BadRequestException("'alkes_items' tidak boleh kosong");
         }
 
         try {
-            for (const item of req.obat) {
-                item.prescription_uuid = req.prescription_uuid;
-                item.sisa_qty_order = item.medication_qty;
+            for (const item of req.alkes_items) {
+                item.order_alkes_uuid = req.order_alkes_uuid;
                 item.faskes_uuid = req.faskes_uuid;
+                item.harga_satuan = 0;
 
-                ZodValidator.validate(PrescriptionValidation.CREATE_PRESCRIPTION_ITEM, item);
+                ZodValidator.validate(AlkesValidation.CREATE_ALKES_ITEM, item);
 
-                const prescription_item =
-                    await PrescriptionRepository.createPrescriptionItem(item, transaction);
-
-                if (item.racikan !== null && item.racikan !== undefined) {
-                    for (const racikan of item.racikan) {
-                        ZodValidator.validate(PrescriptionValidation.CREATE_PRESCRIPTION_ITEM_RACIKAN, item);
-
-                        racikan.faskes_uuid = req.faskes_uuid;
-                        racikan.prescription_item_uuid = prescription_item.dataValues.uuid;
-
-                        await PrescriptionRepository.createPrescriptionItemRacikan(racikan, transaction);
-                    }
-                }
+                await AlkesRepository.createAlkesItem(item, transaction);
             }
 
 
@@ -129,53 +117,24 @@ export default class AlkesService {
     }
 
     static async deleteAlkes(req) {
-        ZodValidator.validate(PrescriptionValidation.DELETE_PRESCRIPTION_ITEM, req);
-        const result = await PrescriptionRepository.deletePrescriptionItem(req.prescription_uuid);
+        ZodValidator.validate(AlkesValidation.DELETE_ALKES_ITEM, req);
+        const result = await AlkesRepository.deleteAlkesItem(req.alkes_item_uuid);
+
         if (result === 0) {
             throw new BadRequestException("data tidak ditemukan");
         }
         return result;
     }
 
-    static async updatePrescription(req) {
-        ZodValidator.validate(PrescriptionValidation.UPDATE_PRESCRIPTION, req);
-        return await PrescriptionRepository.editPrescription(req);
+    static async updateAlkes(req) {
+        ZodValidator.validate(AlkesValidation.UPDATE_ALKES, req);
+        return await AlkesRepository.editAlkes(req);
     }
 
     static async updateAlkesItem(req) {
-        ZodValidator.validate(PrescriptionValidation.UPDATE_OBAT, req);
+        ZodValidator.validate(AlkesValidation.UPDATE_ALKES_ITEM, req);
 
-        if (req.type === "racikan") {
-            for (const racikan of req.racikan) {
-                if (racikan.uuid === null || racikan.uuid === undefined || racikan.uuid === "") {
-                    ZodValidator.validate(PrescriptionValidation.CREATE_PRESCRIPTION_ITEM_RACIKAN, racikan);
-                    racikan.faskes_uuid = req.faskes_uuid;
-                    racikan.prescription_item_uuid = req.uuid;
-
-                    await PrescriptionRepository.createPrescriptionItemRacikan(racikan);
-
-                    continue;
-                }
-
-                if (racikan.is_deleted) {
-                    await PrescriptionRepository.deletePrescriptionItemRacikan(racikan.uuid);
-
-                    continue;
-                }
-
-                if (racikan.is_updated) {
-                    ZodValidator.validate(PrescriptionValidation.CREATE_PRESCRIPTION_ITEM_RACIKAN, racikan);
-
-                    await PrescriptionRepository.editPrescriptionItemRacikan(racikan);
-                }
-            }
-        }
-
-        return await PrescriptionRepository.editPrescriptionItem(req);
-    }
-
-    static async getHistoryObat(req) {
-        return await PrescriptionRepository.getHistoryObat(req);
+        return await AlkesRepository.editAlkesItem(req);
     }
 
     static async getOrderBySomeUuid(req) {

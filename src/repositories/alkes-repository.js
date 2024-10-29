@@ -1,20 +1,14 @@
 import PrescriptionModel from "../models/prescription-model.js";
 import PrescriptionItemModel from "../models/prescription-item-model.js";
-import PrescriptionItemRacikanModel from "../models/prescription-item-racikan-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
-import moment from "moment";
-import NotfoundException from "../errors/notfound-exception.js";
-import BadRequestException from "../errors/bad-request-exception.js";
-import AturanPakaiModel from "../models/aturan-pakai-model.js";
 import ItemMedisModel from "../models/item-medis-model.js";
 import SatuanModel from "../models/satuan-model.js";
 import {Op} from "sequelize";
 import LokasiStokModel from "../models/lokasi-stok-model.js";
 import Utils from "../helpers/utils.js";
-import CaraiPakaiModel from "../models/cara-pakai-model.js";
-import BentukRacikanModel from "../models/bentuk-racikan-model.js";
 import OrderAlkesModel from "../models/order-alkes-model.js";
 import OrderAlkesItemModel from "../models/order-alkes-item-model.js";
+import InternalServerException from "../errors/internal-server-exception.js";
 
 export default class AlkesRepository {
     // get prescription by uuid
@@ -140,33 +134,22 @@ export default class AlkesRepository {
         );
     }
 
-    // delete prescription item
-    static async deleteAlkesItem(prescription_item_uuid) {
+    // delete alkes item
+    static async deleteAlkesItem(alkes_item_uuid) {
         return await sequelizeInstance.transaction(async (tr) => {
-            const affectedRow = await PrescriptionItemModel.destroy(
+            return await OrderAlkesItemModel.destroy(
                 {
                     where: {
-                        uuid: prescription_item_uuid
+                        uuid: alkes_item_uuid
                     },
                     transaction: tr
                 });
-
-             await PrescriptionItemRacikanModel.destroy(
-                {
-                    where: {
-                        prescription_item_uuid: prescription_item_uuid
-                    },
-                    transaction: tr
-                },
-            );
-
-            return affectedRow;
         });
     }
 
-    // edit prescription
+    // edit alkes
     static async editAlkes(req, transaction) {
-        return await PrescriptionModel.update(
+        const affectedRow = await OrderAlkesModel.update(
             req,
             {
                 where: {
@@ -175,11 +158,17 @@ export default class AlkesRepository {
                 transaction: transaction
             }
         );
+
+        if(affectedRow[0] === 0){
+            throw new InternalServerException("Tidak ada data yang diubah");
+        }
+
+        return affectedRow;
     }
 
-    // edit prescription item
+    // edit alkes item
     static async editAlkesItem(req) {
-        return await PrescriptionItemModel.update(
+        const affectedRow = await OrderAlkesItemModel.update(
             req,
             {
                 where: {
@@ -187,88 +176,12 @@ export default class AlkesRepository {
                 }
             }
         );
-    }
 
-    static async getHistoryAlkes(req){
-        if (req.group_index === null || req.group_index === undefined) {
-            req.group_index = 0;
+        if(affectedRow[0] === 0){
+            throw new InternalServerException("Tidak ada data yang diubah");
         }
 
-        let filter = {
-            no_rm: req.no_rm,
-            faskes_uuid: req.faskes_uuid,
-            order_status : 5
-        };
-
-        if(req.pelayanan !== null && req.pelayanan !== undefined && req.pelayanan !== ""){
-            filter.jenis_pelayanan = req.pelayanan;
-        }
-
-        const prescriptions = await PrescriptionModel.findAll({
-            where: filter,
-            order: [['created_at', 'DESC']],
-            attributes : ['no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date'],
-            include: [
-                {
-                    model: PrescriptionItemModel,
-                    as: 'obat',
-                    attributes : ['medication_qty'],
-                    required: false,
-                    include: [
-                        {
-                            model : AturanPakaiModel,
-                            as : 'aturan_pakai',
-                            required: false,
-                            attributes: ['name']
-                        },
-                        {
-                            model : ItemMedisModel,
-                            as : 'item_medis',
-                            required: false,
-                            attributes: ['name']
-                        },
-                        {
-                            model : SatuanModel,
-                            as : 'satuan_dosis',
-                            required: false,
-                            attributes: ['name']
-                        }
-                    ]
-                },
-            ],
-        });
-
-        if (!prescriptions.length) {
-            throw new NotfoundException('Tidak ada data prescription ditemukan.');
-        }
-
-        const groupedPrescriptions = prescriptions.reduce((groups, prescription) => {
-            const dayKey = moment.unix(prescription.created_at).startOf('day').format('X'); // Format sebagai epoch (X)
-            if (!groups[dayKey]) {
-                groups[dayKey] = [];
-            }
-            groups[dayKey].push(prescription);
-            return groups;
-        }, {});
-
-        const sortedGroupKeys = Object.keys(groupedPrescriptions).sort((a, b) => b - a); // Urutkan berdasarkan hari terbaru
-        const totalGroups = sortedGroupKeys.length;
-
-        if (req.group_index >= totalGroups || req.group_index < 0) {
-            throw new BadRequestException('Index kelompok melebihi batas.');
-        }
-
-        const currentGroupKey = sortedGroupKeys[req.group_index];
-        const currentGroup = groupedPrescriptions[currentGroupKey];
-
-
-        return {
-            data : currentGroup,
-            metadata : {
-                total_pages : totalGroups,
-                page : parseInt(req.group_index) + 1
-            }
-        };
+        return affectedRow;
     }
 
     static async getOrderBySomeUuid(req){

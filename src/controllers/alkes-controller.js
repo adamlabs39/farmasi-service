@@ -17,20 +17,20 @@ export default class AlkesController {
         }
     }
 
-    static async addObat(req, res, nextFunction) {
+    static async addAlkesItems(req, res, nextFunction) {
         try {
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
-            const result = await PrescriptionService.addObat(req.body);
+            req.body.order_alkes_uuid = req.params.uuid;
+            const result = await AlkesService.addAlkesItems(req.body);
             res.status(200).json(successResponse("data berhasil ditambahkan", result));
         } catch (error) {
             nextFunction(error);
         }
     }
 
-    static async deleteObat(req, res, nextFunction) {
+    static async deleteAlkesItem(req, res, nextFunction) {
         try {
-            req.body.prescription_uuid = req.params.prescription_uuid;
-            await PrescriptionService.deleteObat(req.body);
+            await AlkesService.deleteAlkes(req.params);
             res.status(200).json(successResponse("data berhasil dihapus"));
         } catch (error) {
             nextFunction(error);
@@ -46,35 +46,22 @@ export default class AlkesController {
         }
     }
 
-    static async updatePrescription(req, res, nextFunction) {
+    static async updateAlkes(req, res, nextFunction) {
         try {
             req.body.uuid = req.params.uuid;
-            await PrescriptionService.updatePrescription(req.body);
+            await AlkesService.updateAlkes(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);
         }
     }
 
-    static async updateObat(req, res, nextFunction) {
+    static async updateAlkesItem(req, res, nextFunction) {
         try {
             req.body.uuid = req.params.uuid;
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
-            await PrescriptionService.updateObat(req.body);
+            await AlkesService.updateAlkesItem(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
-        } catch (error) {
-            nextFunction(error);
-        }
-    }
-
-    static async getHistoryObat(req, res, nextFunction){
-        try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
-            req.body.no_rm = req.query.no_rm;
-            req.body.group_index = (req.query.page ?? 1) - 1;
-            req.body.pelayanan = req.query.pelayanan;
-            const result = await PrescriptionService.getHistoryObat(req.body);
-            res.status(200).json(successResponse("data berhasil ditemukan", result.data, result.metadata));
         } catch (error) {
             nextFunction(error);
         }
