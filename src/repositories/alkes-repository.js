@@ -271,18 +271,17 @@ export default class AlkesRepository {
         };
     }
 
-    static async getOrderBySomeUuid(uuidArray){
-        return await PrescriptionModel.findAll({
+    static async getOrderBySomeUuid(req){
+        return await OrderAlkesModel.findAll({
             where: {
-                uuid: {
-                    [Op.in]: uuidArray,
-                },
+                rekam_medis_uuid : req.rekam_medis_uuid,
+                rekam_medis_date : req.rekam_medis_date
             },
-            attributes : ['uuid','no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', "is_takeaway", "order_status"],
+            attributes : ['uuid', "order_status", 'no_order_alkes', 'petugas_order', 'created_at'],
             include: [
                 {
-                    model: PrescriptionItemModel,
-                    as: 'obat',
+                    model: OrderAlkesItemModel,
+                    as: 'alkes_items',
                     required: false,
                 },
                 {

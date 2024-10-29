@@ -1,6 +1,7 @@
 import successResponse from "../responses/success-response.js";
 import PrescriptionService from "../services/prescription-service.js";
 import AlkesService from "../services/alkes-service.js";
+import AlkesRepository from "../repositories/alkes-repository.js";
 
 export default class AlkesController {
     static async orderAlkes(req, res, nextFunction) {
@@ -79,9 +80,9 @@ export default class AlkesController {
         }
     }
 
-    static async getOrderBySomeUuid(req, res, nextFunction){
+    static async getOrderByRekamMedis(req, res, nextFunction){
         try {
-            const result = await PrescriptionService.getOrderBySomeUuid(req.body);
+            const result = await AlkesService.getOrderBySomeUuid(req.query);
             res.status(200).json(successResponse("data berhasil ditemukan", result));
         } catch (error) {
             nextFunction(error);

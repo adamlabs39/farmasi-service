@@ -124,6 +124,8 @@ routes.get(`${baseUrl}/penjualan-obat/:uuid`, PenjualanObatController.getDetail)
 
 // ALKES
 routes.post(`${baseUrl}/alkes`, AlkesController.orderAlkes);
+routes.get(`${baseUrl}/alkes/some-order`, AlkesController.getOrderByRekamMedis);
 routes.get(`${baseUrl}/alkes/:uuid`, AlkesController.getByUuid);
+
 
 export default routes;

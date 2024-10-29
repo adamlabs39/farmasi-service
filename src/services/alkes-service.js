@@ -179,26 +179,16 @@ export default class AlkesService {
     }
 
     static async getOrderBySomeUuid(req) {
-        ZodValidator.validate(PrescriptionValidation.GET_SOME_ORDER, req);
-        const rawData = await PrescriptionRepository.getOrderBySomeUuid(req.uuides);
+        ZodValidator.validate(AlkesValidation.GET_SOME_ORDER, req);
+        const rawData = await AlkesRepository.getOrderBySomeUuid(req);
         let data = [];
 
         for (const resep of rawData) {
-            resep.dataValues.jumlah_obat = resep.dataValues.obat.length;
+            resep.dataValues.jumlah_item = resep.dataValues.alkes_items.length;
 
             resep.dataValues.lokasi_stok = resep.dataValues.lokasi_stok.name;
 
-            for (const obatItem of resep.dataValues.obat) {
-                if (obatItem.is_compound) {
-                    resep.dataValues.is_racikan = true;
-                }
-
-                if (obatItem.is_chronic) {
-                    resep.dataValues.is_chronic = true;
-                }
-            }
-
-            resep.dataValues.obat = undefined;
+            resep.dataValues.alkes_items = undefined;
 
             data.push(resep.dataValues);
         }

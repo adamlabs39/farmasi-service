@@ -4,6 +4,7 @@ import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import OrderAlkesItemModel from "./order-alkes-item-model.js";
+import LokasiStokModel from "./lokasi-stok-model.js";
 
 export default class OrderAlkesModel extends Model {
 }
@@ -104,5 +105,12 @@ OrderAlkesModel.init({
 
 OrderAlkesModel.hasMany(OrderAlkesItemModel, {
     foreignKey: "order_alkes_uuid",
-    as: "alkes_items"
+    as: "alkes_items",
+    constraints: false
+})
+
+OrderAlkesModel.belongsTo(LokasiStokModel, {
+    foreignKey: "lokasi_stok_uuid",
+    as: "lokasi_stok",
+    constraints: false
 })

@@ -16,5 +16,10 @@ export default class AlkesValidation {
     static CREATE_ALKES_ITEM = z.object({
         item_medis_uuid: z.string().min(1, required),
         qty: z.number().min(1, required),
+    });
+
+    static GET_SOME_ORDER = z.object({
+        rekam_medis_uuid : z.string().min(1, required),
+        rekam_medis_date : z.string().min(1, required),
     })
 }
