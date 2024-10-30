@@ -5,6 +5,8 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import OrderAlkesItemModel from "./order-alkes-item-model.js";
 import LokasiStokModel from "./lokasi-stok-model.js";
+import {LokasiModel} from "@adameds/model-sdk/datamaster";
+import PatientModel from "./patient-model.js";
 
 export default class OrderAlkesModel extends Model {
 }
@@ -82,6 +84,10 @@ OrderAlkesModel.init({
             type: DataTypes.ENUM("rj", "ri", "fisio", "igd"),
             allowNull: false,
         },
+        lokasi_uuid: {
+            type: DataTypes.STRING(255),
+            allowNull: false
+        },
         ...fieldTime
     }, {
         hooks: hookModel,
@@ -112,5 +118,17 @@ OrderAlkesModel.hasMany(OrderAlkesItemModel, {
 OrderAlkesModel.belongsTo(LokasiStokModel, {
     foreignKey: "lokasi_stok_uuid",
     as: "lokasi_stok",
+    constraints: false
+})
+
+OrderAlkesModel.belongsTo(LokasiModel, {
+    foreignKey: "lokasi_uuid",
+    as: "lokasi",
+    constraints: false
+})
+
+OrderAlkesModel.belongsTo(PatientModel, {
+    foreignKey: "patient_uuid",
+    as: "patient",
     constraints: false
 })

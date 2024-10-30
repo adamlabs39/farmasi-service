@@ -246,40 +246,31 @@ export default class AlkesService {
         return await PrescriptionRepository.editPrescription(req);
     }
 
-    static async getAll(req) {
+    static async getAllForFarmacy(req) {
         ZodValidator.validate(PrescriptionValidation.GET_ALL, req);
-        const rawData = await PrescriptionRepository.getAllPrescription(req);
+        const rawData = await AlkesRepository.getAllForFarmacy(req);
 
-        let resep_masuk = [];
-        let obat_disiapkan = [];
-        let penyerahan_obat = [];
+        let order_masuk = [];
+        let sedang_disiapkan = [];
+        let penyerahan_alkes = [];
 
         for (const resep of rawData) {
-            for (const obat of resep.obat) {
-                if (obat.is_chronic) {
-                    resep.dataValues.is_chronic = true;
-                }
-
-                if (obat.is_compound) {
-                    resep.dataValues.is_compound = true;
-                }
-
-                resep.dataValues.obat = undefined;
-            }
-
             if (resep.order_status === 1) {
-                resep_masuk.push(resep);
+                order_masuk.push(resep);
+            } else if (resep.order_status === 2) {
+                sedang_disiapkan.push(resep);
             } else if (resep.order_status === 3) {
-                obat_disiapkan.push(resep);
-            } else if (resep.order_status === 4) {
-                penyerahan_obat.push(resep);
+                penyerahan_alkes.push(resep);
             }
+
+            resep.dataValues.patient = resep.patient.name;
+            resep.dataValues.lokasi = resep.lokasi.name;
         }
 
         return {
-            resep_masuk,
-            obat_disiapkan,
-            penyerahan_obat
+            order_masuk,
+            sedang_disiapkan,
+            penyerahan_alkes
         }
     }
 

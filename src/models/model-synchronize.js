@@ -24,6 +24,7 @@ import SatuanModel from "./satuan-model.js";
 import StockMedisModel from "./stock-medis-model.js";
 import HargaItemModel from "./harga-item-model.js";
 import ItemMedisJenisStokModel from "./item-medis-jenis-stok-model.js";
+import PatientModel from "./patient-model.js";
 
 const MODELMERGE = [
     // JenisStokModel,
@@ -43,6 +44,7 @@ const MODELMERGE = [
     // ManufactureModel,
     OrderAlkesItemModel,
     OrderAlkesModel,
+    // PatientModel
     // PenjualanObatModel,
     // PrescriptionItemModel,
     // PrescriptionItemRacikanModel,

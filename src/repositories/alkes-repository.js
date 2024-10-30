@@ -9,6 +9,8 @@ import Utils from "../helpers/utils.js";
 import OrderAlkesModel from "../models/order-alkes-model.js";
 import OrderAlkesItemModel from "../models/order-alkes-item-model.js";
 import InternalServerException from "../errors/internal-server-exception.js";
+import {LokasiModel} from "@adameds/model-sdk/datamaster";
+import PatientModel from "../models/patient-model.js";
 
 export default class AlkesRepository {
     // get prescription by uuid
@@ -202,6 +204,58 @@ export default class AlkesRepository {
                     as : 'lokasi_stok',
                     required: false,
                     attributes : ["name"]
+                }
+            ],
+        });
+    }
+
+    static getAllForFarmacy(req){
+        req.search = Utils.nullToType(req.search)
+        req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
+
+        req.start_date = Utils.numberTo13Digit(req.start_date)
+        req.end_date = Utils.numberTo13Digit(req.end_date)
+
+        return OrderAlkesModel.findAll({
+            where: {
+                order_status : {
+                    [Op.in]: [1, 2, 3]
+                },
+                faskes_uuid : req.faskes_uuid,
+                [Op.or]: [
+                    { no_order_alkes: { [Op.iLike]: `%${req.search}%` } },
+                    { no_rm: { [Op.iLike]: `%${req.search}%` } },
+                    sequelizeInstance.where(
+                        sequelizeInstance.col('patient.name'),
+                        {[Op.iLike]: `%${req.search || ''}%`}
+                    )
+                ],
+                created_at : {
+                    [Op.between]: [req.start_date, req.end_date]
+                },
+                lokasi_stok_uuid : { [Op.like]: `%${req.lokasi_stok_uuid}%` },
+            },
+            attributes : [
+                'uuid',
+                'no_order_alkes',
+                'order_status',
+                'petugas_order',
+                'created_at',
+                "no_reg",
+                "no_rm",
+            ],
+            include: [
+                {
+                    model : LokasiModel,
+                    as : 'lokasi',
+                    required : false,
+                    attributes : ['name']
+                },
+                {
+                    model : PatientModel,
+                    as : 'patient',
+                    required : false,
+                    attributes : ['name']
                 }
             ],
         });

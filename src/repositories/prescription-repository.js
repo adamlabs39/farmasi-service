@@ -13,6 +13,7 @@ import LokasiStokModel from "../models/lokasi-stok-model.js";
 import Utils from "../helpers/utils.js";
 import CaraiPakaiModel from "../models/cara-pakai-model.js";
 import BentukRacikanModel from "../models/bentuk-racikan-model.js";
+import PatientModel from "../models/patient-model.js";
 
 export default class PrescriptionRepository {
     // get prescription by uuid
@@ -22,15 +23,15 @@ export default class PrescriptionRepository {
                 where: {
                     uuid: uuid
                 },
-                attributes : {
-                  exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
+                attributes: {
+                    exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
                 },
                 include: [
                     {
                         model: PrescriptionItemModel,
                         as: 'obat',
                         required: false,
-                        attributes : {
+                        attributes: {
                             exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
                         },
                         include: [
@@ -38,57 +39,57 @@ export default class PrescriptionRepository {
                                 model: PrescriptionItemRacikanModel,
                                 as: 'racikan',
                                 required: false,
-                                attributes : {
+                                attributes: {
                                     exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
                                 },
-                                include : [
+                                include: [
                                     {
-                                        model : ItemMedisModel,
-                                        as : 'item_medis',
+                                        model: ItemMedisModel,
+                                        as: 'item_medis',
                                         required: false,
-                                        attributes : ['name', 'uuid'],
-                                        include : [
+                                        attributes: ['name', 'uuid'],
+                                        include: [
                                             {
-                                                model : SatuanModel,
-                                                as : 'satuan_penggunaan',
+                                                model: SatuanModel,
+                                                as: 'satuan_penggunaan',
                                                 required: false,
-                                                attributes : ['name']
+                                                attributes: ['name']
                                             }
                                         ]
                                     },
                                 ]
                             },
                             {
-                                model : ItemMedisModel,
-                                as : 'item_medis',
+                                model: ItemMedisModel,
+                                as: 'item_medis',
                                 required: false,
-                                attributes : ['name', 'uuid'],
-                                include : [
+                                attributes: ['name', 'uuid'],
+                                include: [
                                     {
-                                        model : SatuanModel,
-                                        as : 'satuan_penggunaan',
+                                        model: SatuanModel,
+                                        as: 'satuan_penggunaan',
                                         required: false,
-                                        attributes : ['name']
+                                        attributes: ['name']
                                     }
                                 ]
                             },
                             {
-                                model : AturanPakaiModel,
-                                as : 'aturan_pakai',
+                                model: AturanPakaiModel,
+                                as: 'aturan_pakai',
                                 required: false,
-                                attributes : ['name']
+                                attributes: ['name']
                             },
                             {
-                                model : CaraiPakaiModel,
-                                as : 'cara_pakai',
+                                model: CaraiPakaiModel,
+                                as: 'cara_pakai',
                                 required: false,
-                                attributes : ['cara_pakai']
+                                attributes: ['cara_pakai']
                             },
                             {
-                                model : BentukRacikanModel,
-                                as : 'bentuk_racikan',
+                                model: BentukRacikanModel,
+                                as: 'bentuk_racikan',
                                 required: false,
-                                attributes : ['nama_bentuk_racikan']
+                                attributes: ['nama_bentuk_racikan']
                             }
                         ],
                     },
@@ -124,32 +125,36 @@ export default class PrescriptionRepository {
         req.start_date = Utils.numberTo13Digit(req.start_date)
         req.end_date = Utils.numberTo13Digit(req.end_date)
 
-        let wherePrescription =  {
+        let wherePrescription = {
             faskes_uuid: req.faskes_uuid,
-                [Op.or]: [
-                { no_resep: { [Op.iLike]: `%${req.search}%` } },
-                { no_rm: { [Op.iLike]: `%${req.search}%` } }
+            [Op.or]: [
+                {no_resep: {[Op.iLike]: `%${req.search}%`}},
+                {no_rm: {[Op.iLike]: `%${req.search}%`}},
+                sequelizeInstance.where(
+                    sequelizeInstance.col('patient.name'),
+                    {[Op.iLike]: `%${req.search || ''}%`}
+                )
             ],
-                lokasi_stok_uuid : { [Op.like]: `%${req.lokasi_stok_uuid}%` },
-            order_date : {
+            lokasi_stok_uuid: {[Op.like]: `%${req.lokasi_stok_uuid}%`},
+            order_date: {
                 [Op.between]: [req.start_date, req.end_date]
             },
-            order_status : {
+            order_status: {
                 [Op.between]: [1, 4]
             }
         }
 
-        if (req.jenis_pelayanan !== ""){
+        if (req.jenis_pelayanan !== "") {
             wherePrescription.jenis_pelayanan = req.jenis_pelayanan
         }
 
-        if(req.takeaway !== ""){
+        if (req.takeaway !== "") {
             wherePrescription.is_takeaway = true
         }
 
         let wherePrescriptionItem = {}
 
-        if (req.racikan !== ""){
+        if (req.racikan !== "") {
             wherePrescriptionItem.is_compound = true
         }
 
@@ -159,15 +164,21 @@ export default class PrescriptionRepository {
 
         return await PrescriptionModel.findAll(
             {
-                where : wherePrescription,
-                attributes : ['uuid','no_rm', 'no_reg' ,'no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', 'is_takeaway', 'order_status'],
-                include : [
+                where: wherePrescription,
+                attributes: ['uuid', 'no_rm', 'no_reg', 'no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', 'is_takeaway', 'order_status'],
+                include: [
                     {
                         model: PrescriptionItemModel,
                         as: 'obat',
-                        required : (req.is_chronic === true) || (req.racikan === true),
-                        attributes : ["is_chronic", "is_compound"],
-                        where : wherePrescriptionItem,
+                        required: (req.is_chronic === true) || (req.racikan === true),
+                        attributes: ["is_chronic", "is_compound"],
+                        where: wherePrescriptionItem,
+                    },
+                    {
+                        model: PatientModel,
+                        as: 'patient',
+                        required: false,
+                        attributes: ['name']
                     }
                 ]
             },
@@ -207,7 +218,7 @@ export default class PrescriptionRepository {
                     transaction: tr
                 });
 
-             await PrescriptionItemRacikanModel.destroy(
+            await PrescriptionItemRacikanModel.destroy(
                 {
                     where: {
                         prescription_item_uuid: prescription_item_uuid
@@ -268,7 +279,7 @@ export default class PrescriptionRepository {
         );
     }
 
-    static async getHistoryObat(req){
+    static async getHistoryObat(req) {
         if (req.group_index === null || req.group_index === undefined) {
             req.group_index = 0;
         }
@@ -276,39 +287,39 @@ export default class PrescriptionRepository {
         let filter = {
             no_rm: req.no_rm,
             faskes_uuid: req.faskes_uuid,
-            order_status : 5
+            order_status: 5
         };
 
-        if(req.pelayanan !== null && req.pelayanan !== undefined && req.pelayanan !== ""){
+        if (req.pelayanan !== null && req.pelayanan !== undefined && req.pelayanan !== "") {
             filter.jenis_pelayanan = req.pelayanan;
         }
 
         const prescriptions = await PrescriptionModel.findAll({
             where: filter,
             order: [['created_at', 'DESC']],
-            attributes : ['no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date'],
+            attributes: ['no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date'],
             include: [
                 {
                     model: PrescriptionItemModel,
                     as: 'obat',
-                    attributes : ['medication_qty'],
+                    attributes: ['medication_qty'],
                     required: false,
                     include: [
                         {
-                            model : AturanPakaiModel,
-                            as : 'aturan_pakai',
+                            model: AturanPakaiModel,
+                            as: 'aturan_pakai',
                             required: false,
                             attributes: ['name']
                         },
                         {
-                            model : ItemMedisModel,
-                            as : 'item_medis',
+                            model: ItemMedisModel,
+                            as: 'item_medis',
                             required: false,
                             attributes: ['name']
                         },
                         {
-                            model : SatuanModel,
-                            as : 'satuan_dosis',
+                            model: SatuanModel,
+                            as: 'satuan_dosis',
                             required: false,
                             attributes: ['name']
                         }
@@ -342,22 +353,22 @@ export default class PrescriptionRepository {
 
 
         return {
-            data : currentGroup,
-            metadata : {
-                total_pages : totalGroups,
-                page : parseInt(req.group_index) + 1
+            data: currentGroup,
+            metadata: {
+                total_pages: totalGroups,
+                page: parseInt(req.group_index) + 1
             }
         };
     }
 
-    static async getOrderBySomeUuid(uuidArray){
+    static async getOrderBySomeUuid(uuidArray) {
         return await PrescriptionModel.findAll({
             where: {
                 uuid: {
                     [Op.in]: uuidArray,
                 },
             },
-            attributes : ['uuid','no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', "is_takeaway", "order_status"],
+            attributes: ['uuid', 'no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', "is_takeaway", "order_status"],
             include: [
                 {
                     model: PrescriptionItemModel,
@@ -365,10 +376,10 @@ export default class PrescriptionRepository {
                     required: false,
                 },
                 {
-                    model : LokasiStokModel,
-                    as : 'lokasi_stok',
+                    model: LokasiStokModel,
+                    as: 'lokasi_stok',
                     required: false,
-                    attributes : ["name"]
+                    attributes: ["name"]
                 }
             ],
         });

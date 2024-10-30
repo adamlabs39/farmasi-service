@@ -144,10 +144,10 @@ export default class AlkesController {
         }
     }
 
-    static async getAll(req, res, nextFunction) {
+    static async getAllForFarmacy(req, res, nextFunction) {
         try {
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
-            const result = await PrescriptionService.getAll(req.body);
+            const result = await AlkesService.getAllForFarmacy(req.body);
             res.status(200).json(successResponse("data berhasil diupdate", result));
         } catch (error) {
             nextFunction(error);

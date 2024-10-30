@@ -337,6 +337,8 @@ export default class PrescriptionService {
                 resep.dataValues.obat = undefined;
             }
 
+            resep.dataValues.patient = resep.patient.name;
+
             if (resep.order_status === 1) {
                 resep_masuk.push(resep);
             } else if (resep.order_status === 3) {
