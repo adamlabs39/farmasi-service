@@ -88,7 +88,8 @@ export default class AlkesController {
     static async batalOrder(req, res, nextFunction){
         try {
             req.body.petugas_pembatalan = res.locals.jwtData.username;
-            await PrescriptionService.batalOrder(req.body);
+            req.body.uuid = req.params.uuid;
+            await AlkesService.batalOrder(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);

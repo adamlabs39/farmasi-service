@@ -133,6 +133,7 @@ routes.delete(`${baseUrl}/alkes/items/:alkes_item_uuid`, AlkesController.deleteA
 routes.put(`${baseUrl}/alkes/:uuid`, AlkesController.updateAlkes);
 routes.put(`${baseUrl}/alkes/items/:uuid`, AlkesController.updateAlkesItem);
 routes.put(`${baseUrl}/alkes/items/:uuid/jenis-stok`, AlkesController.updateJenisStokItem);
+routes.delete(`${baseUrl}/alkes/:uuid`, AlkesController.batalOrder);
 
 
 

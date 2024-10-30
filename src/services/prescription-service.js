@@ -233,7 +233,7 @@ export default class PrescriptionService {
 
     static async batalOrder(req) {
         ZodValidator.validate(PrescriptionValidation.BATAL_ORDER, req);
-        req.order_status = 1;
+        req.order_status = 0;
         return await PrescriptionRepository.editPrescription(req);
     }
 
