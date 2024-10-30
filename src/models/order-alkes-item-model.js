@@ -4,6 +4,7 @@ import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import ItemMedisModel from "./item-medis-model.js";
+import JenisStokModel from "./jenis-stok-model.js";
 
 export default class OrderAlkesItemModel extends Model {
 }
@@ -26,6 +27,9 @@ OrderAlkesItemModel.init({
             type: DataTypes.FLOAT,
             allowNull: false,
         },
+        jenis_stok_uuid: {
+            type: DataTypes.STRING(255),
+        },
         ...fieldTime
     }, {
         hooks: hookModel,
@@ -45,4 +49,9 @@ OrderAlkesItemModel.init({
 OrderAlkesItemModel.belongsTo(ItemMedisModel, {
     foreignKey: 'item_medis_uuid',
     as: 'item_medis'
+});
+
+OrderAlkesItemModel.belongsTo(JenisStokModel, {
+    foreignKey: 'jenis_stok_uuid',
+    as: 'jenis_stok'
 });

@@ -39,4 +39,9 @@ export default class AlkesValidation {
         qty: z.number().min(1, required),
         item_medis_uuid: z.string().min(1, required),
     });
+
+    static UPDATE_JENIS_ITEM = z.object({
+        uuid: z.string().min(1, required),
+        jenis_stok_uuid: z.string().min(1, required),
+    })
 }

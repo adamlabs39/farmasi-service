@@ -126,11 +126,13 @@ routes.get(`${baseUrl}/penjualan-obat/:uuid`, PenjualanObatController.getDetail)
 routes.post(`${baseUrl}/alkes`, AlkesController.orderAlkes);
 routes.get(`${baseUrl}/alkes/some-order`, AlkesController.getOrderByRekamMedis);
 routes.get(`${baseUrl}/alkes/all`, AlkesController.getAllForFarmacy);
+routes.put(`${baseUrl}/alkes/lokasi-stok`, AlkesController.updateLokasiStok);
 routes.post(`${baseUrl}/alkes/:uuid/items`, AlkesController.addAlkesItems);
 routes.get(`${baseUrl}/alkes/:uuid`, AlkesController.getByUuid);
 routes.delete(`${baseUrl}/alkes/items/:alkes_item_uuid`, AlkesController.deleteAlkesItem);
 routes.put(`${baseUrl}/alkes/:uuid`, AlkesController.updateAlkes);
 routes.put(`${baseUrl}/alkes/items/:uuid`, AlkesController.updateAlkesItem);
+routes.put(`${baseUrl}/alkes/items/:uuid/jenis-stok`, AlkesController.updateJenisStokItem);
 
 
 

@@ -399,7 +399,7 @@ export default class PrescriptionService {
                 let multiplier = 1;
 
                 if (konfigurasiHarga.metode_biaya_racikan === "paket") {
-                    multiplier = 1 + (item.medication_qty % tarif.jumlah);
+                    multiplier = 1 + Math.floor(item.medication_qty / tarif.jumlah);
                 } else if (konfigurasiHarga.metode_biaya_racikan === "item") {
                     multiplier = item.racikan.length;
                 } else {

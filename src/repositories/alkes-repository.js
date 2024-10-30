@@ -11,6 +11,7 @@ import OrderAlkesItemModel from "../models/order-alkes-item-model.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import {LokasiModel} from "@adameds/model-sdk/datamaster";
 import PatientModel from "../models/patient-model.js";
+import JenisStokModel from "../models/jenis-stok-model.js";
 
 export default class AlkesRepository {
     // get prescription by uuid
@@ -46,6 +47,12 @@ export default class AlkesRepository {
                                     }
                                 ]
                             },
+                            {
+                                model : JenisStokModel,
+                                as : 'jenis_stok',
+                                required: false,
+                                attributes : ['name', 'uuid']
+                            }
                         ]
                     }
                 ]

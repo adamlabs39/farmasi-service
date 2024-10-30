@@ -243,7 +243,7 @@ export default class AlkesService {
 
     static async updateLokasiStok(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_LOKASI_STOK, req);
-        return await PrescriptionRepository.editPrescription(req);
+        return await AlkesRepository.editAlkesItem(req);
     }
 
     static async getAllForFarmacy(req) {
@@ -275,13 +275,9 @@ export default class AlkesService {
     }
 
     static async updateJenisItem(req) {
-        ZodValidator.validate(PrescriptionValidation.UPDATE_JENIS_ITEM, req);
+        ZodValidator.validate(AlkesValidation.UPDATE_JENIS_ITEM, req);
 
-        if (req.is_racikan) {
-            return await PrescriptionRepository.editPrescriptionItemRacikan(req);
-        } else {
-            return await PrescriptionRepository.editPrescriptionItem(req);
-        }
+        return await AlkesRepository.editAlkesItem(req);
     }
 
     static async setPriceInPrescription(prescription, konfigurasiHarga, transaction) {
