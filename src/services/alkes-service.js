@@ -176,41 +176,28 @@ export default class AlkesService {
         const konfigurasiHarga = await KonfigurasiHargaService.get(req);
 
         // get all prescription item
-        const prescription = await PrescriptionRepository.getByUuid(req.uuid);
-
+        const alkes = await AlkesRepository.getByUuid(req.uuid);
 
         try {
-            req.total_harga = await this.setPriceInPrescription(prescription, konfigurasiHarga, transaction);
+            req.harga_total = await this.setPriceInOrderAlkes(alkes, konfigurasiHarga, transaction);
 
             // loop for reduce stock
-            for (const obat of prescription.obat) {
-                if (obat.is_compound) {
-                    for (const racikan of obat.racikan) {
-                        await StockMedisRepository.reduceQuantity({
-                            item_medis_uuid: racikan.item_medis_uuid,
-                            jenis_stok_uuid: racikan.jenis_stok_uuid,
-                            quantity: racikan.medication_qty,
-                            metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
-                            name: racikan.item_medis.name,
-                            lokasi_stok_uuid: prescription.lokasi_stok_uuid
-                        }, transaction)
-                    }
-                } else {
+            for (const alkesIitem of alkes.alkes_items) {
                     await StockMedisRepository.reduceQuantity({
-                        item_medis_uuid: obat.item_medis_uuid,
-                        jenis_stok_uuid: obat.jenis_stok_uuid,
-                        quantity: obat.medication_qty,
-                        lokasi_stok_uuid: prescription.lokasi_stok_uuid,
+                        item_medis_uuid: alkesIitem.item_medis_uuid,
+                        jenis_stok_uuid: alkesIitem.jenis_stok_uuid,
+                        quantity: alkesIitem.qty,
+                        lokasi_stok_uuid: alkes.lokasi_stok_uuid,
                         metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
-                        name: obat.item_medis.name
+                        name: alkesIitem.item_medis.name
                     }, transaction)
-                }
+
             }
 
             // update prescription
-            req.order_status = 3;
+            req.order_status = 2;
             req.waktu_verifikasi = toEpochDate(new Date());
-            await PrescriptionRepository.editPrescription(req, transaction);
+            await AlkesRepository.editAlkes(req, transaction);
 
             await transaction.commit();
         } catch (e) {
@@ -218,7 +205,7 @@ export default class AlkesService {
             throw e;
         }
 
-        return prescription;
+        return alkes;
     }
 
     static async updateSiapDiserahkan(req) {
@@ -280,56 +267,10 @@ export default class AlkesService {
         return await AlkesRepository.editAlkesItem(req);
     }
 
-    static async setPriceInPrescription(prescription, konfigurasiHarga, transaction) {
+    static async setPriceInOrderAlkes(alkes, konfigurasiHarga, transaction) {
         let totalHarga = 0;
 
-        for (const item of prescription.obat) {
-            if (item.is_compound) {
-                for (const racikan of item.racikan) {
-                    const hargaItem = await DataMasterItemMedisRepository.getPrice({
-                        item_medis_uuid: racikan.item_medis_uuid,
-                        jenis_stok_uuid: racikan.jenis_stok_uuid
-                    });
-
-                    if (hargaItem === null) {
-                        throw new BadRequestException(`harga item medis ${racikan.item_medis.name} tidak ditemukan`);
-                    }
-
-                    if (konfigurasiHarga.metode_hpp === "avg") {
-                        racikan.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_avg;
-                    } else {
-                        racikan.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
-                    }
-
-                    totalHarga += racikan.harga_satuan * racikan.medication_qty;
-
-                    await PrescriptionRepository.editPrescriptionItemRacikan({
-                        uuid: racikan.uuid,
-                        harga_satuan: racikan.harga_satuan,
-                    }, transaction)
-                }
-
-                // set tarif price
-                const tarif = await DataMasterBentukRacikanRepository.getByUuid(item.bentuk_racikan_uuid);
-                let multiplier = 1;
-
-                if (konfigurasiHarga.metode_biaya_racikan === "paket") {
-                    multiplier = 1 + (item.medication_qty % tarif.jumlah);
-                } else if (konfigurasiHarga.metode_biaya_racikan === "item") {
-                    multiplier = item.racikan.length;
-                } else {
-                    throw new BadRequestException(`metode biaya racikan belum di set`);
-                }
-
-                totalHarga += ((tarif.tarif_racik * multiplier) + (tarif.tarif_embalase * multiplier));
-
-                await PrescriptionRepository.editPrescriptionItem({
-                    uuid: item.uuid,
-                    biaya_racik: tarif.tarif_racik * multiplier,
-                    biaya_embalase: tarif.tarif_embalase * multiplier
-                }, transaction);
-
-            } else {
+        for (const item of alkes.alkes_items) {
                 const hargaItem = await DataMasterItemMedisRepository.getPrice({
                     item_medis_uuid: item.item_medis_uuid,
                     jenis_stok_uuid: item.jenis_stok_uuid
@@ -345,13 +286,12 @@ export default class AlkesService {
                     item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
                 }
 
-                totalHarga += item.harga_satuan * item.medication_qty;
+                totalHarga += item.harga_satuan * item.qty;
 
-                await PrescriptionRepository.editPrescriptionItem({
+                await AlkesRepository.editAlkesItem({
                     uuid: item.uuid,
                     harga_satuan: item.harga_satuan,
                 }, transaction)
-            }
         }
 
         return totalHarga;

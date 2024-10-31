@@ -127,6 +127,7 @@ routes.post(`${baseUrl}/alkes`, AlkesController.orderAlkes);
 routes.get(`${baseUrl}/alkes/some-order`, AlkesController.getOrderByRekamMedis);
 routes.get(`${baseUrl}/alkes/all`, AlkesController.getAllForFarmacy);
 routes.put(`${baseUrl}/alkes/lokasi-stok`, AlkesController.updateLokasiStok);
+routes.put(`${baseUrl}/alkes/update-verifikasi`, AlkesController.updateVerifikasi);
 routes.post(`${baseUrl}/alkes/:uuid/items`, AlkesController.addAlkesItems);
 routes.get(`${baseUrl}/alkes/:uuid`, AlkesController.getByUuid);
 routes.delete(`${baseUrl}/alkes/items/:alkes_item_uuid`, AlkesController.deleteAlkesItem);

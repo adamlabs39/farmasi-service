@@ -100,7 +100,7 @@ export default class AlkesController {
         try {
             req.body.petugas_verifikasi = res.locals.jwtData.username;
             req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
-            await PrescriptionService.updateVerifikasi(req.body);
+            await AlkesService.updateVerifikasi(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);

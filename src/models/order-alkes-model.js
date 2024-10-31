@@ -68,13 +68,13 @@ OrderAlkesModel.init({
             type: DataTypes.STRING(255),
         },
         waktu_verifikasi: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         waktu_penyiapan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         waktu_pemberian: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         lokasi_stok_uuid: {
             type: DataTypes.STRING(255),

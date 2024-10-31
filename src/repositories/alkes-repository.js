@@ -30,7 +30,7 @@ export default class AlkesRepository {
                         as : 'alkes_items',
                         required : false,
                         attributes : {
-                            exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid', 'item_medis_uuid']
+                            exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
                         },
                         include : [
                             {
