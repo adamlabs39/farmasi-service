@@ -390,7 +390,7 @@ export default class PrescriptionRepository {
             where: {
                 uuid: item_uuid
             },
-            include : ['prescription_uuid']
+            attributes : ['prescription_uuid']
         })
     }
 }

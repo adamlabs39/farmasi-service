@@ -41,9 +41,9 @@ const MODELMERGE = [
     // KategoriObatModel,
     // KonfigurasiHargaModel,
     // LokasiStokModel,
-    // ManufactureModel,
-    OrderAlkesItemModel,
-    OrderAlkesModel,
+    ManufactureModel,
+    // OrderAlkesItemModel,
+    // OrderAlkesModel,
     // PatientModel
     // PenjualanObatModel,
     // PrescriptionItemModel,

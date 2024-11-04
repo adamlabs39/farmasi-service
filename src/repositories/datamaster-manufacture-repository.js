@@ -2,6 +2,7 @@ import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import ManufactureModel from "../models/manufacture-model.js";
+import {KabupatenModel, KecamatanModel, KelurahanModel, ProvinceModel} from "@adameds/model-sdk/datamaster";
 
 export default class DataMasterManufactureRepository {
     static async create(req) {
@@ -17,6 +18,40 @@ export default class DataMasterManufactureRepository {
                     [Op.is]: null,
                 },
             },
+            include: [
+                {
+                    model: ProvinceModel,
+                    as: "province",
+                    required: false,
+                    attributes: [
+                        "code", "name"
+                    ]
+                },
+                {
+                    model: KabupatenModel,
+                    as: "kabupaten",
+                    required: false,
+                    attributes: [
+                        "code", "name"
+                    ]
+                },
+                {
+                    model: KecamatanModel,
+                    as: "kecamatan",
+                    required: false,
+                    attributes: [
+                        "code", "name"
+                    ]
+                },
+                {
+                    model: KelurahanModel,
+                    as: "kelurahan",
+                    required: false,
+                    attributes: [
+                        "code", "name"
+                    ]
+                }
+            ],
         };
 
         return Pagination.init(ManufactureModel, req, option);

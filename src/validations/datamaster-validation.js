@@ -39,7 +39,11 @@ export default class DatamasterValidation {
         name : z.string().min(1, required),
         code : z.string().min(1, required),
         alamat : z.string().min(1, required),
-        demografi_wilayah_code : z.string().min(1, required),
+        kecamatan_code : z.string().min(1, required),
+        provinsi_code : z.string().min(1, required),
+        kabupaten_code : z.string().min(1, required),
+        kelurahan_code : z.string().min(1, required),
+        kode_pos : z.string().min(1, required)
     });
 
     static CREATE_LOKASI_STOK = z.object({
