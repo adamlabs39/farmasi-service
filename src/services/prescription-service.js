@@ -118,6 +118,8 @@ export default class PrescriptionService {
 
         try {
             for (const item of req.obat) {
+                await this.statusLessThan(req.prescription_uuid, 2);
+
                 item.prescription_uuid = req.prescription_uuid;
                 item.sisa_qty_order = item.medication_qty;
                 item.faskes_uuid = req.faskes_uuid;
@@ -149,7 +151,11 @@ export default class PrescriptionService {
 
     static async deleteObat(req) {
         ZodValidator.validate(PrescriptionValidation.DELETE_PRESCRIPTION_ITEM, req);
-        const result = await PrescriptionRepository.deletePrescriptionItem(req.prescription_uuid);
+
+        const item = await PrescriptionRepository.getPrescriptionUuidByObat(req.prescription_item_uuid);
+        await this.statusLessThan(item.prescription_uuid, 2);
+
+        const result = await PrescriptionRepository.deletePrescriptionItem(req.prescription_item_uuid);
         if (result === 0) {
             throw new BadRequestException("data tidak ditemukan");
         }
@@ -158,11 +164,17 @@ export default class PrescriptionService {
 
     static async updatePrescription(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_PRESCRIPTION, req);
+
+        await this.statusLessThan(req.uuid, 2);
+
         return await PrescriptionRepository.editPrescription(req);
     }
 
     static async updateObat(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_OBAT, req);
+
+        const item = await PrescriptionRepository.getPrescriptionUuidByObat(req.uuid);
+        await this.statusLessThan(item.prescription_uuid, 2);
 
         if (req.type === "racikan") {
             for (const racikan of req.racikan) {
@@ -242,6 +254,8 @@ export default class PrescriptionService {
 
         const transaction = await sequelizeInstance.transaction();
 
+        await this.statusLessThan(req.uuid, 2);
+
         // get konfigurasi harga
         const konfigurasiHarga = await KonfigurasiHargaService.get(req);
 
@@ -293,6 +307,10 @@ export default class PrescriptionService {
 
     static async updateSiapDiserahkan(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_SIAP_DISERAHKAN, req);
+
+        await this.statusLessThan(req.uuid, 3);
+
+
         req.order_status = 4;
         req.waktu_penyiapan = toEpochDate(new Date());
         return await PrescriptionRepository.editPrescription(req);
@@ -300,12 +318,14 @@ export default class PrescriptionService {
 
     static async batalSiapDiserahkan(req) {
         ZodValidator.validate(PrescriptionValidation.BATAL_DISERAHKAN, req);
+        await this.statusLessThan(req.uuid, 5);
         req.order_status = 4;
         return await PrescriptionRepository.editPrescription(req);
     }
 
     static async updateDiserahkan(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_SERAHKAN, req);
+        await this.statusLessThan(req.uuid, 5);
         req.order_status = 5;
         req.waktu_pemberian = toEpochDate(new Date());
         return await PrescriptionRepository.editPrescription(req);
@@ -440,5 +460,20 @@ export default class PrescriptionService {
         }
 
         return totalHarga;
+    }
+
+    static async statusLessThan(uuid, orderStatus){
+        if (!uuid){
+            throw new BadRequestException("prescription uuid tidak boleh kosong");
+        }
+
+        const prescription = await PrescriptionRepository.getByUuid(uuid);
+        if(prescription === null){
+            throw new BadRequestException("data prescription tidak ditemukan");
+        }
+
+        if(prescription.order_status > orderStatus){
+            throw new BadRequestException("order status tidak memungkinkan aksi ini");
+        }
     }
 }

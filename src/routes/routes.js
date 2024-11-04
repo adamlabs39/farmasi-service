@@ -100,7 +100,7 @@ routes.put(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.upda
 // ORDER OBAT
 routes.post(`${baseUrl}/prescriptions/first-order`, PrescriptionController.orderObat);
 routes.post(`${baseUrl}/prescriptions/add-obat`, PrescriptionController.addObat);
-routes.delete(`${baseUrl}/prescriptions/obat/:prescription_uuid`, PrescriptionController.deleteObat);
+routes.delete(`${baseUrl}/prescriptions/obat/:prescription_item_uuid`, PrescriptionController.deleteObat);
 routes.get(`${baseUrl}/prescriptions/:uuid`, PrescriptionController.getByUuid);
 routes.put(`${baseUrl}/prescriptions/:uuid`, PrescriptionController.updatePrescription);
 routes.put(`${baseUrl}/prescriptions/obat/:uuid`, PrescriptionController.updateObat);
@@ -128,6 +128,9 @@ routes.get(`${baseUrl}/alkes/some-order`, AlkesController.getOrderByRekamMedis);
 routes.get(`${baseUrl}/alkes/all`, AlkesController.getAllForFarmacy);
 routes.put(`${baseUrl}/alkes/lokasi-stok`, AlkesController.updateLokasiStok);
 routes.put(`${baseUrl}/alkes/update-verifikasi`, AlkesController.updateVerifikasi);
+routes.put(`${baseUrl}/alkes/siap-diserahkan`, AlkesController.updateSiapDiserahkan);
+routes.put(`${baseUrl}/alkes/diserahkan`, AlkesController.updateDiserahkan);
+routes.put(`${baseUrl}/alkes/batal-siap-diserahkan`, AlkesController.batalSiapDiserahkan);
 routes.post(`${baseUrl}/alkes/:uuid/items`, AlkesController.addAlkesItems);
 routes.get(`${baseUrl}/alkes/:uuid`, AlkesController.getByUuid);
 routes.delete(`${baseUrl}/alkes/items/:alkes_item_uuid`, AlkesController.deleteAlkesItem);

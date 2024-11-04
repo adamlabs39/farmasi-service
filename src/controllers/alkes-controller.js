@@ -76,15 +76,6 @@ export default class AlkesController {
         }
     }
 
-    static async updateTelaah(req, res, nextFunction){
-        try {
-            await PrescriptionService.updateTelaah(req.body);
-            res.status(200).json(successResponse("data berhasil diupdate"));
-        } catch (error) {
-            nextFunction(error);
-        }
-    }
-
     static async batalOrder(req, res, nextFunction){
         try {
             req.body.petugas_pembatalan = res.locals.jwtData.username;
@@ -110,7 +101,7 @@ export default class AlkesController {
     static async updateSiapDiserahkan(req, res, nextFunction){
         try {
             req.body.petugas_penyiapan_obat = res.locals.jwtData.username;
-            await PrescriptionService.updateSiapDiserahkan(req.body);
+            await AlkesService.updateSiapDiserahkan(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);
@@ -120,7 +111,7 @@ export default class AlkesController {
     static async updateDiserahkan(req, res, nextFunction){
         try {
             req.body.petugas_pemberi = res.locals.jwtData.username;
-            await PrescriptionService.updateDiserahkan(req.body);
+            await AlkesService.updateDiserahkan(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);
@@ -129,7 +120,7 @@ export default class AlkesController {
 
     static async batalSiapDiserahkan(req, res, nextFunction){
         try {
-            await PrescriptionService.batalSiapDiserahkan(req.body);
+            await AlkesService.batalSiapDiserahkan(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);
@@ -138,7 +129,7 @@ export default class AlkesController {
 
     static async updateLokasiStok(req, res, nextFunction){
         try {
-            await PrescriptionService.updateLokasiStok(req.body);
+            await AlkesService.updateLokasiStok(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);

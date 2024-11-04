@@ -24,7 +24,7 @@ export default class PrescriptionRepository {
                     uuid: uuid
                 },
                 attributes: {
-                    exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
+                    exclude: ['deleted_at', 'created_at', 'faskes_uuid']
                 },
                 include: [
                     {
@@ -383,5 +383,14 @@ export default class PrescriptionRepository {
                 }
             ],
         });
+    }
+
+    static async getPrescriptionUuidByObat(item_uuid){
+        return await PrescriptionItemModel.findOne({
+            where: {
+                uuid: item_uuid
+            },
+            include : ['prescription_uuid']
+        })
     }
 }

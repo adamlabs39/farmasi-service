@@ -49,5 +49,11 @@ export default class AlkesValidation {
         uuid: z.string().min(1, required),
         petugas_pembatalan: z.string().min(1, required),
         alasan_batal: z.string().min(1, required),
-    })
+    });
+
+    static UPDATE_SERAHKAN = z.object({
+        uuid: z.string().min(1, required),
+        petugas_pemberi: z.string().min(1, required),
+        penerima: z.string().min(1, required),
+    });
 }

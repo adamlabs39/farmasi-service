@@ -155,12 +155,6 @@ export default class AlkesService {
         return data;
     }
 
-    static async updateTelaah(req) {
-        ZodValidator.validate(PrescriptionValidation.UPDATE_TELAAH, req);
-        req.status_telaah = true;
-        return await PrescriptionRepository.editPrescription(req);
-    }
-
     static async batalOrder(req) {
         ZodValidator.validate(AlkesValidation.BATAL_ORDER, req);
         req.order_status = 0;
@@ -210,22 +204,22 @@ export default class AlkesService {
 
     static async updateSiapDiserahkan(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_SIAP_DISERAHKAN, req);
-        req.order_status = 4;
+        req.order_status = 3;
         req.waktu_penyiapan = toEpochDate(new Date());
-        return await PrescriptionRepository.editPrescription(req);
+        return await AlkesRepository.editAlkes(req);
     }
 
     static async batalSiapDiserahkan(req) {
         ZodValidator.validate(PrescriptionValidation.BATAL_DISERAHKAN, req);
-        req.order_status = 4;
-        return await PrescriptionRepository.editPrescription(req);
+        req.order_status = 3;
+        return await AlkesRepository.editAlkes(req);
     }
 
     static async updateDiserahkan(req) {
-        ZodValidator.validate(PrescriptionValidation.UPDATE_SERAHKAN, req);
-        req.order_status = 5;
+        ZodValidator.validate(AlkesValidation.UPDATE_SERAHKAN, req);
+        req.order_status = 4;
         req.waktu_pemberian = toEpochDate(new Date());
-        return await PrescriptionRepository.editPrescription(req);
+        return await AlkesRepository.editAlkes(req);
     }
 
     static async updateLokasiStok(req) {

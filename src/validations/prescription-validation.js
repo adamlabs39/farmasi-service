@@ -34,7 +34,7 @@ export default class PrescriptionValidation {
     });
 
     static DELETE_PRESCRIPTION_ITEM = z.object({
-        prescription_uuid: z.string().min(1, required),
+        prescription_item_uuid: z.string().min(1, required),
     });
 
     static UPDATE_PRESCRIPTION = z.object({
@@ -98,5 +98,10 @@ export default class PrescriptionValidation {
         uuid: z.string().min(1, required),
         is_racikan: z.boolean(),
         jenis_stok_uuid: z.string().min(1, required),
+    })
+
+    STATUS_MORE_THAN = z.object({
+        status: z.number(),
+        prescription_uuid: z.string().min(1, required),
     })
 }

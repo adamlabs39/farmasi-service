@@ -28,7 +28,7 @@ export default class PrescriptionController {
 
     static async deleteObat(req, res, nextFunction) {
         try {
-            req.body.prescription_uuid = req.params.prescription_uuid;
+            req.body.prescription_item_uuid = req.params.prescription_item_uuid;
             await PrescriptionService.deleteObat(req.body);
             res.status(200).json(successResponse("data berhasil dihapus"));
         } catch (error) {
