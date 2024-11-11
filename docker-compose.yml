@@ -3,10 +3,10 @@ services:
     image: adameds/farmasi-service:dev
     container_name: adameds-farmasi
     ports:
-      - ${APPLICATION_PORT}:${APPLICATION_PORT}
+      - 8086:8086
     restart: always
     networks:
-      - rj-network
+        - farmasi-network
     environment:
       # db
       DB_PASSWORD: ${DB_PASSWORD}
@@ -31,5 +31,5 @@ services:
         source: /home/admin/adameds/public.key
         target: /adameds-farmasi/public.key
 networks:
-  rj-network:
-    driver: bridge
+    farmasi-network:
+        driver: bridge
