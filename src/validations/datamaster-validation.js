@@ -52,7 +52,6 @@ export default class DatamasterValidation {
         name : z.string().min(1, required),
         code : z.string().min(1, required),
         jenis_lokasi : z.string().min(1, required),
-        default_tujuan_order_permintaan : z.string().min(1, required),
     });
 
     static UPDATE_SATUAN = z.object({
@@ -86,7 +85,6 @@ export default class DatamasterValidation {
         name : z.string().min(1, required),
         code : z.string().min(1, required),
         jenis_lokasi : z.string().min(1, required),
-        default_tujuan_order_permintaan : z.string().min(1, required),
     })
 
     static UPDATE_MANUFACTURE = z.object({
@@ -134,8 +132,6 @@ export default class DatamasterValidation {
         satuan_kemasan_uuid : z.string().min(1, required),
         kategori_obat_uuid : z.string().min(1, required),
         satuan_pembelian_uuid : z.string().min(1, required),
-        stock_min : z.number(),
-        stock_max : z.number(),
         status : z.boolean(),
     });
 
@@ -154,8 +150,6 @@ export default class DatamasterValidation {
         satuan_kemasan_uuid : z.string().min(1, required),
         kategori_obat_uuid : z.string().min(1, required),
         satuan_pembelian_uuid : z.string().min(1, required),
-        stock_min : z.number(),
-        stock_max : z.number(),
         status : z.boolean(),
     });
 

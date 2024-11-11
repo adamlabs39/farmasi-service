@@ -21,7 +21,7 @@ export const dbSeeder = async () => {
         // await CaraPakaiSeeder.seed(transaction);
         // await LokasiStokSeeder.seed(transaction);
         // await ItemMedisSeeder.seed(transaction);
-        // await SatuanSeeder.seed(transaction);
+        await SatuanSeeder.seed(transaction);
         // await PrescriptionSeeder.seed(transaction);
         // await PrescriptionItemSeeder.seed(transaction);
         // await PrescriptionItemRacikanSeeder.seed(transaction);
@@ -29,8 +29,8 @@ export const dbSeeder = async () => {
         // await HargaItemSeeder.seed(transaction);
         // await JenisStokSeeder.seed(transaction);
         // await ItemMedisJenisStokSeeder.seed(transaction);
-        await OrderAlkesSeeder.seed(transaction);
-        await OrderAlkesItemSeeder.seed(transaction);
+        // await OrderAlkesSeeder.seed(transaction);
+        // await OrderAlkesItemSeeder.seed(transaction);
         // await ItemMedisSeeder.seed(transaction);
         await transaction.commit();
     } catch (error) {

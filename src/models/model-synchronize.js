@@ -41,7 +41,7 @@ const MODELMERGE = [
     // KategoriObatModel,
     // KonfigurasiHargaModel,
     // LokasiStokModel,
-    ManufactureModel,
+    // ManufactureModel,
     // OrderAlkesItemModel,
     // OrderAlkesModel,
     // PatientModel
@@ -51,13 +51,13 @@ const MODELMERGE = [
     // PrescriptionModel,
     // ReturItemModel,
     // ReturModel,
-    // SatuanModel,
+    SatuanModel,
     // StockMedisModel
     // HargaItemModel,
     // ItemMedisJenisStokModel,
     // JenisStokModel,
     // ItemMedisModel,
-
+    // LokasiStokModel
 ];
 
 export default MODELMERGE;

@@ -5,6 +5,7 @@ import errorMiddleware from "./middlewares/error-middleware.js";
 import MODELMERGE from "./models/model-synchronize.js";
 import authorizationMiddleware from "./middlewares/authorization-middleware.js";
 import {dbSeeder} from "./seeders/db-seeder.js";
+import authorizationSdk from "@adameds/authorization-sdk";
 
 const APPLICATION_PORT = process.env.APPLICATION_PORT;
 const APPLICATION_HOST = process.env.APPLICATION_HOST;
@@ -17,7 +18,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(authorizationMiddleware)
+app.use(authorizationSdk([]));
 app.use(routes);
 app.use(errorMiddleware);
 app.listen(APPLICATION_PORT, APPLICATION_HOST, async () => {
@@ -25,6 +26,7 @@ app.listen(APPLICATION_PORT, APPLICATION_HOST, async () => {
         // for (const model of MODELMERGE) {
         //     await model.sync({ alter: false, force: true });
         // }
+
 
         //
         // await dbSeeder();

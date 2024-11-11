@@ -30,6 +30,7 @@ export default class DatamasterItemMedisService {
             if(req.conversion !== undefined && Array.isArray(req.conversion)){
                 const newConversion = req.conversion.filter(item => (item.uuid === "" || item.uuid === null || item.uuid === undefined) ).map(item => ({
                     ...item,
+                    status : true,
                     item_medis_uuid: itemMedis.dataValues.uuid,
                     faskes_uuid: req.faskes_uuid,
                     uuid : uuidv7(),
@@ -97,6 +98,7 @@ export default class DatamasterItemMedisService {
 
                 const deletedConversion = req.conversion.filter(item => item.is_deleted === true).map(item => ({
                     ...item,
+                    status : true,
                     item_medis_uuid: req.uuid,
                     faskes_uuid: req.faskes_uuid,
                 }));

@@ -4,7 +4,7 @@ import successResponse from "../responses/success-response.js";
 export default class DatamasterItemMedisController {
     static async create(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             await DatamasterItemMedisService.create(req.body);
             res.status(201).json(successResponse("data berhasil dibuat"));
         } catch (error) {
@@ -14,7 +14,7 @@ export default class DatamasterItemMedisController {
 
     static async update(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             req.body.uuid = req.params.uuid;
             await DatamasterItemMedisService.update(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
@@ -25,8 +25,8 @@ export default class DatamasterItemMedisController {
 
     static async getAll(req, res, nextFunction) {
         try {
-            req.query.faskes_uuid = res.locals.jwtData.faskesUuid;
-            req.body.name = req.query.name;
+            req.query.faskes_uuid = req.author.faskesUuid;
+            req.query.jenis_stok_uuides = req.body.jenis_stok_uuides;
             const result = await DatamasterItemMedisService.getAll(req.query);
             res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
         } catch (error) {
@@ -47,7 +47,7 @@ export default class DatamasterItemMedisController {
 
     static async getConversions(req, res, nextFunction) {
         try {
-            req.query.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.query.faskes_uuid = req.author.faskesUuid;
             req.query.item_medis_uuid = req.params.uuid;
             const data = await DatamasterItemMedisService.getConversions(req.query);
             res.status(200).json(successResponse(data));
@@ -58,7 +58,7 @@ export default class DatamasterItemMedisController {
 
     static async getAllWithoutPagination(req, res, nextFunction) {
         try {
-            req.query.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.query.faskes_uuid = req.author.faskesUuid;
             const result = await DatamasterItemMedisService.getAllWithoutPagination(req.query);
             res.status(200).json(successResponse("data berhasil didapat", result));
         } catch (error) {
@@ -69,7 +69,7 @@ export default class DatamasterItemMedisController {
     static async getAvailableJenisStok(req, res, nextFunction){
         try {
             req.query.item_medis_uuid = req.params.uuid;
-            req.query.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.query.faskes_uuid = req.author.faskesUuid;
             const result = await DatamasterItemMedisService.getAvailableJenisStok(req.query);
             res.status(200).json(successResponse("data berhasil didapat", result));
         } catch (error) {

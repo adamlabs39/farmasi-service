@@ -4,7 +4,7 @@ import PenjualanObatService from "../services/penjualan-obat-service.js";
 export default class PenjualanObatController {
     static async create(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
 
             const result = await PenjualanObatService.create(req.body);
 
@@ -28,7 +28,7 @@ export default class PenjualanObatController {
 
     static async getAll(req, res, nextFunction) {
         try {
-            req.query.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.query.faskes_uuid = req.author.faskesUuid;
 
             const result = await PenjualanObatService.getAll(req.query);
             res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));

@@ -51,12 +51,6 @@ ItemMedisModel.init({
         manufacture_uuid: {
             type: DataTypes.STRING(255),
         },
-        stock_min: {
-            type: DataTypes.INTEGER,
-        },
-        stock_max: {
-            type: DataTypes.INTEGER,
-        },
         jenis_item: {
             type: DataTypes.ENUM('obat', 'alkes'),
             allowNull: false,
@@ -64,9 +58,6 @@ ItemMedisModel.init({
         kategori_obat_uuid: {
             type: DataTypes.STRING(255),
             allowNull: false,
-        },
-        jenis_stocks: {
-            type: DataTypes.JSON,
         },
         ingridients: {
             type: DataTypes.JSON,

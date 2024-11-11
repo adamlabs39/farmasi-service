@@ -17,6 +17,17 @@ export default class DataMasterItemMedisRepository {
     }
 
     static async getAll(req) {
+
+        let whereJenisStok = {
+            deleted_at: {[Op.is]: null},
+        }
+
+        if (req.jenis_stok_uuides !== undefined && req.jenis_stok_uuides.length !== 0){
+            whereJenisStok.jenis_stok_uuid ={
+                [Op.in] : req.jenis_stok_uuides
+            }
+        }
+
         const option = {
             where: {
                 faskes_uuid: req.faskes_uuid,
@@ -47,8 +58,8 @@ export default class DataMasterItemMedisRepository {
                 {
                     model: ItemMedisJenisStokModel,
                     as: "jenis_stok",
-                    required: false,
-                    where: {deleted_at: {[Op.is]: null}},
+                    required: true,
+                    where: whereJenisStok,
                     attributes: ["uuid"],
                     include: [
                         {

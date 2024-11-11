@@ -4,7 +4,7 @@ import DatamasterBentukRacikanService from "../services/datamaster-bentuk-racika
 export default class DatamasterBentukRacikanController {
     static async create(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             await DatamasterBentukRacikanService.create(req.body);
             res.status(201).json(successResponse("data berhasil dibuat"));
         } catch (error) {
@@ -14,7 +14,7 @@ export default class DatamasterBentukRacikanController {
 
     static async getAll(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             req.body.nama_bentuk_racikan = req.query.name;
             const result = await DatamasterBentukRacikanService.getAll(req.body);
             res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));

@@ -6,8 +6,8 @@ import AlkesRepository from "../repositories/alkes-repository.js";
 export default class AlkesController {
     static async orderAlkes(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
-            req.body.petugas_order = res.locals.jwtData.username;
+            req.body.faskes_uuid = req.author.faskesUuid;
+            req.body.petugas_order = req.author.username;
 
             const result = await AlkesService.orderAlkes(req.body);
 
@@ -19,7 +19,7 @@ export default class AlkesController {
 
     static async addAlkesItems(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             req.body.order_alkes_uuid = req.params.uuid;
             const result = await AlkesService.addAlkesItems(req.body);
             res.status(200).json(successResponse("data berhasil ditambahkan", result));
@@ -59,7 +59,7 @@ export default class AlkesController {
     static async updateAlkesItem(req, res, nextFunction) {
         try {
             req.body.uuid = req.params.uuid;
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             await AlkesService.updateAlkesItem(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
@@ -78,7 +78,7 @@ export default class AlkesController {
 
     static async batalOrder(req, res, nextFunction){
         try {
-            req.body.petugas_pembatalan = res.locals.jwtData.username;
+            req.body.petugas_pembatalan = req.author.username;
             req.body.uuid = req.params.uuid;
             await AlkesService.batalOrder(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
@@ -89,8 +89,8 @@ export default class AlkesController {
 
     static async updateVerifikasi(req, res, nextFunction){
         try {
-            req.body.petugas_verifikasi = res.locals.jwtData.username;
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.petugas_verifikasi = req.author.username;
+            req.body.faskes_uuid = req.author.faskesUuid;
             await AlkesService.updateVerifikasi(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
@@ -100,7 +100,7 @@ export default class AlkesController {
 
     static async updateSiapDiserahkan(req, res, nextFunction){
         try {
-            req.body.petugas_penyiapan_obat = res.locals.jwtData.username;
+            req.body.petugas_penyiapan_obat = req.author.username;
             await AlkesService.updateSiapDiserahkan(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
@@ -110,7 +110,7 @@ export default class AlkesController {
 
     static async updateDiserahkan(req, res, nextFunction){
         try {
-            req.body.petugas_pemberi = res.locals.jwtData.username;
+            req.body.petugas_pemberi = req.author.username;
             await AlkesService.updateDiserahkan(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
@@ -138,7 +138,7 @@ export default class AlkesController {
 
     static async getAllForFarmacy(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             const result = await AlkesService.getAllForFarmacy(req.body);
             res.status(200).json(successResponse("data berhasil diupdate", result));
         } catch (error) {
