@@ -1,22 +1,35 @@
-version: '3.3'
 services:
-  app:
-    build: .
+  adameds-farmasi:
+    image: adameds/farmasi-service:dev
     container_name: adameds-farmasi
     ports:
       - ${APPLICATION_PORT}:${APPLICATION_PORT}
     restart: always
     networks:
-        - adameds-network
+      - rj-network
     environment:
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_DIALECT=${DB_DIALECT}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - APPLICATION_PORT=${APPLICATION_PORT}
-      - APPLICATION_HOST=${APPLICATION_HOST}
+      # db
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_DIALECT: ${DB_DIALECT}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+
+      # redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_DATABASE: ${REDIS_DATABASE}
+
+    volumes:
+      - type: bind
+        source: /home/admin/adameds/private.key
+        target: /adameds-farmasi/private.key
+      - type: bind
+        source: /home/admin/adameds/public.key
+        target: /adameds-farmasi/public.key
 networks:
-    adameds-network:
-        driver: bridge
+  rj-network:
+    driver: bridge
