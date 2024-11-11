@@ -3,6 +3,12 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import PrescriptionItemRacikanModel from "./prescription-item-racikan-model.js";
+import AturanPakaiModel from "./aturan-pakai-model.js";
+import ItemMedisModel from "./item-medis-model.js";
+import SatuanModel from "./satuan-model.js";
+import CaraiPakaiModel from "./cara-pakai-model.js";
+import BentukRacikanModel from "./bentuk-racikan-model.js";
 
 export default class PrescriptionItemModel extends Model {
 }
@@ -15,7 +21,6 @@ PrescriptionItemModel.init({
         },
         item_medis_uuid: {
             type: DataTypes.STRING(255),
-            allowNull: false,
         },
         medication_qty: {
             type: DataTypes.FLOAT,
@@ -43,7 +48,6 @@ PrescriptionItemModel.init({
         },
         prescription_notes: {
             type: DataTypes.STRING(255),
-            allowNull: false,
         },
         is_chronic: {
             type: DataTypes.BOOLEAN,
@@ -56,6 +60,7 @@ PrescriptionItemModel.init({
         is_compound: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
+            defaultValue: false,
         },
         nama_racikan: {
             type: DataTypes.STRING(255),
@@ -69,6 +74,21 @@ PrescriptionItemModel.init({
         sisa_qty_order: {
             type: DataTypes.FLOAT,
             allowNull: false,
+        },
+        stok_medis_uuid: {
+            type: DataTypes.STRING(255),
+        },
+        jenis_stok_uuid: {
+            type: DataTypes.STRING(255),
+        },
+        harga_satuan: {
+            type: DataTypes.FLOAT,
+        },
+        biaya_embalase: {
+            type: DataTypes.FLOAT,
+        },
+        biaya_racik: {
+            type: DataTypes.FLOAT,
         },
         ...fieldTime
     }, {
@@ -85,3 +105,39 @@ PrescriptionItemModel.init({
         ],
     }
 )
+
+PrescriptionItemModel.hasMany(PrescriptionItemRacikanModel, {
+    foreignKey: "prescription_item_uuid",
+    as: "racikan",
+    constraints: false
+})
+
+PrescriptionItemModel.belongsTo(AturanPakaiModel, {
+    foreignKey: "aturan_pakai_uuid",
+    as: "aturan_pakai",
+    constraints: false
+})
+
+PrescriptionItemModel.belongsTo(CaraiPakaiModel, {
+    foreignKey: "cara_pakai_uuid",
+    as: "cara_pakai",
+    constraints: false
+})
+
+PrescriptionItemModel.belongsTo(ItemMedisModel, {
+    foreignKey: "item_medis_uuid",
+    as: "item_medis",
+    constraints: false
+})
+
+PrescriptionItemModel.belongsTo(SatuanModel, {
+    foreignKey: "medication_dose_satuan_uuid",
+    as: "satuan_dosis",
+    constraints: false
+})
+
+PrescriptionItemModel.belongsTo(BentukRacikanModel, {
+    foreignKey: "bentuk_racikan_uuid",
+    as: "bentuk_racikan",
+    constraints: false
+})

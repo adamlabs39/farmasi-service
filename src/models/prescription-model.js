@@ -3,6 +3,10 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import {toEpochDate} from "../helpers/date-helper.js";
+import PrescriptionItemModel from "./prescription-item-model.js";
+import LokasiStokModel from "./lokasi-stok-model.js";
+import PatientModel from "./patient-model.js";
 
 export default class PrescriptionModel extends Model {
 }
@@ -19,7 +23,6 @@ PrescriptionModel.init({
         },
         rekam_medis_uuid: {
             type: DataTypes.STRING(255),
-            allowNull: false,
         },
         patient_uuid: {
             type: DataTypes.STRING(255),
@@ -30,8 +33,9 @@ PrescriptionModel.init({
             allowNull: false,
         },
         order_date: {
-            type: DataTypes.DATE,
+            type: DataTypes.BIGINT,
             allowNull: false,
+            defaultValue: toEpochDate(new Date())
         },
         order_status: {
             type: DataTypes.INTEGER,
@@ -81,13 +85,13 @@ PrescriptionModel.init({
             defaultValue: 0
         },
         waktu_verifikasi: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         waktu_penyiapan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         waktu_pemberian: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         status_telaah: {
             type: DataTypes.BOOLEAN,
@@ -100,6 +104,10 @@ PrescriptionModel.init({
         },
         petugas_edukasi: {
             type: DataTypes.STRING(255),
+        },
+        jenis_pelayanan: {
+            type: DataTypes.ENUM("rj", "ri", "fisio", "igd"),
+            allowNull: false,
         },
         ...fieldTime
     }, {
@@ -121,3 +129,21 @@ PrescriptionModel.init({
         }
     }
 )
+
+PrescriptionModel.hasMany(PrescriptionItemModel, {
+    foreignKey: "prescription_uuid",
+    as: "obat",
+    constraints: false
+})
+
+PrescriptionModel.belongsTo(LokasiStokModel, {
+    foreignKey: "lokasi_stok_uuid",
+    as: "lokasi_stok",
+    constraints: false
+})
+
+PrescriptionModel.belongsTo(PatientModel, {
+    foreignKey: "patient_uuid",
+    as: "patient",
+    constraints: false
+})

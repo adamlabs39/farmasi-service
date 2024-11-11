@@ -4,8 +4,8 @@ import DataMasterSatuanRepository from "../repositories/datamaster-satuan-reposi
 
 export default class DatamasterSatuanService {
     static async create(req) {
-        let validData = ZodValidator.validate(DatamasterValidation.CREATE_SATUAN, req);
-        return await DataMasterSatuanRepository.create(validData);
+        ZodValidator.validate(DatamasterValidation.CREATE_SATUAN, req);
+        return await DataMasterSatuanRepository.create(req);
     }
 
     static async getAll(req) {
@@ -14,8 +14,8 @@ export default class DatamasterSatuanService {
     }
 
     static update(req) {
-        let validData = ZodValidator.validate(DatamasterValidation.UPDATE_SATUAN, req);
-        return DataMasterSatuanRepository.update(validData);
+        ZodValidator.validate(DatamasterValidation.UPDATE_SATUAN, req);
+        return DataMasterSatuanRepository.update(req);
     }
 
     static delete(req) {

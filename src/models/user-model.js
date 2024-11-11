@@ -72,14 +72,6 @@ UserModel.init(
             type: DataTypes.TEXT,
             allowNull: true,
         },
-        awalan_gelar : {
-            type: DataTypes.STRING(50),
-            allowNull: true,
-        },
-        akhiran_gelar : {
-            type: DataTypes.STRING(50),
-            allowNull: true,
-        },
         status: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

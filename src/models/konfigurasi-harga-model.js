@@ -11,9 +11,11 @@ KonfigurasiHargaModel.init({
         ...identifierModel,
         metode_pemotongan_stok: {
             type: DataTypes.STRING(255),
+            defaultValue: "FIFO"
         },
         metode_hpp: {
             type: DataTypes.STRING(255),
+            defaultValue : "last"
         },
         ppn: {
             type: DataTypes.FLOAT,

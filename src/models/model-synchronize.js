@@ -8,7 +8,6 @@ import IngredientItemMedisModel from "./ingredient-item-medis-model.js";
 import IngredientModel from "./ingredient-model.js";
 import ItemMedisModel from "./item-medis-model.js";
 import ItemPenjualanObatModel from "./item-penjualan-obat-model.js";
-import JenisStokItemMedisModel from "./jenis-stok-item-medis-model.js";
 import KategoriObatModel from "./kategori-obat-model.js";
 import KonfigurasiHargaModel from "./konfigurasi-harga-model.js";
 import LokasiStokModel from "./lokasi-stok-model.js";
@@ -22,6 +21,11 @@ import PrescriptionModel from "./prescription-model.js";
 import ReturItemModel from "./retur-item-model.js";
 import ReturModel from "./retur-model.js";
 import SatuanModel from "./satuan-model.js";
+import StockMedisModel from "./stock-medis-model.js";
+import HargaItemModel from "./harga-item-model.js";
+import ItemMedisJenisStokModel from "./item-medis-jenis-stok-model.js";
+import PatientModel from "./patient-model.js";
+import {JenisStokItemMedisModel} from "@adameds/model-sdk/farmasi";
 
 const MODELMERGE = [
     JenisStokModel,
@@ -41,13 +45,20 @@ const MODELMERGE = [
     ManufactureModel,
     OrderAlkesItemModel,
     OrderAlkesModel,
+    PatientModel,
     PenjualanObatModel,
     PrescriptionItemModel,
     PrescriptionItemRacikanModel,
     PrescriptionModel,
     ReturItemModel,
     ReturModel,
-    SatuanModel
+    SatuanModel,
+    StockMedisModel,
+    HargaItemModel,
+    ItemMedisJenisStokModel,
+    JenisStokModel,
+    ItemMedisModel,
+    LokasiStokModel
 ];
 
 export default MODELMERGE;

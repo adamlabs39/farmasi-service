@@ -5,7 +5,7 @@ import KonfigurasiHargaService from "../services/konfigurasi-harga-service.js";
 export default class KonfigurasiHargaController {
     static async get(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             const result = await KonfigurasiHargaService.get(req.body);
             res.status(200).json(successResponse("data berhasil didapat", result));
         } catch (error) {
@@ -15,8 +15,8 @@ export default class KonfigurasiHargaController {
 
     static async update(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
-            req.body.petugas = res.locals.jwtData.username;
+            req.body.faskes_uuid = req.author.faskesUuid;
+            req.body.petugas = req.author.username;
             await KonfigurasiHargaService.update(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {

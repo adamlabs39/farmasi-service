@@ -2,8 +2,8 @@ import {toEpochDate} from "../helpers/date-helper.js";
 import ConversionModel from "../models/conversion-model.js";
 
 export default class ConversionRepository {
-    static async bulkCreate(req) {
-        return await ConversionModel.bulkCreate(req);
+    static async bulkCreate(req, transaction) {
+        return await ConversionModel.bulkCreate(req, {transaction});
     }
 
     static async getAll(req) {
@@ -19,21 +19,23 @@ export default class ConversionRepository {
         })
     }
 
-    static async update(req) {
+    static async update(req, transaction) {
         return await ConversionModel.update(req, {
             where: {
                 uuid: req.uuid,
-            }
+            },
+            transaction
         });
     }
 
-    static async delete(req) {
+    static async delete(req, transaction) {
         return await ConversionModel.update({
             deleted_at : toEpochDate(new Date())
         },{
             where: {
                 uuid: req.uuid,
-            }
+            },
+            transaction
         });
     }
 }

@@ -3,16 +3,16 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import OrderAlkesItemModel from "./order-alkes-item-model.js";
+import LokasiStokModel from "./lokasi-stok-model.js";
+import {LokasiModel} from "@adameds/model-sdk/datamaster";
+import PatientModel from "./patient-model.js";
 
 export default class OrderAlkesModel extends Model {
 }
 
 OrderAlkesModel.init({
         ...identifierModel,
-        item_medis_uuid: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
         no_order_alkes: {
             type: DataTypes.STRING(255),
             allowNull: false,
@@ -34,7 +34,7 @@ OrderAlkesModel.init({
             allowNull: false,
         },
         rekam_medis_date: {
-            type: DataTypes.DATE,
+            type: DataTypes.STRING(20),
             allowNull: false,
         },
         order_status: {
@@ -52,10 +52,6 @@ OrderAlkesModel.init({
         alasan_batal: {
             type: DataTypes.STRING(255),
         },
-        dokter_order: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
         petugas_verifikasi: {
             type: DataTypes.STRING(255),
         },
@@ -72,13 +68,25 @@ OrderAlkesModel.init({
             type: DataTypes.STRING(255),
         },
         waktu_verifikasi: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         waktu_penyiapan: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
         },
         waktu_pemberian: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
+        },
+        lokasi_stok_uuid: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        jenis_pelayanan: {
+            type: DataTypes.ENUM("rj", "ri", "fisio", "igd"),
+            allowNull: false,
+        },
+        lokasi_uuid: {
+            type: DataTypes.STRING(255),
+            allowNull: false
         },
         ...fieldTime
     }, {
@@ -100,3 +108,27 @@ OrderAlkesModel.init({
         }
     }
 )
+
+OrderAlkesModel.hasMany(OrderAlkesItemModel, {
+    foreignKey: "order_alkes_uuid",
+    as: "alkes_items",
+    constraints: false
+})
+
+OrderAlkesModel.belongsTo(LokasiStokModel, {
+    foreignKey: "lokasi_stok_uuid",
+    as: "lokasi_stok",
+    constraints: false
+})
+
+OrderAlkesModel.belongsTo(LokasiModel, {
+    foreignKey: "lokasi_uuid",
+    as: "lokasi",
+    constraints: false
+})
+
+OrderAlkesModel.belongsTo(PatientModel, {
+    foreignKey: "patient_uuid",
+    as: "patient",
+    constraints: false
+})

@@ -3,6 +3,9 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import JenisStokModel from "./jenis-stok-model.js";
+import ItemMedisModel from "./item-medis-model.js";
+import SatuanModel from "./satuan-model.js";
 
 export default class ItemPenjualanObatModel extends Model {
 }
@@ -36,6 +39,9 @@ ItemPenjualanObatModel.init({
         diskon: {
             type: DataTypes.FLOAT,
         },
+        catatan_stok: {
+            type: DataTypes.JSON
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,
@@ -51,3 +57,21 @@ ItemPenjualanObatModel.init({
         ],
     }
 )
+
+ItemPenjualanObatModel.belongsTo(JenisStokModel, {
+    foreignKey: 'jenis_stok_uuid',
+    as: 'jenis_stok',
+    constraints: false
+});
+
+ItemPenjualanObatModel.belongsTo(ItemMedisModel, {
+    foreignKey: 'item_medis_uuid',
+    as: 'item_medis',
+    constraints: false
+});
+
+ItemPenjualanObatModel.belongsTo(SatuanModel, {
+    foreignKey: 'satuan_uuid',
+    as: 'satuan',
+    constraints: false
+});

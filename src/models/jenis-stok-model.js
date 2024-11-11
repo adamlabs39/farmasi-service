@@ -3,6 +3,7 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import StockMedisModel from "./stock-medis-model.js";
 
 export default class JenisStokModel extends Model {
 }
@@ -41,3 +42,8 @@ JenisStokModel.init({
         }
     }
 )
+
+JenisStokModel.hasMany(StockMedisModel, {
+    foreignKey: "jenis_stok_uuid",
+    as: "stocks"
+})

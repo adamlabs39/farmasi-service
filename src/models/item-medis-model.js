@@ -4,6 +4,10 @@ import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import ManufactureModel from "./manufacture-model.js";
+import ConversionModel from "./conversion-model.js";
+import ItemMedisJenisStokModel from "./item-medis-jenis-stok-model.js";
+import SatuanModel from "./satuan-model.js";
+import StockMedisModel from "./stock-medis-model.js";
 
 export default class ItemMedisModel extends Model {
 }
@@ -47,24 +51,6 @@ ItemMedisModel.init({
         manufacture_uuid: {
             type: DataTypes.STRING(255),
         },
-        stock_min: {
-            type: DataTypes.INTEGER,
-        },
-        stock_max: {
-            type: DataTypes.INTEGER,
-        },
-        harga_dasar: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        hna: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        hja: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
         jenis_item: {
             type: DataTypes.ENUM('obat', 'alkes'),
             allowNull: false,
@@ -72,20 +58,6 @@ ItemMedisModel.init({
         kategori_obat_uuid: {
             type: DataTypes.STRING(255),
             allowNull: false,
-        },
-        // ingredient_uuid: {
-        //     type: DataTypes.STRING(255),
-        // },
-        exp_date: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        // supplier_uuid: {
-        //     type: DataTypes.STRING(255),
-        //     allowNull: false,
-        // },
-        jenis_stocks: {
-            type: DataTypes.JSON,
         },
         ingridients: {
             type: DataTypes.JSON,
@@ -119,5 +91,29 @@ ItemMedisModel.init({
 ItemMedisModel.belongsTo(ManufactureModel, {
     foreignKey: "manufacture_uuid",
     as: "manufacture",
+    constraints: false
+})
+
+ItemMedisModel.hasMany(ConversionModel, {
+    foreignKey: "item_medis_uuid",
+    as: "conversions",
+    constraints: false
+})
+
+ItemMedisModel.hasMany(ItemMedisJenisStokModel, {
+    foreignKey: "item_medis_uuid",
+    as: "jenis_stok",
+    constraints: false
+})
+
+ItemMedisModel.belongsTo(SatuanModel, {
+    foreignKey: "satuan_penggunaan_uuid",
+    as: "satuan_penggunaan",
+    constraints: false
+})
+
+ItemMedisModel.hasMany(StockMedisModel, {
+    foreignKey: "item_medis_uuid",
+    as: "stocks",
     constraints: false
 })

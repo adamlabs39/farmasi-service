@@ -27,6 +27,7 @@ LokasiStokModel.init({
         },
         default_tujuan_order_permintaan: {
             type: DataTypes.STRING(10),
+            defaultValue: "",
         },
         ...fieldTime
     }, {

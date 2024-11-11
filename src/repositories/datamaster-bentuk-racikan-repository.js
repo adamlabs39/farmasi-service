@@ -39,4 +39,23 @@ export default class DataMasterBentukRacikanRepository {
             }
         });
     }
+
+    static async getAllWithoutPagination(faskes_uuid) {
+        return await BentukRacikanModel.findAll(
+            {
+                where: {
+                    faskes_uuid: faskes_uuid
+                }
+            }
+        );
+    }
+
+    static async getByUuid(uuid) {
+        return await BentukRacikanModel.findOne({
+            where: {
+                uuid: uuid
+            },
+            attributes : ["jumlah", "tarif_embalase", "tarif_racik"]
+        });
+    }
 }

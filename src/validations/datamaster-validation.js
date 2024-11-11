@@ -39,12 +39,11 @@ export default class DatamasterValidation {
         name : z.string().min(1, required),
         code : z.string().min(1, required),
         alamat : z.string().min(1, required),
-        kecamatan_uuid : z.string().min(1, required),
-        kabupaten_uuid : z.string().min(1, required),
-        provinsi_uuid : z.string().min(1, required),
-        kecamatan : z.string().min(1, required),
-        kabupaten : z.string().min(1, required),
-        provinsi : z.string().min(1, required),
+        kecamatan_code : z.string().min(1, required),
+        provinsi_code : z.string().min(1, required),
+        kabupaten_code : z.string().min(1, required),
+        kelurahan_code : z.string().min(1, required),
+        kode_pos : z.string().min(1, required)
     });
 
     static CREATE_LOKASI_STOK = z.object({
@@ -53,7 +52,6 @@ export default class DatamasterValidation {
         name : z.string().min(1, required),
         code : z.string().min(1, required),
         jenis_lokasi : z.string().min(1, required),
-        default_tujuan_order_permintaan : z.string().min(1, required),
     });
 
     static UPDATE_SATUAN = z.object({
@@ -87,7 +85,6 @@ export default class DatamasterValidation {
         name : z.string().min(1, required),
         code : z.string().min(1, required),
         jenis_lokasi : z.string().min(1, required),
-        default_tujuan_order_permintaan : z.string().min(1, required),
     })
 
     static UPDATE_MANUFACTURE = z.object({
@@ -96,12 +93,7 @@ export default class DatamasterValidation {
         name : z.string().min(1, required),
         code : z.string().min(1, required),
         alamat : z.string().min(1, required),
-        kecamatan_uuid : z.string().min(1, required),
-        kabupaten_uuid : z.string().min(1, required),
-        provinsi_uuid : z.string().min(1, required),
-        kecamatan : z.string().min(1, required),
-        kabupaten : z.string().min(1, required),
-        provinsi : z.string().min(1, required),
+        demografi_wilayah_code : z.string().min(1, required),
     });
 
     static GET_ALL_SATUAN = z.object({
@@ -139,14 +131,7 @@ export default class DatamasterValidation {
         isi_kemasan : z.number(),
         satuan_kemasan_uuid : z.string().min(1, required),
         kategori_obat_uuid : z.string().min(1, required),
-        supplier_uuid : z.string().min(1, required),
-        exp_date : z.string().min(1, required),
         satuan_pembelian_uuid : z.string().min(1, required),
-        harga_dasar : z.number(),
-        hna : z.number(),
-        hja : z.number(),
-        stock_min : z.number(),
-        stock_max : z.number(),
         status : z.boolean(),
     });
 
@@ -164,18 +149,28 @@ export default class DatamasterValidation {
         isi_kemasan : z.number(),
         satuan_kemasan_uuid : z.string().min(1, required),
         kategori_obat_uuid : z.string().min(1, required),
-        supplier_uuid : z.string().min(1, required),
-        exp_date : z.string().min(1, required),
         satuan_pembelian_uuid : z.string().min(1, required),
-        harga_dasar : z.number(),
-        hna : z.number(),
-        hja : z.number(),
-        stock_min : z.number(),
-        stock_max : z.number(),
         status : z.boolean(),
     });
 
     static GET_CONVERSIONS = z.object({
         item_medis_uuid : z.string().min(1, uuidRequired),
-    })
+    });
+
+    static INSERT_JENIS_STOK_ITEM_MEDIS = z.object({
+        jenis_stok_uuid : z.string().min(1, required),
+    });
+
+    static UPDATE_JENIS_STOK_ITEM_MEDIS = z.object({
+        jenis_stok_uuid : z.string().min(1, required),
+        uuid : z.string().min(1, required),
+    });
+
+    static DELETE_JENIS_STOK_ITEM_MEDIS = z.object({
+        uuid : z.string().min(1, required),
+    });
+
+    static GET_AVAILABLE_JENIS_STOK = z.object({
+        item_medis_uuid : z.string().min(1, required),
+    });
 }

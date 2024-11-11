@@ -4,7 +4,7 @@ import DatamasterManufactureService from "../services/datamaster-manufacture-ser
 export default class DatamasterManufactureController {
     static async create(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             await DatamasterManufactureService.create(req.body);
             res.status(201).json(successResponse("data berhasil dibuat"));
         } catch (error) {
@@ -14,10 +14,10 @@ export default class DatamasterManufactureController {
 
     static async getAll(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = res.locals.jwtData.faskesUuid;
+            req.body.faskes_uuid = req.author.faskesUuid;
             req.body.name = req.query.name;
             const result = await DatamasterManufactureService.getAll(req.body);
-            res.status(200).json(successResponse("data berhasil didapat", result));
+            res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
         } catch (error) {
             nextFunction(error);
         }
@@ -36,6 +36,8 @@ export default class DatamasterManufactureController {
 
     static async delete(req, res, nextFunction) {
         try {
+            const { uuid } = req.params;
+            req.body.uuid = uuid;
             await DatamasterManufactureService.delete(req.body);
             res.status(200).json(successResponse("data berhasil dihapus"));
         } catch (error) {

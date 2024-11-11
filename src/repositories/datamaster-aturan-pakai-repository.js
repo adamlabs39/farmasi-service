@@ -39,4 +39,14 @@ export default class DataMasterAturanPakaiRepository {
             }
         });
     }
+
+    static async getAllWithoutPagination(faskes_uuid) {
+        return await AturanPakaiModel.findAll(
+            {
+                where: {
+                    faskes_uuid: faskes_uuid
+                }
+            }
+        );
+    }
 }

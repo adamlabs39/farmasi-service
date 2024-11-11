@@ -1,13 +1,21 @@
 import KonfigurasiHargaModel from "../models/konfigurasi-harga-model.js";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class KonfigurasiHargaRepository {
     static async get(faskes_uuid) {
-        return await KonfigurasiHargaModel.findOne({
+        const result = await KonfigurasiHargaModel.findOne({
             where: {
                 faskes_uuid : faskes_uuid,
                 deleted_at: null,
             },
         });
+
+
+        if (!result){
+            throw new BadRequestException("Konfigurasi harga belum di set");
+        } else {
+            return result;
+        }
     }
 
     static async create(req) {
@@ -15,7 +23,6 @@ export default class KonfigurasiHargaRepository {
     }
 
     static async update(req) {
-        console.log(req);
         const affectedRow = await KonfigurasiHargaModel.update(req, {
             where: {
                 faskes_uuid: req.faskes_uuid,
