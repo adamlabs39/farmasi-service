@@ -8,7 +8,7 @@ build-image:
     - echo "@adameds:registry=https://gitlab.com/api/v4/groups/93029767/-/packages/npm/" >> .npmrc
     - echo "//gitlab.com/api/v4/groups/93029767/-/packages/npm/:_authToken=$AUTH_TOKEN" >> .npmrc
     - cat .npmrc
-    - docker compose --env-file /home/admin/adameds/.env-rj down --rmi all
+    - docker compose --env-file /home/admin/adameds/.env-farmasi down --rmi all
   only:
     - dev-deployment
   script:
@@ -19,4 +19,4 @@ deploy-app:
     - dev-deployment
   stage: deploy
   script:
-    - docker compose --env-file /home/admin/adameds/.env-rj up -d
+    - docker build -t adameds/faramsi-service:dev ./ --no-cache
