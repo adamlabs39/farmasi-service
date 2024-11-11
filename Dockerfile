@@ -1,7 +1,6 @@
 FROM node:16-alpine
 
 WORKDIR /adameds-farmasi
-COPY package.json .
-RUN npm install
 COPY . .
+RUN npm install
 CMD npm start

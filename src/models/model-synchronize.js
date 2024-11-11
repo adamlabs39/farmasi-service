@@ -25,39 +25,40 @@ import StockMedisModel from "./stock-medis-model.js";
 import HargaItemModel from "./harga-item-model.js";
 import ItemMedisJenisStokModel from "./item-medis-jenis-stok-model.js";
 import PatientModel from "./patient-model.js";
+import {JenisStokItemMedisModel} from "@adameds/model-sdk/farmasi";
 
 const MODELMERGE = [
-    // JenisStokModel,
-    // AturanPakaiModel,
-    // BentukRacikanModel,
-    // BentukSediaanModel,
-    // CaraiPakaiModel,
-    // ConversionModel,
-    // IngredientItemMedisModel,
-    // IngredientModel,
-    // ItemMedisModel,
-    // ItemPenjualanObatModel,
-    // JenisStokItemMedisModel,
-    // KategoriObatModel,
-    // KonfigurasiHargaModel,
-    // LokasiStokModel,
-    // ManufactureModel,
-    // OrderAlkesItemModel,
-    // OrderAlkesModel,
-    // PatientModel
-    // PenjualanObatModel,
-    // PrescriptionItemModel,
-    // PrescriptionItemRacikanModel,
-    // PrescriptionModel,
-    // ReturItemModel,
-    // ReturModel,
+    JenisStokModel,
+    AturanPakaiModel,
+    BentukRacikanModel,
+    BentukSediaanModel,
+    CaraiPakaiModel,
+    ConversionModel,
+    IngredientItemMedisModel,
+    IngredientModel,
+    ItemMedisModel,
+    ItemPenjualanObatModel,
+    JenisStokItemMedisModel,
+    KategoriObatModel,
+    KonfigurasiHargaModel,
+    LokasiStokModel,
+    ManufactureModel,
+    OrderAlkesItemModel,
+    OrderAlkesModel,
+    PatientModel,
+    PenjualanObatModel,
+    PrescriptionItemModel,
+    PrescriptionItemRacikanModel,
+    PrescriptionModel,
+    ReturItemModel,
+    ReturModel,
     SatuanModel,
-    // StockMedisModel
-    // HargaItemModel,
-    // ItemMedisJenisStokModel,
-    // JenisStokModel,
-    // ItemMedisModel,
-    // LokasiStokModel
+    StockMedisModel,
+    HargaItemModel,
+    ItemMedisJenisStokModel,
+    JenisStokModel,
+    ItemMedisModel,
+    LokasiStokModel
 ];
 
 export default MODELMERGE;

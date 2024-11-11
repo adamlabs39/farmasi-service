@@ -17,21 +17,20 @@ import OrderAlkesItemSeeder from "./order-alkes-item-seeder.js";
 export const dbSeeder = async () => {
     const transaction = await sequelizeInstance.transaction();
     try {
-        // await AturanPakaiSeeder.seed(transaction);
-        // await CaraPakaiSeeder.seed(transaction);
-        // await LokasiStokSeeder.seed(transaction);
-        // await ItemMedisSeeder.seed(transaction);
+        await AturanPakaiSeeder.seed(transaction);
+        await CaraPakaiSeeder.seed(transaction);
+        await LokasiStokSeeder.seed(transaction);
+        await ItemMedisSeeder.seed(transaction);
         await SatuanSeeder.seed(transaction);
-        // await PrescriptionSeeder.seed(transaction);
-        // await PrescriptionItemSeeder.seed(transaction);
-        // await PrescriptionItemRacikanSeeder.seed(transaction);
-        // await StockMedisSeeder.seed(transaction);
-        // await HargaItemSeeder.seed(transaction);
-        // await JenisStokSeeder.seed(transaction);
-        // await ItemMedisJenisStokSeeder.seed(transaction);
-        // await OrderAlkesSeeder.seed(transaction);
-        // await OrderAlkesItemSeeder.seed(transaction);
-        // await ItemMedisSeeder.seed(transaction);
+        await PrescriptionSeeder.seed(transaction);
+        await PrescriptionItemSeeder.seed(transaction);
+        await PrescriptionItemRacikanSeeder.seed(transaction);
+        await StockMedisSeeder.seed(transaction);
+        await HargaItemSeeder.seed(transaction);
+        await JenisStokSeeder.seed(transaction);
+        await ItemMedisJenisStokSeeder.seed(transaction);
+        await OrderAlkesSeeder.seed(transaction);
+        await OrderAlkesItemSeeder.seed(transaction);
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();
