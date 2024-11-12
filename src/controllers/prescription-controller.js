@@ -175,4 +175,13 @@ export default class PrescriptionController {
             nextFunction(error);
         }
     }
+
+    static async getForFpo(req, res, nextFunction){
+        try {
+            const result = await PrescriptionService.getForFpo(req.query);
+            res.status(200).json(successResponse("data berhasil didapat", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }

@@ -14,6 +14,8 @@ import Utils from "../helpers/utils.js";
 import CaraiPakaiModel from "../models/cara-pakai-model.js";
 import BentukRacikanModel from "../models/bentuk-racikan-model.js";
 import PatientModel from "../models/patient-model.js";
+import {toEpochDate} from "../helpers/date-helper.js";
+import FpoPemberianModel from "../models/fpo-pemberian-model.js";
 
 export default class PrescriptionRepository {
     // get prescription by uuid
@@ -392,5 +394,94 @@ export default class PrescriptionRepository {
             },
             attributes : ['prescription_uuid']
         })
+    }
+
+    static async getForFpo(req){
+        const selectedDate = new Date(req.date);
+
+        let itemWhereOptions = {};
+        if (moment(selectedDate).isSame(new Date(), 'day')){
+            itemWhereOptions = {
+                sisa_qty_order : {
+                    [Op.gt] : 0
+                }
+            }
+        }
+
+        let prescriptionOptions = {
+            where : {
+                created_at : {
+                    [Op.lte] : toEpochDate(selectedDate)
+                },
+                order_status : 5,
+                rekam_medis_uuid : req.rekam_medis_uuid,
+            },
+            attributes : ["no_resep", "dokter_order"],
+            include : [
+                {
+                    model : PrescriptionItemModel,
+                    required : true,
+                    as : "obat",
+                    where : itemWhereOptions,
+                    attributes : ["uuid", "medication_dose_qty", "medication_qty", "nama_racikan", "sisa_qty_order"],
+                    include : [
+                        {
+                            model: ItemMedisModel,
+                            as: 'item_medis',
+                            required: false,
+                            attributes: ['name', 'uuid'],
+                            include: [
+                                {
+                                    model: SatuanModel,
+                                    as: 'satuan_penggunaan',
+                                    required: false,
+                                    attributes: ['name']
+                                }
+                            ]
+                        },
+                        {
+                            model: AturanPakaiModel,
+                            as: 'aturan_pakai',
+                            required: false,
+                            attributes: ['name']
+                        },
+                        {
+                            model: CaraiPakaiModel,
+                            as: 'cara_pakai',
+                            required: false,
+                            attributes: ['cara_pakai']
+                        },
+                        {
+                            model: SatuanModel,
+                            as: 'satuan_dosis',
+                            required: false,
+                            attributes: ['name']
+                        },
+                        {
+                            model: BentukRacikanModel,
+                            as: 'bentuk_racikan',
+                            required: false,
+                            attributes: ['nama_bentuk_racikan']
+                        },
+                        {
+                            model : FpoPemberianModel,
+                            as : "fpo_pemberian",
+                            required : !(moment(selectedDate).isSame(new Date(), 'day')),
+                            attributes : ["jam_pemberian"],
+                            where : {
+                                jam_pemberian : {
+                                    [Op.between] : [
+                                        moment(selectedDate).startOf('day').valueOf(),
+                                        moment(selectedDate).endOf('day').valueOf()
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+
+        return await PrescriptionModel.findAll(prescriptionOptions);
     }
 }

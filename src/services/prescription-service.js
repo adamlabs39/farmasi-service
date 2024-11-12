@@ -476,4 +476,9 @@ export default class PrescriptionService {
             throw new BadRequestException("order status tidak memungkinkan aksi ini");
         }
     }
+
+    static async getForFpo(req){
+        ZodValidator.validate(PrescriptionValidation.GET_FOR_FPO, req);
+        return await PrescriptionRepository.getForFpo(req);
+    }
 }

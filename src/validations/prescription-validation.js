@@ -13,6 +13,7 @@ export default class PrescriptionValidation {
         dokter_order: z.string().min(1, required),
         jenis_pelayanan: z.string().min(1, required),
         session_uuid: z.string().min(1, required),
+        rekam_medis_uuid : z.string().min(1, required),
     });
 
     static CREATE_PRESCRIPTION_ITEM = z.object({
@@ -100,8 +101,13 @@ export default class PrescriptionValidation {
         jenis_stok_uuid: z.string().min(1, required),
     })
 
-    STATUS_MORE_THAN = z.object({
+    static STATUS_MORE_THAN = z.object({
         status: z.number(),
         prescription_uuid: z.string().min(1, required),
+    })
+
+    static GET_FOR_FPO = z.object({
+        date: z.string().min(1, required),
+        rekam_medis_uuid : z.string().min(1, required)
     })
 }
