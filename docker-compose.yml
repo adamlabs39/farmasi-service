@@ -1,28 +1,18 @@
 services:
   adameds-farmasi:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      no_cache: true
     image: adameds/faramsi-service:dev
     container_name: adameds-farmasi
     ports:
       - 8086:8086
     restart: always
     networks:
-        - farmasi-network
+      - farmasi-network
     environment:
-      # db
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_DIALECT: ${DB_DIALECT}
-      DB_NAME: ${DB_NAME}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-
-      # redis
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
-      REDIS_USERNAME: ${REDIS_USERNAME}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_DATABASE: ${REDIS_DATABASE}
-
+      DOTENV_KEY: ${DOTENV_KEY}
     volumes:
       - type: bind
         source: /home/admin/adameds/private.key
@@ -30,6 +20,9 @@ services:
       - type: bind
         source: /home/admin/adameds/public.key
         target: /adameds-farmasi/public.key
+      - type: bind
+        source: /home/admin/adameds/.env.vault
+        target: /adameds-farmasi/.env.vault
 networks:
     farmasi-network:
         driver: bridge
