@@ -109,6 +109,9 @@ PrescriptionModel.init({
             type: DataTypes.ENUM("rj", "ri", "fisio", "igd"),
             allowNull: false,
         },
+        session_uuid: {
+            type: DataTypes.STRING(255),
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,

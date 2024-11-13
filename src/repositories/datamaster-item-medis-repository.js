@@ -1,15 +1,14 @@
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
-import ItemMedisModel from "../models/item-medis-model.js";
-import ConversionModel from "../models/conversion-model.js";
-import ItemMedisJenisStokModel from "../models/item-medis-jenis-stok-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
-import JenisStokModel from "../models/jenis-stok-model.js";
-import HargaItemModel from "../models/harga-item-model.js";
-import ManufactureModel from "../models/manufacture-model.js";
-import StockMedisModel from "../models/stock-medis-model.js";
-import SatuanModel from "../models/satuan-model.js";
+import {
+    ConversionModel, HargaItemModel,
+    ItemMedisJenisStokModel,
+    ItemMedisModel,
+    JenisStokModel,
+    ManufactureModel, SatuanModel
+} from "@adameds/model-sdk/farmasi";
 
 export default class DataMasterItemMedisRepository {
     static async create(req, transaction) {

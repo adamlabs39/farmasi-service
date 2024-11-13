@@ -1,5 +1,5 @@
-import KonfigurasiHargaModel from "../models/konfigurasi-harga-model.js";
 import BadRequestException from "../errors/bad-request-exception.js";
+import {KonfigurasiHargaModel} from "@adameds/model-sdk/farmasi";
 
 export default class KonfigurasiHargaRepository {
     static async get(faskes_uuid) {

@@ -1,7 +1,7 @@
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
-import LokasiStokModel from "../models/lokasi-stok-model.js";
+import {LokasiStokModel} from "@adameds/model-sdk/farmasi";
 
 export default class DataMasterLokasiStokRepository {
     static async create(req) {

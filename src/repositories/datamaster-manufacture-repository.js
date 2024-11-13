@@ -1,8 +1,8 @@
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
-import ManufactureModel from "../models/manufacture-model.js";
 import {KabupatenModel, KecamatanModel, KelurahanModel, ProvinceModel} from "@adameds/model-sdk/datamaster";
+import {ManufactureModel} from "@adameds/model-sdk/farmasi";
 
 export default class DataMasterManufactureRepository {
     static async create(req) {

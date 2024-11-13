@@ -1,7 +1,7 @@
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
-import AturanPakaiModel from "../models/aturan-pakai-model.js";
+import {AturanPakaiModel} from "@adameds/model-sdk/farmasi";
 
 export default class DataMasterAturanPakaiRepository {
     static async create(req) {

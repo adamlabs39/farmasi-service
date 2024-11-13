@@ -1,12 +1,14 @@
-import PenjualanObatModel from "../models/penjualan-obat-model.js";
-import ItemPenjualanObatModel from "../models/item-penjualan-obat-model.js";
+
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
-import LokasiStokModel from "../models/lokasi-stok-model.js";
 import Utils from "../helpers/utils.js";
-import ItemMedisModel from "../models/item-medis-model.js";
-import SatuanModel from "../models/satuan-model.js";
-import JenisStokModel from "../models/jenis-stok-model.js";
+import {
+    ItemMedisModel,
+    ItemPenjualanObatModel,
+    JenisStokModel,
+    LokasiStokModel,
+    PenjualanObatModel, SatuanModel
+} from "@adameds/model-sdk/farmasi";
 
 export default class PenjualanObatRepository {
     static async createOtc(req,transaction){

@@ -9,6 +9,7 @@ import ItemMedisModel from "./item-medis-model.js";
 import SatuanModel from "./satuan-model.js";
 import CaraiPakaiModel from "./cara-pakai-model.js";
 import BentukRacikanModel from "./bentuk-racikan-model.js";
+import FpoPemberianModel from "./fpo-pemberian-model.js";
 
 export default class PrescriptionItemModel extends Model {
 }
@@ -90,6 +91,9 @@ PrescriptionItemModel.init({
         biaya_racik: {
             type: DataTypes.FLOAT,
         },
+        stok_medis_uuides: {
+            type: DataTypes.JSON
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,
@@ -139,5 +143,11 @@ PrescriptionItemModel.belongsTo(SatuanModel, {
 PrescriptionItemModel.belongsTo(BentukRacikanModel, {
     foreignKey: "bentuk_racikan_uuid",
     as: "bentuk_racikan",
+    constraints: false
+})
+
+PrescriptionItemModel.hasMany(FpoPemberianModel, {
+    foreignKey: "prescription_item_uuid",
+    as: "fpo_pemberian",
     constraints: false
 })

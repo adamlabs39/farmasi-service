@@ -101,6 +101,7 @@ routes.put(`${baseUrl}/datamaster/konfig-harga`, KonfigurasiHargaController.upda
 routes.post(`${baseUrl}/prescriptions/first-order`, PrescriptionController.orderObat);
 routes.post(`${baseUrl}/prescriptions/add-obat`, PrescriptionController.addObat);
 routes.delete(`${baseUrl}/prescriptions/obat/:prescription_item_uuid`, PrescriptionController.deleteObat);
+routes.get(`${baseUrl}/prescriptions/fpo`, PrescriptionController.getForFpo);
 routes.get(`${baseUrl}/prescriptions/:uuid`, PrescriptionController.getByUuid);
 routes.put(`${baseUrl}/prescriptions/:uuid`, PrescriptionController.updatePrescription);
 routes.put(`${baseUrl}/prescriptions/obat/:uuid`, PrescriptionController.updateObat);

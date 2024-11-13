@@ -1,7 +1,7 @@
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
-import BentukSediaanModel from "../models/bentuk-sediaan-model.js";
+import {BentukSediaanModel} from "@adameds/model-sdk/farmasi";
 
 export default class DatamasterBentukSediaanRepository {
     static async create(req) {

@@ -1,7 +1,7 @@
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
-import IngredientModel from "../models/ingredient-model.js";
+import {IngredientModel} from "@adameds/model-sdk/farmasi";
 
 export default class DataMasterIngredientRepository {
     static async create(req) {

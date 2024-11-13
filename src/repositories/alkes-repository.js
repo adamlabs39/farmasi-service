@@ -1,17 +1,16 @@
-import PrescriptionModel from "../models/prescription-model.js";
-import PrescriptionItemModel from "../models/prescription-item-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
-import ItemMedisModel from "../models/item-medis-model.js";
-import SatuanModel from "../models/satuan-model.js";
 import {Op} from "sequelize";
-import LokasiStokModel from "../models/lokasi-stok-model.js";
 import Utils from "../helpers/utils.js";
-import OrderAlkesModel from "../models/order-alkes-model.js";
-import OrderAlkesItemModel from "../models/order-alkes-item-model.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import {LokasiModel} from "@adameds/model-sdk/datamaster";
-import PatientModel from "../models/patient-model.js";
-import JenisStokModel from "../models/jenis-stok-model.js";
+import {
+    ItemMedisModel, JenisStokModel, LokasiStokModel,
+    OrderAlkesItemModel,
+    OrderAlkesModel,
+    PrescriptionItemModel, PrescriptionModel,
+    SatuanModel
+} from "@adameds/model-sdk/farmasi";
+import {PatientModel} from "@adameds/model-sdk/admisi";
 
 export default class AlkesRepository {
     // get prescription by uuid

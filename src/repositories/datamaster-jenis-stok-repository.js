@@ -1,7 +1,7 @@
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
-import JenisStokModel from "../models/jenis-stok-model.js";
+import {JenisStokModel} from "@adameds/model-sdk/farmasi";
 
 export default class DataMasterJenisStokRepository {
     static async create(req) {
