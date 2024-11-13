@@ -268,9 +268,11 @@ export default class PrescriptionService {
 
             // loop for reduce stock
             for (const obat of prescription.obat) {
+                let usedStock;
+
                 if (obat.is_compound) {
                     for (const racikan of obat.racikan) {
-                        await StockMedisRepository.reduceQuantity({
+                        usedStock = await StockMedisRepository.reduceQuantity({
                             item_medis_uuid: racikan.item_medis_uuid,
                             jenis_stok_uuid: racikan.jenis_stok_uuid,
                             quantity: racikan.medication_qty,
@@ -280,7 +282,7 @@ export default class PrescriptionService {
                         }, transaction)
                     }
                 } else {
-                    await StockMedisRepository.reduceQuantity({
+                    usedStock = await StockMedisRepository.reduceQuantity({
                         item_medis_uuid: obat.item_medis_uuid,
                         jenis_stok_uuid: obat.jenis_stok_uuid,
                         quantity: obat.medication_qty,
@@ -289,6 +291,14 @@ export default class PrescriptionService {
                         name: obat.item_medis.name
                     }, transaction)
                 }
+
+                const prescriptionItem = {
+                    uuid : obat.uuid,
+                    stok_medis_uuides : usedStock
+                }
+
+                // update prescription item
+                await PrescriptionRepository.editPrescriptionItem(prescriptionItem, transaction)
             }
 
             // update prescription

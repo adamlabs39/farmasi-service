@@ -269,14 +269,19 @@ export default class PrescriptionRepository {
     }
 
     // edit prescription item
-    static async editPrescriptionItem(req) {
+    static async editPrescriptionItem(req, transaction) {
+        if (transaction === null || transaction === undefined) {
+            transaction = await sequelizeInstance.transaction()
+        }
+
         return await PrescriptionItemModel.update(
             req,
             {
                 where: {
                     uuid: req.uuid
-                }
-            }
+                },
+                transaction
+            },
         );
     }
 
