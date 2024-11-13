@@ -2,8 +2,6 @@ import express from "express";
 import cors from "cors";
 import routes from "./routes/routes.js";
 import errorMiddleware from "./middlewares/error-middleware.js";
-import MODELMERGE from "./models/model-synchronize.js";
-import {dbSeeder} from "./seeders/db-seeder.js";
 import authorizationSdk from "@adameds/authorization-sdk";
 
 const APPLICATION_PORT = process.env.APPLICATION_PORT;

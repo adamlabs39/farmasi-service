@@ -30,6 +30,9 @@ OrderAlkesItemModel.init({
         jenis_stok_uuid: {
             type: DataTypes.STRING(255),
         },
+    stok_medis_uuides: {
+        type: DataTypes.JSON
+    },
         ...fieldTime
     }, {
         hooks: hookModel,

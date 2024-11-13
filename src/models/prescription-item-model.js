@@ -91,6 +91,9 @@ PrescriptionItemModel.init({
         biaya_racik: {
             type: DataTypes.FLOAT,
         },
+        stok_medis_uuides: {
+            type: DataTypes.JSON
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,

@@ -88,6 +88,9 @@ OrderAlkesModel.init({
             type: DataTypes.STRING(255),
             allowNull: false
         },
+        payment_method: {
+            type: DataTypes.STRING(255),
+        },
         ...fieldTime
     }, {
         hooks: hookModel,
