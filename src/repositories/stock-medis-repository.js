@@ -1,7 +1,7 @@
 import {Op} from "sequelize";
-import StockMedisModel from "../models/stock-medis-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import BadRequestException from "../errors/bad-request-exception.js";
+import {StockMedisModel} from "@adameds/model-sdk/inventory";
 
 export default class StockMedisRepository {
     static async reduceQuantity(req, t) {

@@ -1,21 +1,20 @@
-import PrescriptionModel from "../models/prescription-model.js";
-import PrescriptionItemModel from "../models/prescription-item-model.js";
-import PrescriptionItemRacikanModel from "../models/prescription-item-racikan-model.js";
+
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import moment from "moment";
 import NotfoundException from "../errors/notfound-exception.js";
 import BadRequestException from "../errors/bad-request-exception.js";
-import AturanPakaiModel from "../models/aturan-pakai-model.js";
-import ItemMedisModel from "../models/item-medis-model.js";
-import SatuanModel from "../models/satuan-model.js";
 import {Op} from "sequelize";
-import LokasiStokModel from "../models/lokasi-stok-model.js";
 import Utils from "../helpers/utils.js";
-import CaraiPakaiModel from "../models/cara-pakai-model.js";
-import BentukRacikanModel from "../models/bentuk-racikan-model.js";
-import PatientModel from "../models/patient-model.js";
 import {toEpochDate} from "../helpers/date-helper.js";
-import FpoPemberianModel from "../models/fpo-pemberian-model.js";
+import {
+    AturanPakaiModel,
+    BentukRacikanModel, CaraiPakaiModel, FpoPemberianModel,
+    ItemMedisModel,
+    PrescriptionItemModel,
+    PrescriptionItemRacikanModel,
+    PrescriptionModel, SatuanModel
+} from "@adameds/model-sdk/farmasi";
+import {PatientModel} from "@adameds/model-sdk/admisi";
 
 export default class PrescriptionRepository {
     // get prescription by uuid

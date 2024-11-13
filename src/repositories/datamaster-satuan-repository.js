@@ -1,7 +1,7 @@
-import SatuanModel from "../models/satuan-model.js";
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
+import {SatuanModel} from "@adameds/model-sdk/farmasi";
 
 export default class DataMasterSatuanRepository {
     static async create(req) {

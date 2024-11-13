@@ -1,7 +1,7 @@
 import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
-import CaraiPakaiModel from "../models/cara-pakai-model.js";
+import {CaraiPakaiModel} from "@adameds/model-sdk/farmasi";
 
 export default class DataMasterCaraPakaiRepository {
     static async create(req) {

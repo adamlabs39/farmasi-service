@@ -1,5 +1,5 @@
 import {toEpochDate} from "../helpers/date-helper.js";
-import ConversionModel from "../models/conversion-model.js";
+import {ConversionModel} from "@adameds/model-sdk/farmasi";
 
 export default class ConversionRepository {
     static async bulkCreate(req, transaction) {
