@@ -71,7 +71,8 @@ export default class StockMedisRepository {
 
                 result.push({
                     stock_medis_uuid: stock.uuid,
-                    quantity: remainingQuantity
+                    quantity: remainingQuantity,
+                    expired_date : stock.exp_date,
                 });
 
                 remainingQuantity = 0;
@@ -87,7 +88,8 @@ export default class StockMedisRepository {
                 );
                 result.push({
                     stock_medis_uuid: stock.uuid,
-                    quantity:  stock.sisa_stok
+                    quantity:  stock.sisa_stok,
+                    expired_date : stock.exp_date,
                 });
 
                 remainingQuantity = Math.abs(newStock);

@@ -14,6 +14,7 @@ import DatamasterItemMedisController from "../controllers/datamaster-item-medis-
 import PrescriptionController from "../controllers/prescription-controller.js";
 import PenjualanObatController from "../controllers/penjualan-obat-controller.js";
 import AlkesController from "../controllers/alkes-controller.js";
+import ReturController from "../controllers/retur-controller.js";
 
 const apiBase = process.env.API_BASE || "api";
 const apiVersion = process.env.API_VERSION || "v1";
@@ -140,6 +141,8 @@ routes.put(`${baseUrl}/alkes/items/:uuid`, AlkesController.updateAlkesItem);
 routes.put(`${baseUrl}/alkes/items/:uuid/jenis-stok`, AlkesController.updateJenisStokItem);
 routes.delete(`${baseUrl}/alkes/:uuid`, AlkesController.batalOrder);
 
+// RETUR
+routes.post(`${baseUrl}/retur`, ReturController.create);
 
 
 export default routes;

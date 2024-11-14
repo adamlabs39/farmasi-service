@@ -3,6 +3,7 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import ReturItemModel from "./retur-item-model.js";
 
 export default class ReturModel extends Model {
 }
@@ -36,7 +37,7 @@ ReturModel.init({
             allowNull: false,
         },
         order_date: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             allowNull: false,
         },
         total: {
@@ -45,10 +46,6 @@ ReturModel.init({
         },
         lokasi_stok_uuid: {
             type: DataTypes.STRING(255),
-            allowNull: false,
-        },
-        item_medis: {
-            type: DataTypes.JSON,
             allowNull: false,
         },
         alasan_retur: {
@@ -74,3 +71,8 @@ ReturModel.init({
         ],
     }
 )
+
+ReturModel.hasMany(ReturItemModel, {
+    foreignKey: "retur_uuid",
+    as: "items",
+})

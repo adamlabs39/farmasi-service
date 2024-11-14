@@ -3,7 +3,6 @@ import LokasiStokSeeder from "./lokasi-stok-seeder.js";
 import AturanPakaiSeeder from "./aturan-pakai-seeder.js";
 import ItemMedisSeeder from "./item-medis-seeder.js";
 import SatuanSeeder from "./satuan-seeder.js";
-import PrescriptionSeeder from "./prescription-seeder.js";
 import PrescriptionItemSeeder from "./prescription-item-seeder.js";
 import PrescriptionItemRacikanSeeder from "./prescription-item-racikan-seeder.js";
 import StockMedisSeeder from "./stock-medis-seeder.js";
@@ -14,6 +13,7 @@ import CaraPakaiSeeder from "./cara-pakai-seeder.js";
 import OrderAlkesSeeder from "./order-alkes-seeder.js";
 import OrderAlkesItemSeeder from "./order-alkes-item-seeder.js";
 import FpoPemberianSeeder from "./fpo-pemberian-seeder.js";
+import PrescriptionSeeder from "./prescription-seeder.js";
 
 export const dbSeeder = async () => {
     const transaction = await sequelizeInstance.transaction();
@@ -30,9 +30,9 @@ export const dbSeeder = async () => {
         // await HargaItemSeeder.seed(transaction);
         // await JenisStokSeeder.seed(transaction);
         // await ItemMedisJenisStokSeeder.seed(transaction);
-        // await OrderAlkesSeeder.seed(transaction);
-        // await OrderAlkesItemSeeder.seed(transaction);
-        await FpoPemberianSeeder.seed(transaction);
+        await OrderAlkesSeeder.seed(transaction);
+        await OrderAlkesItemSeeder.seed(transaction);
+        // await FpoPemberianSeeder.seed(transaction);
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();

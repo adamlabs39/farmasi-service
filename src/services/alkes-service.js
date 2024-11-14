@@ -244,8 +244,8 @@ export default class AlkesService {
                 penyerahan_alkes.push(resep);
             }
 
-            resep.dataValues.patient = resep.patient.name;
-            resep.dataValues.lokasi = resep.lokasi.name;
+            resep.dataValues.patient = resep.patient?.name;
+            resep.dataValues.lokasi = resep.lokasi?.name;
         }
 
         return {

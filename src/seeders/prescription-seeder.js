@@ -1,4 +1,4 @@
-import PrescriptionModel from "../models/prescription-model.js";
+import {PrescriptionModel} from "@adameds/model-sdk/farmasi";
 
 export default class PrescriptionSeeder {
     static async seed(transaction) {

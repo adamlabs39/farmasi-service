@@ -1,4 +1,3 @@
-
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import moment from "moment";
 import NotfoundException from "../errors/notfound-exception.js";
@@ -9,7 +8,7 @@ import {toEpochDate} from "../helpers/date-helper.js";
 import {
     AturanPakaiModel,
     BentukRacikanModel, CaraiPakaiModel, FpoPemberianModel,
-    ItemMedisModel,
+    ItemMedisModel, LokasiStokModel,
     PrescriptionItemModel,
     PrescriptionItemRacikanModel,
     PrescriptionModel, SatuanModel
@@ -122,6 +121,7 @@ export default class PrescriptionRepository {
         req.racikan = Utils.nullToType(req.racikan)
         req.takeaway = Utils.nullToType(req.takeaway)
         req.is_chronic = Utils.nullToType(req.is_chronic)
+        req.status = Utils.nullToType(req.status, Array)
 
         req.start_date = Utils.numberTo13Digit(req.start_date)
         req.end_date = Utils.numberTo13Digit(req.end_date)
@@ -142,6 +142,12 @@ export default class PrescriptionRepository {
             },
             order_status: {
                 [Op.between]: [1, 4]
+            }
+        }
+
+        if (req.status.length > 0) {
+            wherePrescription.order_status = {
+                [Op.between]: req.status
             }
         }
 
@@ -391,44 +397,44 @@ export default class PrescriptionRepository {
         });
     }
 
-    static async getPrescriptionUuidByObat(item_uuid){
+    static async getPrescriptionUuidByObat(item_uuid) {
         return await PrescriptionItemModel.findOne({
             where: {
                 uuid: item_uuid
             },
-            attributes : ['prescription_uuid']
+            attributes: ['prescription_uuid']
         })
     }
 
-    static async getForFpo(req){
+    static async getForFpo(req) {
         const selectedDate = new Date(req.date);
 
         let itemWhereOptions = {};
-        if (moment(selectedDate).isSame(new Date(), 'day')){
+        if (moment(selectedDate).isSame(new Date(), 'day')) {
             itemWhereOptions = {
-                sisa_qty_order : {
-                    [Op.gt] : 0
+                sisa_qty_order: {
+                    [Op.gt]: 0
                 }
             }
         }
 
         let prescriptionOptions = {
-            where : {
-                created_at : {
-                    [Op.lte] : toEpochDate(selectedDate)
+            where: {
+                created_at: {
+                    [Op.lte]: toEpochDate(selectedDate)
                 },
-                order_status : 5,
-                rekam_medis_uuid : req.rekam_medis_uuid,
+                order_status: 5,
+                rekam_medis_uuid: req.rekam_medis_uuid,
             },
-            attributes : ["no_resep", "dokter_order"],
-            include : [
+            attributes: ["no_resep", "dokter_order"],
+            include: [
                 {
-                    model : PrescriptionItemModel,
-                    required : true,
-                    as : "obat",
-                    where : itemWhereOptions,
-                    attributes : ["uuid", "medication_dose_qty", "medication_qty", "nama_racikan", "sisa_qty_order"],
-                    include : [
+                    model: PrescriptionItemModel,
+                    required: true,
+                    as: "obat",
+                    where: itemWhereOptions,
+                    attributes: ["uuid", "medication_dose_qty", "medication_qty", "nama_racikan", "sisa_qty_order"],
+                    include: [
                         {
                             model: ItemMedisModel,
                             as: 'item_medis',
@@ -468,13 +474,13 @@ export default class PrescriptionRepository {
                             attributes: ['nama_bentuk_racikan']
                         },
                         {
-                            model : FpoPemberianModel,
-                            as : "fpo_pemberian",
-                            required : !(moment(selectedDate).isSame(new Date(), 'day')),
-                            attributes : ["jam_pemberian"],
-                            where : {
-                                jam_pemberian : {
-                                    [Op.between] : [
+                            model: FpoPemberianModel,
+                            as: "fpo_pemberian",
+                            required: !(moment(selectedDate).isSame(new Date(), 'day')),
+                            attributes: ["jam_pemberian"],
+                            where: {
+                                jam_pemberian: {
+                                    [Op.between]: [
                                         moment(selectedDate).startOf('day').valueOf(),
                                         moment(selectedDate).endOf('day').valueOf()
                                     ]
