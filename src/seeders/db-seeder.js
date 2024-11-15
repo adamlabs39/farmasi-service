@@ -14,6 +14,7 @@ import OrderAlkesSeeder from "./order-alkes-seeder.js";
 import OrderAlkesItemSeeder from "./order-alkes-item-seeder.js";
 import FpoPemberianSeeder from "./fpo-pemberian-seeder.js";
 import PrescriptionSeeder from "./prescription-seeder.js";
+import KonfigurasiHargaSeeder from "./konfigurasi-harga-seeder.js";
 
 export const dbSeeder = async () => {
     const transaction = await sequelizeInstance.transaction();
@@ -30,9 +31,10 @@ export const dbSeeder = async () => {
         // await HargaItemSeeder.seed(transaction);
         // await JenisStokSeeder.seed(transaction);
         // await ItemMedisJenisStokSeeder.seed(transaction);
-        await OrderAlkesSeeder.seed(transaction);
-        await OrderAlkesItemSeeder.seed(transaction);
+        // await OrderAlkesSeeder.seed(transaction);
+        // await OrderAlkesItemSeeder.seed(transaction);
         // await FpoPemberianSeeder.seed(transaction);
+        await KonfigurasiHargaSeeder.seed(transaction);
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();

@@ -28,7 +28,7 @@ app.listen(APPLICATION_PORT, APPLICATION_HOST, async () => {
         //
         //
 
-        // await dbSeeder();
+        await dbSeeder();
     } catch (error) {
         console.error("Failed to synchronize the database:", error);
     }
