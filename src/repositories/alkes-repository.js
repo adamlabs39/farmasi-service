@@ -5,8 +5,7 @@ import InternalServerException from "../errors/internal-server-exception.js";
 import {LokasiModel} from "@adameds/model-sdk/datamaster";
 import {
     ItemMedisModel, JenisStokModel, LokasiStokModel,
-    OrderAlkesItemModel,
-    OrderAlkesModel,
+    OrderAlkesItemModel, OrderAlkesModel,
     PrescriptionItemModel, PrescriptionModel,
     SatuanModel
 } from "@adameds/model-sdk/farmasi";
@@ -218,6 +217,7 @@ export default class AlkesRepository {
     static getAllForFarmacy(req){
         req.search = Utils.nullToType(req.search)
         req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
+        req.status = Utils.nullToType(req.status, Array)
 
         req.start_date = Utils.numberTo13Digit(req.start_date)
         req.end_date = Utils.numberTo13Digit(req.end_date)
@@ -225,7 +225,7 @@ export default class AlkesRepository {
         return OrderAlkesModel.findAll({
             where: {
                 order_status : {
-                    [Op.in]: [1, 2, 3]
+                    [Op.between]: (req.status.length > 0) ? req.status : [1, 2, 3],
                 },
                 faskes_uuid : req.faskes_uuid,
                 [Op.or]: [
@@ -255,7 +255,6 @@ export default class AlkesRepository {
                     model : LokasiModel,
                     as : 'lokasi',
                     required : false,
-                    attributes : ['name']
                 },
                 {
                     model : PatientModel,

@@ -17,7 +17,6 @@ import OrderAlkesModel from "./order-alkes-model.js";
 import PenjualanObatModel from "./penjualan-obat-model.js";
 import PrescriptionItemModel from "./prescription-item-model.js";
 import PrescriptionItemRacikanModel from "./prescription-item-racikan-model.js";
-import PrescriptionModel from "./prescription-model.js";
 import ReturItemModel from "./retur-item-model.js";
 import ReturModel from "./retur-model.js";
 import SatuanModel from "./satuan-model.js";
@@ -25,8 +24,8 @@ import StockMedisModel from "./stock-medis-model.js";
 import HargaItemModel from "./harga-item-model.js";
 import ItemMedisJenisStokModel from "./item-medis-jenis-stok-model.js";
 import PatientModel from "./patient-model.js";
-import {JenisStokItemMedisModel} from "@adameds/model-sdk/farmasi";
-import FpoPemberianModel from "./fpo-pemberian-model.js";
+import {PrescriptionModel} from "@adameds/model-sdk/farmasi";
+// import FpoPemberianModel from "./fpo-pemberian-model.js";
 
 const MODELMERGE = [
     // JenisStokModel,
@@ -48,7 +47,7 @@ const MODELMERGE = [
     OrderAlkesModel,
     // PatientModel,
     // PenjualanObatModel,
-    PrescriptionItemModel,
+    // PrescriptionItemModel,
     // PrescriptionItemRacikanModel,
     // PrescriptionModel,
     // ReturItemModel,
@@ -59,8 +58,9 @@ const MODELMERGE = [
     // ItemMedisJenisStokModel,
     // JenisStokModel,
     // ItemMedisModel,
-    // LokasiStokModel
-    FpoPemberianModel
+    // FpoPemberianModel
+    // ReturItemModel
+
 ];
 
 export default MODELMERGE;

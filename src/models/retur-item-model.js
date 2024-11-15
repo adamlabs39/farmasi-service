@@ -3,6 +3,7 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
+import PrescriptionItemModel from "./prescription-item-model.js";
 
 export default class ReturItemModel extends Model {
 }
@@ -13,8 +14,12 @@ ReturItemModel.init({
             type: DataTypes.STRING(255),
             allowNull: false,
         },
-        item_medis_uuid: {
+        prescription_item_uuid: {
             type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        expired_date: {
+            type: DataTypes.DATE,
             allowNull: false,
         },
         qty_retur: {
@@ -40,3 +45,9 @@ ReturItemModel.init({
         ],
     }
 )
+
+ReturItemModel.belongsTo(PrescriptionItemModel, {
+    foreignKey: "prescription_item_uuid",
+    as: "detail_prescription_item",
+    constraints: false
+})

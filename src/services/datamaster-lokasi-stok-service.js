@@ -8,7 +8,6 @@ export default class DatamasterLokasiStokService {
         if (req.jenis_lokasi === "depo") {
             req.default_tujuan_order_permintaan = req.default_tujuan_order_permintaan.join("");
         }
-        console.log(req);
         return await DataMasterLokasiStokRepository.create(req);
     }
 

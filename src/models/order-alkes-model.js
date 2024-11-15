@@ -85,7 +85,7 @@ OrderAlkesModel.init({
             allowNull: false,
         },
         lokasi_uuid: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.UUID,
             allowNull: false
         },
         payment_method: {
