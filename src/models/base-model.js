@@ -1,12 +1,13 @@
 import { DataTypes } from "sequelize";
 import { toEpochDate } from "../helpers/date-helper.js";
+import moment from "moment";
 
 const fieldTime = {
     created_at: {
         type: DataTypes.BIGINT,
         allowNull: false,
         unique: false,
-        defaultValue: toEpochDate(new Date())
+        defaultValue: moment().valueOf()
     },
     updated_at: {
         type: DataTypes.BIGINT,

@@ -125,6 +125,9 @@ export default class ReturService {
         ZodValidator.validate(ReturValidation.GET_ALL, req);
 
         let result;
+        req.pagination = true;
+        req.subQuery = false;
+
         if (req.item_type === "obat") {
             req.status = [5, 5]
             ZodValidator.validate(PrescriptionValidation.GET_ALL, req);

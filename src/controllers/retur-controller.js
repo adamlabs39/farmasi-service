@@ -28,7 +28,7 @@ export default class ReturController {
         try {
             req.body.faskes_uuid = req.author.faskesUuid;
             const result = await ReturService.getAll(req.body);
-            res.status(200).json(successResponse("data berhasil diupdate", result));
+            res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
         } catch (error) {
             nextFunction(error);
         }
