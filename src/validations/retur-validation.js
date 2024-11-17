@@ -17,4 +17,12 @@ export default class ReturValidation {
         harga_satuan: z.number(),
     })
 
+    static GET_DETAIL =  z.object({
+        item_type: z.string().min(1, required),
+    })
+
+    static GET_ALL = z.object({
+      item_type: z.string().min(1, required),
+    })
+
 }

@@ -14,6 +14,7 @@ import {
     PrescriptionModel, SatuanModel
 } from "@adameds/model-sdk/farmasi";
 import {PatientModel} from "@adameds/model-sdk/admisi";
+import Pagination from "../helpers/pagination.js";
 
 export default class PrescriptionRepository {
     // get prescription by uuid
@@ -169,27 +170,33 @@ export default class PrescriptionRepository {
             wherePrescriptionItem.is_chronic = true
         }
 
-        return await PrescriptionModel.findAll(
-            {
-                where: wherePrescription,
-                attributes: ['uuid', 'no_rm', 'no_reg', 'no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', 'is_takeaway', 'order_status'],
-                include: [
-                    {
-                        model: PrescriptionItemModel,
-                        as: 'obat',
-                        required: (req.is_chronic === true) || (req.racikan === true),
-                        attributes: ["is_chronic", "is_compound"],
-                        where: wherePrescriptionItem,
-                    },
-                    {
-                        model: PatientModel,
-                        as: 'patient',
-                        required: false,
-                        attributes: ['name']
-                    }
-                ]
-            },
-        );
+        const options = {
+            attributes: ['uuid', 'no_rm', 'no_reg', 'no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', 'is_takeaway', 'order_status'],
+            include: [
+                {
+                    model: PrescriptionItemModel,
+                    as: 'obat',
+                    required: (req.is_chronic === true) || (req.racikan === true),
+                    attributes: ["is_chronic", "is_compound"],
+                    where: wherePrescriptionItem,
+                },
+                {
+                    model: PatientModel,
+                    as: 'patient',
+                    required: false,
+                    attributes: ['name']
+                }
+            ],
+            where: wherePrescription,
+        }
+
+        if(!req.pagination){
+            return await PrescriptionModel.findAll(
+                {options},
+            );
+        } else {
+            return await Pagination.init(PrescriptionModel, req, options);
+        }
     }
 
     // get all prescription item
@@ -493,5 +500,19 @@ export default class PrescriptionRepository {
         }
 
         return await PrescriptionModel.findAll(prescriptionOptions);
+    }
+
+    static async getPrescriptionByUuid(uuid) {
+        const data = await PrescriptionItemModel.findOne({
+            where: {
+                uuid: uuid
+            },
+        });
+
+        if(!data){
+            throw new NotfoundException('Data tidak ditemukan');
+        }
+
+        return data;
     }
 }

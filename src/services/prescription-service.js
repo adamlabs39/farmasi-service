@@ -91,14 +91,24 @@ export default class PrescriptionService {
             }
 
             // insert into rekam medis
-            await axiosInstance.post(`${REKAM_MEDIS_URL}/rekam-medis/order-obat`, {
-                session_uuid: req.session_uuid,
-                order_obat_uuid: prescription_uuid
-            }, {
-                headers: {
-                    Authorization: req.token
+            try {
+                await axiosInstance.post(`${REKAM_MEDIS_URL}/rekam-medis/order-obat`, {
+                    session_uuid: req.session_uuid,
+                    order_obat_uuid: prescription_uuid
+                }, {
+                    headers: {
+                        Authorization: req.token
+                    }
+                });
+            } catch (error) {
+                if (error.response) {
+                    throw new InternalServerException("[SERVER REKAM MEDIS]: " + error.response.data.message);
+                } else if (error.request) {
+                    throw new InternalServerException("Tidak ada respons dari server rekam medis");
+                } else {
+                    throw new InternalServerException("Kesalahan saat menyiapkan permintaan rekam medis");
                 }
-            });
+            }
 
             await transaction.commit();
 
@@ -238,14 +248,14 @@ export default class PrescriptionService {
     }
 
     static async updateTelaah(req) {
-        ZodValidator.validate(PrescriptionValidation.UPDATE_TELAAH, req);
         req.status_telaah = true;
+        ZodValidator.validate(PrescriptionValidation.UPDATE_TELAAH, req);
         return await PrescriptionRepository.editPrescription(req);
     }
 
     static async batalOrder(req) {
-        ZodValidator.validate(PrescriptionValidation.BATAL_ORDER, req);
         req.order_status = 0;
+        ZodValidator.validate(PrescriptionValidation.BATAL_ORDER, req);
         return await PrescriptionRepository.editPrescription(req);
     }
 
@@ -426,6 +436,9 @@ export default class PrescriptionService {
 
                 // set tarif price
                 const tarif = await DataMasterBentukRacikanRepository.getByUuid(item.bentuk_racikan_uuid);
+                if (!tarif){
+                    throw new BadRequestException(`tarif racikan tidak ditemukan`);
+                }
                 let multiplier = 1;
 
                 if (konfigurasiHarga.metode_biaya_racikan === "paket") {

@@ -4,12 +4,13 @@ import Utils from "../helpers/utils.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import {LokasiModel} from "@adameds/model-sdk/datamaster";
 import {
-    ItemMedisModel, JenisStokModel, LokasiStokModel,
-    OrderAlkesItemModel, OrderAlkesModel,
+    ItemMedisModel, JenisStokModel, LokasiStokModel, OrderAlkesItemModel,
+    OrderAlkesModel,
     PrescriptionItemModel, PrescriptionModel,
     SatuanModel
 } from "@adameds/model-sdk/farmasi";
 import {PatientModel} from "@adameds/model-sdk/admisi";
+import Pagination from "../helpers/pagination.js";
 
 export default class AlkesRepository {
     // get prescription by uuid
@@ -174,13 +175,18 @@ export default class AlkesRepository {
     }
 
     // edit alkes item
-    static async editAlkesItem(req) {
+    static async editAlkesItem(req, transaction) {
+        if (!transaction){
+            transaction = await sequelizeInstance.transaction();
+        }
+
         const affectedRow = await OrderAlkesItemModel.update(
             req,
             {
                 where: {
                     uuid: req.uuid
-                }
+                },
+                transaction: transaction
             }
         );
 
@@ -214,7 +220,7 @@ export default class AlkesRepository {
         });
     }
 
-    static getAllForFarmacy(req){
+    static async getAllForFarmacy(req){
         req.search = Utils.nullToType(req.search)
         req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
         req.status = Utils.nullToType(req.status, Array)
@@ -222,7 +228,8 @@ export default class AlkesRepository {
         req.start_date = Utils.numberTo13Digit(req.start_date)
         req.end_date = Utils.numberTo13Digit(req.end_date)
 
-        return OrderAlkesModel.findAll({
+
+        const option = {
             where: {
                 order_status : {
                     [Op.between]: (req.status.length > 0) ? req.status : [1, 2, 3],
@@ -263,6 +270,12 @@ export default class AlkesRepository {
                     attributes : ['name']
                 }
             ],
-        });
+        };
+
+        if (!req.pagination){
+            return await OrderAlkesModel.findAll(option);
+        } else {
+            return await Pagination.init(OrderAlkesModel, req, option);
+        }
     }
 }

@@ -5,11 +5,13 @@ export default class Pagination{
         const page = args.page || 1;
         const limit = args.limit || 10;
         const offset = (page - 1) * limit;
+        const subQuery = args.subQuery ?? true;
 
         const query = await model.findAndCountAll({
             limit: limit,
             offset: offset,
             distinct:true,
+            subQuery: subQuery,
             ...options
         });
 
