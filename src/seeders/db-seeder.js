@@ -31,10 +31,10 @@ export const dbSeeder = async () => {
         // await HargaItemSeeder.seed(transaction);
         // await JenisStokSeeder.seed(transaction);
         // await ItemMedisJenisStokSeeder.seed(transaction);
-        // await OrderAlkesSeeder.seed(transaction);
-        // await OrderAlkesItemSeeder.seed(transaction);
+        await OrderAlkesSeeder.seed(transaction);
+        await OrderAlkesItemSeeder.seed(transaction);
         // await FpoPemberianSeeder.seed(transaction);
-        await KonfigurasiHargaSeeder.seed(transaction);
+        // await KonfigurasiHargaSeeder.seed(transaction);
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();

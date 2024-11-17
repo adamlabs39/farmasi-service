@@ -1,4 +1,3 @@
-import PrescriptionRepository from "../repositories/prescription-repository.js";
 import PrescriptionValidation from "../validations/prescription-validation.js";
 import ZodValidator from "../validations/zod-validator.js";
 import BadRequestException from "../errors/bad-request-exception.js";
@@ -6,13 +5,10 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import DataMasterLokasiStokRepository from "../repositories/datamaster-lokasi-stok-repository.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import Utils from "../helpers/utils.js";
-import axiosInstance from "../configurations/axios-instance.js";
-import {REKAM_MEDIS_URL} from "../helpers/constants.js";
 import {toEpochDate} from "../helpers/date-helper.js";
 import KonfigurasiHargaService from "./konfigurasi-harga-service.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
 import DataMasterItemMedisRepository from "../repositories/datamaster-item-medis-repository.js";
-import DataMasterBentukRacikanRepository from "../repositories/datamaster-bentuk-racikan-repository.js";
 import AlkesValidation from "../validations/alkes-validation.js";
 import AlkesRepository from "../repositories/alkes-repository.js";
 
@@ -177,15 +173,21 @@ export default class AlkesService {
 
             // loop for reduce stock
             for (const alkesIitem of alkes.alkes_items) {
-                    await StockMedisRepository.reduceQuantity({
-                        item_medis_uuid: alkesIitem.item_medis_uuid,
-                        jenis_stok_uuid: alkesIitem.jenis_stok_uuid,
-                        quantity: alkesIitem.qty,
-                        lokasi_stok_uuid: alkes.lokasi_stok_uuid,
-                        metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
-                        name: alkesIitem.item_medis.name
-                    }, transaction)
+                const usedStock = await StockMedisRepository.reduceQuantity({
+                    item_medis_uuid: alkesIitem.item_medis_uuid,
+                    jenis_stok_uuid: alkesIitem.jenis_stok_uuid,
+                    quantity: alkesIitem.qty,
+                    lokasi_stok_uuid: alkes.lokasi_stok_uuid,
+                    metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
+                    name: alkesIitem?.item_medis?.name ?? ""
+                }, transaction)
 
+                const item = {
+                    uuid: alkesIitem.uuid,
+                    stok_medis_uuides: usedStock
+                }
+
+                await AlkesRepository.editAlkesItem(item, transaction);
             }
 
             // update prescription
@@ -265,27 +267,27 @@ export default class AlkesService {
         let totalHarga = 0;
 
         for (const item of alkes.alkes_items) {
-                const hargaItem = await DataMasterItemMedisRepository.getPrice({
-                    item_medis_uuid: item.item_medis_uuid,
-                    jenis_stok_uuid: item.jenis_stok_uuid
-                });
+            const hargaItem = await DataMasterItemMedisRepository.getPrice({
+                item_medis_uuid: item.item_medis_uuid,
+                jenis_stok_uuid: item.jenis_stok_uuid
+            });
 
-                if (hargaItem === null) {
-                    throw new BadRequestException(`harga item medis ${item.item_medis.name} tidak ditemukan`);
-                }
+            if (hargaItem === null) {
+                throw new BadRequestException(`harga item medis ${item?.item_medis?.name ?? ""} tidak ditemukan`);
+            }
 
-                if (konfigurasiHarga.metode_hpp === "avg") {
-                    item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_avg;
-                } else {
-                    item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
-                }
+            if (konfigurasiHarga.metode_hpp === "avg") {
+                item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_avg;
+            } else {
+                item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
+            }
 
-                totalHarga += item.harga_satuan * item.qty;
+            totalHarga += item.harga_satuan * item.qty;
 
-                await AlkesRepository.editAlkesItem({
-                    uuid: item.uuid,
-                    harga_satuan: item.harga_satuan,
-                }, transaction)
+            await AlkesRepository.editAlkesItem({
+                uuid: item.uuid,
+                harga_satuan: item.harga_satuan,
+            }, transaction)
         }
 
         return totalHarga;

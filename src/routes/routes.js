@@ -143,6 +143,8 @@ routes.delete(`${baseUrl}/alkes/:uuid`, AlkesController.batalOrder);
 
 // RETUR
 routes.post(`${baseUrl}/retur`, ReturController.create);
+routes.get(`${baseUrl}/retur/detail`, ReturController.getDetail);
+routes.get(`${baseUrl}/retur/all`, ReturController.getAll);
 
 
 export default routes;

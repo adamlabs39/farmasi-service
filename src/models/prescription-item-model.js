@@ -10,6 +10,7 @@ import SatuanModel from "./satuan-model.js";
 import CaraiPakaiModel from "./cara-pakai-model.js";
 import BentukRacikanModel from "./bentuk-racikan-model.js";
 import FpoPemberianModel from "./fpo-pemberian-model.js";
+import JenisStokModel from "./jenis-stok-model.js";
 
 export default class PrescriptionItemModel extends Model {
 }
@@ -149,5 +150,11 @@ PrescriptionItemModel.belongsTo(BentukRacikanModel, {
 PrescriptionItemModel.hasMany(FpoPemberianModel, {
     foreignKey: "prescription_item_uuid",
     as: "fpo_pemberian",
+    constraints: false
+})
+
+PrescriptionItemModel.belongsTo(JenisStokModel, {
+    foreignKey: "jenis_stok_uuid",
+    as: "jenis_stok",
     constraints: false
 })

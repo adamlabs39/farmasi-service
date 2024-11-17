@@ -4,8 +4,8 @@ import Utils from "../helpers/utils.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import {LokasiModel} from "@adameds/model-sdk/datamaster";
 import {
-    ItemMedisModel, JenisStokModel, LokasiStokModel,
-    OrderAlkesItemModel, OrderAlkesModel,
+    ItemMedisModel, JenisStokModel, LokasiStokModel, OrderAlkesItemModel,
+    OrderAlkesModel,
     PrescriptionItemModel, PrescriptionModel,
     SatuanModel
 } from "@adameds/model-sdk/farmasi";
@@ -174,13 +174,18 @@ export default class AlkesRepository {
     }
 
     // edit alkes item
-    static async editAlkesItem(req) {
+    static async editAlkesItem(req, transaction) {
+        if (!transaction){
+            transaction = await sequelizeInstance.transaction();
+        }
+
         const affectedRow = await OrderAlkesItemModel.update(
             req,
             {
                 where: {
                     uuid: req.uuid
-                }
+                },
+                transaction: transaction
             }
         );
 

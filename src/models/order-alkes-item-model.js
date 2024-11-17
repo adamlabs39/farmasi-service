@@ -51,10 +51,12 @@ OrderAlkesItemModel.init({
 
 OrderAlkesItemModel.belongsTo(ItemMedisModel, {
     foreignKey: 'item_medis_uuid',
-    as: 'item_medis'
+    as: 'item_medis',
+    constraints: false
 });
 
 OrderAlkesItemModel.belongsTo(JenisStokModel, {
     foreignKey: 'jenis_stok_uuid',
-    as: 'jenis_stok'
+    as: 'jenis_stok',
+    constraints: false
 });

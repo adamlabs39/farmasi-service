@@ -494,4 +494,18 @@ export default class PrescriptionRepository {
 
         return await PrescriptionModel.findAll(prescriptionOptions);
     }
+
+    static async getPrescriptionByUuid(uuid) {
+        const data = await PrescriptionItemModel.findOne({
+            where: {
+                uuid: uuid
+            },
+        });
+
+        if(!data){
+            throw new NotfoundException('Data tidak ditemukan');
+        }
+
+        return data;
+    }
 }
