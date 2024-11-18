@@ -256,6 +256,7 @@ export default class AlkesRepository {
                 'created_at',
                 "no_reg",
                 "no_rm",
+                "jenis_pelayanan"
             ],
             include: [
                 {
@@ -268,6 +269,12 @@ export default class AlkesRepository {
                     as : 'patient',
                     required : false,
                     attributes : ['name']
+                },
+                {
+                    model : LokasiStokModel,
+                    as : 'lokasi_stok',
+                    required: false,
+                    attributes: ["name"]
                 }
             ],
         };

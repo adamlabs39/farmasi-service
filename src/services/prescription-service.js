@@ -43,6 +43,10 @@ export default class PrescriptionService {
             limit: 100
         });
 
+        if (!lokasiStocks) {
+            throw new InternalServerException("lokasi stok belum di set");
+        }
+
         const lokasi = lokasiStocks.data.find(
             item => item
                 .default_tujuan_order_permintaan
