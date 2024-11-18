@@ -291,7 +291,7 @@ export default class PrescriptionService {
                             jenis_stok_uuid: racikan.jenis_stok_uuid,
                             quantity: racikan.medication_qty,
                             metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
-                            name: racikan.item_medis.name,
+                            name: racikan.item_medis?.name,
                             lokasi_stok_uuid: prescription.lokasi_stok_uuid
                         }, transaction)
                     }
@@ -302,7 +302,7 @@ export default class PrescriptionService {
                         quantity: obat.medication_qty,
                         lokasi_stok_uuid: prescription.lokasi_stok_uuid,
                         metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
-                        name: obat.item_medis.name
+                        name: obat.item_medis?.name
                     }, transaction)
                 }
 

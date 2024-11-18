@@ -21,7 +21,7 @@ export const dbSeeder = async () => {
     try {
         // await AturanPakaiSeeder.seed(transaction);
         // await CaraPakaiSeeder.seed(transaction);
-        await LokasiStokSeeder.seed(transaction);
+        // await LokasiStokSeeder.seed(transaction);
         // await ItemMedisSeeder.seed(transaction);
         // await SatuanSeeder.seed(transaction);
         // await PrescriptionSeeder.seed(transaction);

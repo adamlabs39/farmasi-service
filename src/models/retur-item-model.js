@@ -4,6 +4,7 @@ import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import PrescriptionItemModel from "./prescription-item-model.js";
+import {OrderAlkesItemModel} from "@adameds/model-sdk/farmasi";
 
 export default class ReturItemModel extends Model {
 }
@@ -16,7 +17,6 @@ ReturItemModel.init({
         },
         prescription_item_uuid: {
             type: DataTypes.STRING(255),
-            allowNull: false,
         },
         expired_date: {
             type: DataTypes.DATE,
@@ -29,6 +29,9 @@ ReturItemModel.init({
         harga_satuan: {
             type: DataTypes.FLOAT,
             allowNull: false,
+        },
+        order_alkes_item_uuid: {
+            type: DataTypes.STRING(255),
         },
         ...fieldTime
     }, {
@@ -49,5 +52,11 @@ ReturItemModel.init({
 ReturItemModel.belongsTo(PrescriptionItemModel, {
     foreignKey: "prescription_item_uuid",
     as: "detail_prescription_item",
+    constraints: false
+})
+
+ReturItemModel.belongsTo(OrderAlkesItemModel, {
+    foreignKey: "order_alkes_item_uuid",
+    as: "detail_order_alkes_item",
     constraints: false
 })

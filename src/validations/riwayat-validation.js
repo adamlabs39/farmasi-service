@@ -7,4 +7,9 @@ export default class RiwayatValidation {
         status_type: z.string().min(1, required),
     })
 
+    static GET_DETAIL = z.object({
+        item_type: z.string().min(1, required),
+        uuid: z.string().min(1, required),
+        status_type: z.string().min(1, required),
+    })
 }

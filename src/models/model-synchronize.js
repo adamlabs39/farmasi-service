@@ -20,26 +20,26 @@ const MODELMERGE = [
     // JenisStokItemMedisModel,
     // KategoriObatModel,
     // KonfigurasiHargaModel,
-    LokasiStokModel,
+    // LokasiStokModel,
     // ManufactureModel,
-    OrderAlkesItemModel,
+    // OrderAlkesItemModel,
     OrderAlkesModel,
     // PatientModel,
     // PenjualanObatModel,
-    PrescriptionItemModel,
-    PrescriptionItemRacikanModel,
+    // PrescriptionItemModel,
+    // PrescriptionItemRacikanModel,
     PrescriptionModel,
-    ReturItemModel,
-    ReturModel,
-    SatuanModel,
+    // ReturItemModel,
+    // ReturModel,
+    // SatuanModel,
     // StockMedisModel,
     // HargaItemModel,
     // ItemMedisJenisStokModel,
     // JenisStokModel,
-    ItemMedisModel,
-    FpoPemberianModel
-    // ReturItemModel
-
+    // ItemMedisModel,
+    // FpoPemberianModel
+    ReturItemModel,
+    ReturModel
 ];
 
 export default MODELMERGE;
