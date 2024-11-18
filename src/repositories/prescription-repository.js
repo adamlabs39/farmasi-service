@@ -185,6 +185,12 @@ export default class PrescriptionRepository {
                     as: 'patient',
                     required: false,
                     attributes: ['name']
+                },
+                {
+                    model : LokasiStokModel,
+                    as : 'lokasi_stok',
+                    required: false,
+                    attributes: ["name"]
                 }
             ],
             where: wherePrescription,
