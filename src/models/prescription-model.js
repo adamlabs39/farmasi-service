@@ -4,9 +4,9 @@ import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
 import {toEpochDate} from "../helpers/date-helper.js";
-import PrescriptionItemModel from "./prescription-item-model.js";
-import LokasiStokModel from "./lokasi-stok-model.js";
-import PatientModel from "./patient-model.js";
+import {LokasiModel} from "@adameds/model-sdk/datamaster";
+import {PatientModel} from "@adameds/model-sdk/admisi";
+import {LokasiStokModel, PrescriptionItemModel} from "@adameds/model-sdk/farmasi";
 
 export default class PrescriptionModel extends Model {
 }
@@ -118,6 +118,13 @@ PrescriptionModel.init({
         waktu_retur: {
             type: DataTypes.BIGINT,
         },
+        lokasi_uuid: {
+            type: DataTypes.UUID,
+            allowNull: false,
+        },
+        payment_method : {
+            type: DataTypes.INTEGER,
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,
@@ -154,5 +161,11 @@ PrescriptionModel.belongsTo(LokasiStokModel, {
 PrescriptionModel.belongsTo(PatientModel, {
     foreignKey: "patient_uuid",
     as: "patient",
+    constraints: false
+})
+
+PrescriptionModel.belongsTo(LokasiModel, {
+    foreignKey: "lokasi_uuid",
+    as: "lokasi",
     constraints: false
 })

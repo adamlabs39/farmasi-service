@@ -10,11 +10,12 @@ import {
     BentukRacikanModel, CaraiPakaiModel, FpoPemberianModel,
     ItemMedisModel, JenisStokModel, LokasiStokModel,
     PrescriptionItemModel,
-    PrescriptionItemRacikanModel,
-    PrescriptionModel, SatuanModel
+    PrescriptionItemRacikanModel, PrescriptionModel,
+    SatuanModel
 } from "@adameds/model-sdk/farmasi";
 import {PatientModel} from "@adameds/model-sdk/admisi";
 import Pagination from "../helpers/pagination.js";
+import {LokasiModel} from "@adameds/model-sdk/datamaster";
 
 export default class PrescriptionRepository {
     // get prescription by uuid
@@ -129,6 +130,7 @@ export default class PrescriptionRepository {
         req.takeaway = Utils.nullToType(req.takeaway)
         req.is_chronic = Utils.nullToType(req.is_chronic)
         req.status = Utils.nullToType(req.status, Array)
+        req.payment_method = Utils.nullToType(req.payment_method, Number)
 
         req.start_date = Utils.numberTo13Digit(req.start_date)
         req.end_date = Utils.numberTo13Digit(req.end_date)
@@ -176,8 +178,12 @@ export default class PrescriptionRepository {
             wherePrescriptionItem.is_chronic = true
         }
 
+        if (req.payment_method !== 0) {
+            wherePrescription.payment_method = req.payment_method;
+        }
+
         const options = {
-            attributes: ['uuid', 'no_rm', 'no_reg', 'no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', 'is_takeaway', 'order_status'],
+            attributes: ['uuid', 'no_rm', 'no_reg', 'no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date', 'is_takeaway', 'order_status', 'payment_method'],
             include: [
                 {
                     model: PrescriptionItemModel,
@@ -526,5 +532,71 @@ export default class PrescriptionRepository {
         }
 
         return data;
+    }
+
+    static async getPendapatan(req){
+        req.subQuery = false;
+
+        req.search = Utils.nullToType(req.search)
+        req.jenis_pelayanan = Utils.nullToType(req.jenis_pelayanan)
+        req.lokasi_uuid = Utils.nullToType(req.lokasi_uuid)
+        req.payment_method = Utils.nullToType(req.payment_method, Number)
+
+        let option = {
+            where : {
+                order_date: {
+                    [Op.between]: [req.start_date, req.end_date]
+                },
+                order_status: {
+                    [Op.between] : [5, 6]
+                },
+                [Op.or]: [
+                    {no_rm: {[Op.iLike]: `%${req.search}%`}},
+                    sequelizeInstance.where(
+                        sequelizeInstance.col('patient.name'),
+                        {[Op.iLike]: `%${req.search || ''}%`}
+                    )
+                ],
+                faskes_uuid : req.faskes_uuid,
+            },
+            attributes : [
+                'order_date',
+                'no_resep',
+                'no_rm',
+                "no_reg",
+                'payment_method',
+                'dokter_order',
+                'total_harga',
+                'jenis_pelayanan'
+            ],
+            include : [
+                {
+                    model : PatientModel,
+                    as : "patient",
+                    required : false,
+                    attributes : ["name"]
+                },
+                {
+                    model : LokasiModel,
+                    as : "lokasi",
+                    required : false,
+                    attributes : ["name"]
+                }
+            ]
+        }
+
+        if (req.jenis_pelayanan !== "") {
+            option.where.jenis_pelayanan = req.jenis_pelayanan
+        }
+
+        if (req.lokasi_uuid !== "") {
+            option.where.lokasi_uuid = req.lokasi_uuid
+        }
+
+        if (req.payment_method !== 0) {
+            option.where.payment_method = req.payment_method;
+        }
+
+        return await Pagination.init(PrescriptionModel, req, option);
     }
 }

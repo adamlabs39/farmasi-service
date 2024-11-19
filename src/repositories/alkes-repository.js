@@ -224,10 +224,10 @@ export default class AlkesRepository {
         req.search = Utils.nullToType(req.search)
         req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
         req.status = Utils.nullToType(req.status, Array)
+        req.payment_method = Utils.nullToType(req.payment_method, Number)
 
         req.start_date = Utils.numberTo13Digit(req.start_date)
         req.end_date = Utils.numberTo13Digit(req.end_date)
-
 
         const option = {
             where: {
@@ -256,7 +256,8 @@ export default class AlkesRepository {
                 'created_at',
                 "no_reg",
                 "no_rm",
-                "jenis_pelayanan"
+                "jenis_pelayanan",
+                "payment_method"
             ],
             include: [
                 {
@@ -278,6 +279,10 @@ export default class AlkesRepository {
                 }
             ],
         };
+
+        if (req.payment_method !== 0) {
+            option.where.payment_method = req.payment_method;
+        }
 
         if (!req.pagination){
             return await OrderAlkesModel.findAll(option);
