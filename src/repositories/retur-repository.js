@@ -1,7 +1,6 @@
 import {
     ItemMedisModel, JenisStokModel, OrderAlkesItemModel, PrescriptionItemModel,
-    ReturItemModel,
-    ReturModel,
+    ReturItemModel, ReturModel,
     SatuanModel
 } from "@adameds/model-sdk/farmasi";
 
@@ -73,6 +72,90 @@ export default class ReturRepository {
                     }
                 ]
             }
+            ]
+        })
+    }
+
+    static async getObatOne(req){
+        return await ReturModel.findOne({
+            where : req,
+            attributes : [
+                "no_resep",
+                "no_order_alkes",
+                "total",
+                "alasan_retur",
+            ],
+            include : [
+                {
+                    model : ReturItemModel,
+                    as : 'items',
+                    required : false,
+                    attributes : ['qty_retur', 'expired_date', 'harga_satuan'],
+                    include : [
+                        {
+                            model : PrescriptionItemModel,
+                            as: "detail_prescription_item",
+                            required: false,
+                            attributes : ['medication_qty'],
+                            include : [
+                                {
+                                    model : JenisStokModel,
+                                    as : 'jenis_stok',
+                                    required: false,
+                                    attributes : ['name'],
+                                },
+                                {
+                                    model : ItemMedisModel,
+                                    as : 'item_medis',
+                                    required: false,
+                                    attributes : ['name'],
+                                }
+                            ]
+                        },
+                    ]
+                }
+            ]
+        })
+    }
+
+    static async getAlkesOne(req){
+        return await ReturModel.findOne({
+            where : req,
+            attributes : [
+                "no_resep",
+                "no_order_alkes",
+                "total",
+                "alasan_retur",
+            ],
+            include : [
+                {
+                    model : ReturItemModel,
+                    as : 'items',
+                    required : false,
+                    attributes : ['qty_retur', 'expired_date', 'harga_satuan'],
+                    include : [
+                        {
+                            model : OrderAlkesItemModel,
+                            as: "detail_order_alkes_item",
+                            required: false,
+                            attributes : ['qty'],
+                            include : [
+                                {
+                                    model : JenisStokModel,
+                                    as : 'jenis_stok',
+                                    required: false,
+                                    attributes : ['name'],
+                                },
+                                {
+                                    model : ItemMedisModel,
+                                    as : 'item_medis',
+                                    required: false,
+                                    attributes : ['name'],
+                                }
+                            ]
+                        },
+                    ]
+                }
             ]
         })
     }

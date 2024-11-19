@@ -149,5 +149,6 @@ routes.get(`${baseUrl}/retur/all`, ReturController.getAll);
 
 // RIWAYAT
 routes.get(`${baseUrl}/riwayat/all`, RiwayatController.getAll);
+routes.get(`${baseUrl}/riwayat/detail`, RiwayatController.getDetail);
 
 export default routes;

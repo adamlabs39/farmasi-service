@@ -4,6 +4,7 @@ import PrescriptionRepository from "../repositories/prescription-repository.js";
 import AlkesRepository from "../repositories/alkes-repository.js";
 import BadRequestException from "../errors/bad-request-exception.js";
 import RiwayatValidation from "../validations/riwayat-validation.js";
+import ReturRepository from "../repositories/retur-repository.js";
 
 export default class RiwayatService {
     static async getAll(req) {
@@ -59,5 +60,39 @@ export default class RiwayatService {
         )
 
         return result;
+    }
+
+    static async getDetail(req){
+        ZodValidator.validate(RiwayatValidation.GET_DETAIL, req);
+
+        let result;
+
+        if (req.item_type === "obat") {
+            result = await PrescriptionRepository.getByUuid(req.uuid);
+
+            if (req.status_type === "retur"){
+                const retur = await ReturRepository.getObatOne({
+                    no_resep: result.no_resep
+                });
+
+                result.dataValues.obat = undefined;
+                result.dataValues.retur = retur;
+            }
+        }
+
+        else if (req.item_type === "alkes") {
+            result = await AlkesRepository.getByUuid(req.uuid);
+
+            if (req.status_type === "retur"){
+                const retur = await ReturRepository.getAlkesOne({
+                    no_order_alkes: result.no_order_alkes
+                });
+
+                result.dataValues.alkes_items = undefined;
+                result.dataValues.retur = retur;
+            }
+        }
+
+        return result
     }
 }

@@ -9,6 +9,7 @@ import {uuidv7} from "uuidv7";
 import PrescriptionValidation from "../validations/prescription-validation.js";
 import AlkesRepository from "../repositories/alkes-repository.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
+import moment from "moment";
 
 export default class ReturService {
     static async create(req) {
@@ -67,33 +68,48 @@ export default class ReturService {
 
                 await ReturRepository.createItem(item, transaction);
 
-                // get prescription item
-                const prescriptionItem = await PrescriptionRepository.getPrescriptionByUuid(item.prescription_item_uuid);
-
                 // bring back stock
-                if (!prescriptionItem.stok_medis_uuides) {
-                    throw new BadRequestException("Stock medis uuides not found");
-                }
+                if (req.jenis_retur === "obat") {
+                    const prescriptionItem = await PrescriptionRepository.getPrescriptionByUuid(item.prescription_item_uuid);
+                    if (!prescriptionItem.stok_medis_uuides) {
+                        throw new BadRequestException("Stock medis uuides not found");
+                    }
 
-                for (const stock of prescriptionItem.stok_medis_uuides) {
+                    for (const stock of prescriptionItem.stok_medis_uuides) {
+                        await StockMedisRepository.addQuantity({
+                            stock_medis_uuid: stock.stock_medis_uuid,
+                            quantity: stock.quantity,
+                        }, transaction)
+                    }
+                } else if (req.jenis_retur === "alkes") {
+                    const alkesItem = await OrderAlkesRepository.getByUuid(item.order_alkes_item_uuid);
+
+                    if (!alkesItem.stock_medis_uuid) {
+                        throw new BadRequestException("Stock medis uuides not found");
+                    }
+
                     await StockMedisRepository.addQuantity({
-                        stock_medis_uuid: stock.stock_medis_uuid,
-                        quantity: stock.quantity,
+                        stock_medis_uuid: alkesItem.stock_medis_uuid,
+                        quantity: alkesItem.qty,
                     }, transaction)
                 }
-
             }
 
+            req.waktu_retur = moment.valueOf();
             // update status
             if (req.jenis_retur === "obat") {
                 await PrescriptionRepository.editPrescription({
                     uuid: req.prescription_uuid,
-                    order_status : 6
+                    order_status: 6,
+                    petugas_retur: req.petugas_retur,
+                    waktu_retur: req.waktu_retur
                 }, transaction)
             } else if (req.jenis_retur === "alkes") {
                 await OrderAlkesRepository.editAlkes({
                     uuid: req.order_alkes_uuid,
-                    order_status : 5
+                    order_status: 5,
+                    petugas_retur: req.petugas_retur,
+                    waktu_retur: req.waktu_retur
                 }, transaction)
             }
 
@@ -111,7 +127,8 @@ export default class ReturService {
 
     }
 
-    static async getDetail(req) {
+    static
+    async getDetail(req) {
         ZodValidator.validate(ReturValidation.GET_DETAIL, req);
 
         if (req.item_type === "obat") {
@@ -121,7 +138,8 @@ export default class ReturService {
         }
     }
 
-    static async getAll(req) {
+    static
+    async getAll(req) {
         ZodValidator.validate(ReturValidation.GET_ALL, req);
 
         let result;

@@ -8,7 +8,7 @@ import {toEpochDate} from "../helpers/date-helper.js";
 import {
     AturanPakaiModel,
     BentukRacikanModel, CaraiPakaiModel, FpoPemberianModel,
-    ItemMedisModel, LokasiStokModel,
+    ItemMedisModel, JenisStokModel, LokasiStokModel,
     PrescriptionItemModel,
     PrescriptionItemRacikanModel,
     PrescriptionModel, SatuanModel
@@ -91,6 +91,12 @@ export default class PrescriptionRepository {
                                 as: 'bentuk_racikan',
                                 required: false,
                                 attributes: ['nama_bentuk_racikan']
+                            },
+                            {
+                                model : JenisStokModel,
+                                as : 'jenis_stok',
+                                required: false,
+                                attributes: ["name"]
                             }
                         ],
                     },

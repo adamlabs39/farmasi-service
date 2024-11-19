@@ -75,4 +75,5 @@ ReturModel.init({
 ReturModel.hasMany(ReturItemModel, {
     foreignKey: "retur_uuid",
     as: "items",
+    constraints: false
 })

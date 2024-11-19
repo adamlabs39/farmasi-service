@@ -112,6 +112,12 @@ PrescriptionModel.init({
         session_uuid: {
             type: DataTypes.STRING(255),
         },
+        petugas_retur: {
+            type: DataTypes.STRING(255),
+        },
+        waktu_retur: {
+            type: DataTypes.BIGINT,
+        },
         ...fieldTime
     }, {
         sequelize: sequelizeInstance,

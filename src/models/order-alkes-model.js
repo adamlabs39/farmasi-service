@@ -91,6 +91,12 @@ OrderAlkesModel.init({
         payment_method: {
             type: DataTypes.STRING(255),
         },
+        petugas_retur: {
+            type: DataTypes.STRING(255),
+        },
+        waktu_retur: {
+            type: DataTypes.BIGINT,
+        },
         ...fieldTime
     }, {
         hooks: hookModel,

@@ -31,8 +31,6 @@ export default class DataMasterLokasiStokRepository {
             option.where.jenis_lokasi = req.jenis_lokasi;
         }
 
-        console.log("kontol",option);
-
         return Pagination.init(LokasiStokModel, req, option);
     }
 
