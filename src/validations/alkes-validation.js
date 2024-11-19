@@ -11,7 +11,8 @@ export default class AlkesValidation {
         rekam_medis_uuid: z.string().min(1, required),
         petugas_order: z.string().min(1, required),
         rekam_medis_date: z.string().min(1, required),
-        lokasi_uuid : z.string().min(1, required)
+        lokasi_uuid : z.string().min(1, required),
+        payment_method : z.number(),
     });
 
     static CREATE_ALKES_ITEM = z.object({

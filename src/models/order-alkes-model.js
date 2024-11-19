@@ -89,7 +89,7 @@ OrderAlkesModel.init({
             allowNull: false
         },
         payment_method: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.INTEGER,
         },
         petugas_retur: {
             type: DataTypes.STRING(255),

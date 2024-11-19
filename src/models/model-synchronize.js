@@ -3,8 +3,9 @@ import {
     OrderAlkesItemModel,
     OrderAlkesModel,
     PrescriptionItemModel, PrescriptionItemRacikanModel,
-    PrescriptionModel, ReturItemModel, ReturModel, SatuanModel
+    ReturItemModel, ReturModel, SatuanModel
 } from "@adameds/model-sdk/farmasi";
+import PrescriptionModel from "./prescription-model.js";
 
 const MODELMERGE = [
     // JenisStokModel,
@@ -38,8 +39,8 @@ const MODELMERGE = [
     // JenisStokModel,
     // ItemMedisModel,
     // FpoPemberianModel
-    ReturItemModel,
-    ReturModel
+    // ReturItemModel,
+    // ReturModel
 ];
 
 export default MODELMERGE;

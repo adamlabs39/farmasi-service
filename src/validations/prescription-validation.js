@@ -14,6 +14,8 @@ export default class PrescriptionValidation {
         jenis_pelayanan: z.string().min(1, required),
         session_uuid: z.string().min(1, required),
         rekam_medis_uuid : z.string().min(1, required),
+        lokasi_uuid : z.string().min(1, required),
+        payment_method : z.number(),
     });
 
     static CREATE_PRESCRIPTION_ITEM = z.object({

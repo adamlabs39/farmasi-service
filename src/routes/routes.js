@@ -16,6 +16,7 @@ import PenjualanObatController from "../controllers/penjualan-obat-controller.js
 import AlkesController from "../controllers/alkes-controller.js";
 import ReturController from "../controllers/retur-controller.js";
 import RiwayatController from "../controllers/riwayat-controller.js";
+import ReportController from "../controllers/report-controller.js";
 
 const apiBase = process.env.API_BASE || "api";
 const apiVersion = process.env.API_VERSION || "v1";
@@ -150,5 +151,8 @@ routes.get(`${baseUrl}/retur/all`, ReturController.getAll);
 // RIWAYAT
 routes.get(`${baseUrl}/riwayat/all`, RiwayatController.getAll);
 routes.get(`${baseUrl}/riwayat/detail`, RiwayatController.getDetail);
+
+// REKAP
+routes.get(`${baseUrl}/rekap/pendapatan`, ReportController.getPendapatan);
 
 export default routes;
