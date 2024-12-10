@@ -3,7 +3,7 @@ import identifierModel from "./common/identifier-model.js";
 import fieldTime from "./base-model.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {hookModel} from "./common/hook-model.js";
-import ItemMedisModel from "./item-medis-model.js";
+import {ItemMedisModel} from "@adameds/model-sdk/farmasi";
 
 export default class PrescriptionItemRacikanModel extends Model {
 }

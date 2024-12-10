@@ -1,4 +1,4 @@
-import ItemMedisModel from "../models/item-medis-model.js";
+import {ItemMedisModel} from "@adameds/model-sdk/farmasi";
 
 export default class ItemMedisSeeder {
     static async seed(transaction) {
@@ -11,11 +11,12 @@ export default class ItemMedisSeeder {
                 "name" : "paracetamol",
                 "status" : true,
                 "dosis" : 500,
-                "satuan_dosis_uuid" : "ksmfskfmkm",
-                "satuan_penggunaan_uuid" : "rwiermwerkpimo",
-                "satuan_pembelian_uuid" : "kdmfkwmfkwmf",
+                "satuan_dosis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "satuan_penggunaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "satuan_pembelian_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "jenis_item" : "obat",
-                "kategori_obat_uuid" : "skmfskfmkf",
+                "kategori_obat_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "manufacture_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e"
             },
         ];
 

@@ -8,6 +8,7 @@ import ConversionModel from "./conversion-model.js";
 import ItemMedisJenisStokModel from "./item-medis-jenis-stok-model.js";
 import SatuanModel from "./satuan-model.js";
 import StockMedisModel from "./stock-medis-model.js";
+import {KategoriObatModel} from "@adameds/model-sdk/farmasi";
 
 export default class ItemMedisModel extends Model {
 }
@@ -115,5 +116,29 @@ ItemMedisModel.belongsTo(SatuanModel, {
 ItemMedisModel.hasMany(StockMedisModel, {
     foreignKey: "item_medis_uuid",
     as: "stocks",
+    constraints: false
+})
+
+ItemMedisModel.belongsTo(SatuanModel, {
+    foreignKey: "satuan_dosis_uuid",
+    as: "satuan_dosis",
+    constraints: false
+})
+
+ItemMedisModel.belongsTo(SatuanModel, {
+    foreignKey: "satuan_kemasan_uuid",
+    as: "satuan_kemasan",
+    constraints: false
+})
+
+ItemMedisModel.belongsTo(SatuanModel, {
+    foreignKey: "bentuk_sediaan_uuid",
+    as: "bentuk_sediaan",
+    constraints: false
+})
+
+ItemMedisModel.belongsTo(KategoriObatModel, {
+    foreignKey: "kategori_obat_uuid",
+    as: "kategori_obat",
     constraints: false
 })

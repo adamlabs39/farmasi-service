@@ -3,7 +3,6 @@ import cors from "cors";
 import routes from "./routes/routes.js";
 import errorMiddleware from "./middlewares/error-middleware.js";
 import authorizationSdk from "@adameds/authorization-sdk";
-import MODELMERGE from "./models/model-synchronize.js";
 import {dbSeeder} from "./seeders/db-seeder.js";
 
 const APPLICATION_PORT = process.env.APPLICATION_PORT;
@@ -22,9 +21,9 @@ app.use(routes);
 app.use(errorMiddleware);
 app.listen(APPLICATION_PORT, APPLICATION_HOST, async () => {
     try {
-        for (const model of MODELMERGE) {
-            await model.sync({ alter: false, force: true });
-        }
+        // for (const model of MODELMERGE) {
+        //     await model.sync({ alter: false, force: true });
+        // }
         // //
         // //
         //

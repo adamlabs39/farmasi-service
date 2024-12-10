@@ -1,4 +1,3 @@
-import sequelizeInstance from "../configurations/sequelize-instance.js";
 import LokasiStokSeeder from "./lokasi-stok-seeder.js";
 import AturanPakaiSeeder from "./aturan-pakai-seeder.js";
 import ItemMedisSeeder from "./item-medis-seeder.js";
@@ -15,15 +14,40 @@ import OrderAlkesItemSeeder from "./order-alkes-item-seeder.js";
 import FpoPemberianSeeder from "./fpo-pemberian-seeder.js";
 import PrescriptionSeeder from "./prescription-seeder.js";
 import KonfigurasiHargaSeeder from "./konfigurasi-harga-seeder.js";
+import FaskesSeeder from "./faskes-seeder.js";
+import PegawaiSeeder from "./pegawai-seeder.js";
+import PractitionerSeeder from "./practitioner-seeder.js";
+import UserSeeder from "./user-seeder.js";
+import RoleSeeder from "./role-seeder.js";
+import sequelizeInstance from "@adameds/model-sdk/instance";
+import BentukSediaanSeeder from "./bentuk-sediaan-seeder.js";
+import KategoriObatSeeder from "./kategori-obat-seeder.js";
+import ManufacureSeeder from "./manufacure-seeder.js";
 
 export const dbSeeder = async () => {
     const transaction = await sequelizeInstance.transaction();
     try {
+        // user things
+        // await RoleSeeder.seed(transaction);
+        // await FaskesSeeder.seed(transaction);
+        // await PegawaiSeeder.seed(transaction);
+        // await PractitionerSeeder.seed(transaction);
+        // await UserSeeder.seed(transaction);
+
+        // datamaster things
+        // await KonfigurasiHargaSeeder.seed(transaction);
         // await AturanPakaiSeeder.seed(transaction);
         // await CaraPakaiSeeder.seed(transaction);
         // await LokasiStokSeeder.seed(transaction);
         // await ItemMedisSeeder.seed(transaction);
         // await SatuanSeeder.seed(transaction);
+        // await BentukSediaanSeeder.seed(transaction);
+        // await KategoriObatSeeder.seed(transaction);
+        // await ManufacureSeeder.seed(transaction);
+        // await JenisStokSeeder.seed(transaction);
+        // await ItemMedisJenisStokSeeder.seed(transaction);
+
+        // prescription things
         // await PrescriptionSeeder.seed(transaction);
         // await PrescriptionItemSeeder.seed(transaction);
         // await PrescriptionItemRacikanSeeder.seed(transaction);
@@ -34,7 +58,7 @@ export const dbSeeder = async () => {
         // await OrderAlkesSeeder.seed(transaction);
         // await OrderAlkesItemSeeder.seed(transaction);
         // await FpoPemberianSeeder.seed(transaction);
-        // await KonfigurasiHargaSeeder.seed(transaction);
+
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();

@@ -3,10 +3,11 @@ import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import {
+    BentukSediaanModel,
     ConversionModel, HargaItemModel,
     ItemMedisJenisStokModel,
     ItemMedisModel,
-    JenisStokModel,
+    JenisStokModel, KategoriObatModel,
     ManufactureModel, SatuanModel
 } from "@adameds/model-sdk/farmasi";
 
@@ -72,6 +73,41 @@ export default class DataMasterItemMedisRepository {
                     // attributes: [
                     //     "satuan_pembelian", "satuan_penggunaan", "konversi", "uuid"
                     // ]
+                },
+                {
+                    model: SatuanModel,
+                    as: "satuan_penggunaan",
+                    required: false,
+                    where: {deleted_at: {[Op.is]: null}},
+                    attributes: ["name"]
+                },
+                {
+                    model: SatuanModel,
+                    as: "satuan_dosis",
+                    required: false,
+                    where: {deleted_at: {[Op.is]: null}},
+                    attributes: ["name"]
+                },
+                {
+                    model: SatuanModel,
+                    as: "satuan_kemasan",
+                    required: false,
+                    where: {deleted_at: {[Op.is]: null}},
+                    attributes: ["name"]
+                },
+                {
+                    model : KategoriObatModel,
+                    as : "kategori_obat",
+                    required: false,
+                    where: {deleted_at: {[Op.is]: null}},
+                    attributes: ["name"]
+                },
+                {
+                    model : BentukSediaanModel,
+                    as : "bentuk_sediaan",
+                    required: false,
+                    where: {deleted_at: {[Op.is]: null}},
+                    attributes: ["name"]
                 }
             ]
         };
