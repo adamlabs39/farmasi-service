@@ -90,7 +90,7 @@ routes.delete(`${baseUrl}/datamaster/bentuk-racikan/:uuid`, DatamasterBentukRaci
 // DATAMASTER - ITEM MEDIS
 routes.post(`${baseUrl}/datamaster/item-medis`, DatamasterItemMedisController.create);
 routes.put(`${baseUrl}/datamaster/item-medis/:uuid`, DatamasterItemMedisController.update);
-routes.get(`${baseUrl}/datamaster/item-medis`, DatamasterItemMedisController.getAll);
+routes.post(`${baseUrl}/datamaster/item-medis`, DatamasterItemMedisController.getAll);
 routes.delete(`${baseUrl}/datamaster/item-medis/:uuid`, DatamasterItemMedisController.delete);
 routes.get(`${baseUrl}/datamaster/item-medis/:uuid/conversions`, DatamasterItemMedisController.getConversions);
 routes.get(`${baseUrl}/datamaster/item-medis/without-pagination`, DatamasterItemMedisController.getAllWithoutPagination);

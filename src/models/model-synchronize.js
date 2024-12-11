@@ -34,32 +34,34 @@ function JenisStokItemMedisModel() {
 }
 
 const MODELMERGE = [
-    RoleModel,
-    FaskesModel,
-    PegawaiModel,
-    PractitionerModel,
-    UserModel,
-    PatientModel,
+    // RoleModel,
+    // FaskesModel,
+    // PegawaiModel,
+    // PractitionerModel,
+    // UserModel,
+    // PatientModel,
+    //
+    // KonfigurasiHargaModel,
+    // AturanPakaiModel,
+    // CaraiPakaiModel,
+    // LokasiStokModel,
+    // ItemMedisModel,
+    // SatuanModel,
+    // BentukSediaanModel,
+    // KategoriObatModel,
+    // ManufactureModel,
+    // JenisStokModel,
+    // ItemMedisJenisStokModel,
+    //
+    // LokasiModel,
+    // PrescriptionModel,
+    // PrescriptionItemModel,
+    // PrescriptionItemRacikanModel,
+    // BentukRacikanModel,
+    // StockMedisModel,
+    // HargaItemModel,
 
-    KonfigurasiHargaModel,
-    AturanPakaiModel,
-    CaraiPakaiModel,
-    LokasiStokModel,
-    ItemMedisModel,
-    SatuanModel,
-    BentukSediaanModel,
-    KategoriObatModel,
-    ManufactureModel,
-    JenisStokModel,
-    ItemMedisJenisStokModel,
-
-    LokasiModel,
-    PrescriptionModel,
-    PrescriptionItemModel,
-    PrescriptionItemRacikanModel,
-    BentukRacikanModel,
-    StockMedisModel,
-    HargaItemModel,
+    PenjualanObatModel
 ];
 
 export default MODELMERGE;

@@ -16,6 +16,7 @@ export default class ItemMedisSeeder {
                 "satuan_pembelian_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "jenis_item" : "obat",
                 "kategori_obat_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "satuan_kemasan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "manufacture_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e"
             },
             {
@@ -29,6 +30,7 @@ export default class ItemMedisSeeder {
                 "satuan_dosis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "satuan_penggunaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "satuan_pembelian_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "satuan_kemasan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "jenis_item" : "obat",
                 "kategori_obat_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "manufacture_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e"
