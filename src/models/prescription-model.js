@@ -25,7 +25,7 @@ PrescriptionModel.init({
             type: DataTypes.STRING(255),
         },
         patient_uuid: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.UUID,
             allowNull: false,
         },
         no_rm: {
