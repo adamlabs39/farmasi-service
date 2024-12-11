@@ -17,45 +17,49 @@ import {
     SatuanModel
 } from "@adameds/model-sdk/farmasi";
 import PrescriptionModel from "./prescription-model.js";
-import {LokasiModel} from "@adameds/model-sdk/datamaster";
+import {
+    FaskesModel,
+    LokasiModel,
+    PegawaiModel,
+    PractitionerModel,
+    RoleModel,
+    UserModel
+} from "@adameds/model-sdk/datamaster";
 import {StockMedisModel} from "@adameds/model-sdk/inventory";
 import {PatientModel} from "@adameds/model-sdk/admisi";
+import PractitionerSeeder from "../seeders/practitioner-seeder.js";
 
 function JenisStokItemMedisModel() {
     return undefined;
 }
 
 const MODELMERGE = [
-    // JenisStokModel,
-    // AturanPakaiModel,
-    // BentukRacikanModel,
-    // BentukSediaanModel,
-    // CaraiPakaiModel,
-    // ConversionModel,
-    // IngredientItemMedisModel,
-    // IngredientModel,
-    // ItemMedisModel,
-    // ItemPenjualanObatModel,
-    // JenisStokItemMedisModel,
-    // KategoriObatModel,
-    // KonfigurasiHargaModel,
-    // LokasiStokModel,
-    // ManufactureModel,
-    // OrderAlkesItemModel,
-    // OrderAlkesModel,
+    // RoleModel,
+    // FaskesModel,
+    // PegawaiModel,
+    // PractitionerModel,
+    // UserModel,
     // PatientModel,
-    // PenjualanObatModel,
+    //
+    // KonfigurasiHargaModel,
+    // AturanPakaiModel,
+    // CaraiPakaiModel,
+    // LokasiStokModel,
+    // ItemMedisModel,
+    // SatuanModel,
+    // BentukSediaanModel,
+    // KategoriObatModel,
+    // ManufactureModel,
+    // JenisStokModel,
+    // ItemMedisJenisStokModel,
+
+    // LokasiModel,
+    // PrescriptionModel,
     // PrescriptionItemModel,
     // PrescriptionItemRacikanModel,
-    // PrescriptionModel,
-    // ReturItemModel,
-    // ReturModel,
-    // SatuanModel,
+    // BentukRacikanModel,
     // StockMedisModel,
     // HargaItemModel,
-    // ItemMedisJenisStokModel,
-    // FpoPemberianModel,
-    // LokasiModel
 ];
 
 export default MODELMERGE;

@@ -369,19 +369,21 @@ export default class PrescriptionService {
         let penyerahan_obat = [];
 
         for (const resep of rawData) {
-            for (const obat of resep.obat) {
-                if (obat.is_chronic) {
-                    resep.dataValues.is_chronic = true;
-                }
+            if (resep.obat){
+                for (const obat of resep.obat) {
+                    if (obat.is_chronic) {
+                        resep.dataValues.is_chronic = true;
+                    }
 
-                if (obat.is_compound) {
-                    resep.dataValues.is_compound = true;
-                }
+                    if (obat.is_compound) {
+                        resep.dataValues.is_compound = true;
+                    }
 
-                resep.dataValues.obat = undefined;
+                    resep.dataValues.obat = undefined;
+                }
             }
 
-            resep.dataValues.patient = resep.patient.name;
+            resep.dataValues.patient = resep.patient?.name ?? "-";
 
             if (resep.order_status === 1) {
                 resep_masuk.push(resep);

@@ -210,7 +210,7 @@ export default class PrescriptionRepository {
 
         if(!req.pagination){
             return await PrescriptionModel.findAll(
-                {options},
+                options,
             );
         } else {
             return await Pagination.init(PrescriptionModel, req, options);
