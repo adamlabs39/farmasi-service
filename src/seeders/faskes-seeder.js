@@ -6,7 +6,7 @@ export default class FaskesSeeder {
             {
                 "uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "name": "RSUD Dr. Fauzy & Fauziah",
-                "code": "ABC",
+                "code": "ABCDD",
                 "status": true
             }
         ];

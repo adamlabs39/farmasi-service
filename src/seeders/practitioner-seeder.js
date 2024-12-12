@@ -9,7 +9,7 @@ export default class PractitionerSeeder {
                 pegawai_uuid: '0192b31f-365d-731c-8b16-3a4565c9475e',
                 sip: 'SIP002',
                 str: 'STR002',
-                code_bpjs: 'BPJS002',
+                code_bpjs: 'BPJSSS002',
                 satu_sehat_id: 'SEHAT002',
                 status: true,
             },

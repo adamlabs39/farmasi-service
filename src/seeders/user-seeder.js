@@ -387,7 +387,7 @@ export default class UserSeeder {
                         module: "Setting",
                         sub_modules: [],
                     },
-                ],
+                ].toString(),
                 password: await hash("password123", 10),
                 status: true,
             },

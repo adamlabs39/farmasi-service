@@ -126,9 +126,9 @@ export default class PrescriptionRepository {
         req.search = Utils.nullToType(req.search)
         req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
         req.jenis_pelayanan = Utils.nullToType(req.jenis_pelayanan)
-        req.racikan = Utils.nullToType(req.racikan)
-        req.takeaway = Utils.nullToType(req.takeaway)
         req.is_chronic = Utils.nullToType(req.is_chronic)
+        req.takeaway = Utils.nullToType(req.takeaway)
+        req.racikan = Utils.nullToType(req.racikan)
         req.status = Utils.nullToType(req.status, Array)
         req.payment_method = Utils.nullToType(req.payment_method, Number)
 
@@ -140,10 +140,10 @@ export default class PrescriptionRepository {
             [Op.or]: [
                 {no_resep: {[Op.iLike]: `%${req.search}%`}},
                 {no_rm: {[Op.iLike]: `%${req.search}%`}},
-                sequelizeInstance.where(
-                    sequelizeInstance.col('patient.name'),
-                    {[Op.iLike]: `%${req.search || ''}%`}
-                )
+                // sequelizeInstance.where(
+                //     sequelizeInstance.col('patient.name'),
+                //     {[Op.iLike]: `%${req.search || ''}%`}
+                // )
             ],
             lokasi_stok_uuid: {[Op.like]: `%${req.lokasi_stok_uuid}%`},
             order_date: {
@@ -194,6 +194,9 @@ export default class PrescriptionRepository {
                 },
                 {
                     model: PatientModel,
+                    on : sequelizeInstance.where(sequelizeInstance.cast(sequelizeInstance.col('PrescriptionModel.patient_uuid'), 'TEXT'), {
+                        [Op.eq]: sequelizeInstance.cast(sequelizeInstance.col('patient.uuid'), 'TEXT')
+                    }),
                     as: 'patient',
                     required: false,
                     attributes: ['name']
