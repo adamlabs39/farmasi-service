@@ -26,8 +26,8 @@ export default class ReturController {
 
     static async getAll(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = req.author.faskesUuid;
-            const result = await ReturService.getAll(req.body);
+            req.query.faskes_uuid = req.author.faskesUuid;
+            const result = await ReturService.getAll(req.query);
             res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
         } catch (error) {
             nextFunction(error);
