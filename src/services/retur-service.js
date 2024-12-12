@@ -10,6 +10,7 @@ import PrescriptionValidation from "../validations/prescription-validation.js";
 import AlkesRepository from "../repositories/alkes-repository.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
 import moment from "moment";
+import Utils from "../helpers/utils.js";
 
 export default class ReturService {
     static async create(req) {
@@ -142,8 +143,8 @@ export default class ReturService {
     async getAll(req) {
         ZodValidator.validate(ReturValidation.GET_ALL, req);
 
-        req.start_date = BigInt(req.start_date);
-        req.end_date = BigInt(req.end_date);
+        req.start_date = Utils.numberTo13Digit(req.start_date);
+        req.end_date = Utils.numberTo13Digit(req.end_date);
 
         let result;
         req.pagination = true;
