@@ -142,6 +142,9 @@ export default class ReturService {
     async getAll(req) {
         ZodValidator.validate(ReturValidation.GET_ALL, req);
 
+        req.start_date = BigInt(req.start_date);
+        req.end_date = BigInt(req.end_date);
+
         let result;
         req.pagination = true;
         req.subQuery = false;
