@@ -31,7 +31,7 @@ export default class PenjualanObatService {
                 item.penjualan_obat_uuid = penjualan.uuid;
                 item.faskes_uuid = req.faskes_uuid;
 
-                req.total_item+= 1;
+                req.total_item += 1;
 
                 // get konfigurasi harga
                 const konfigurasiHarga = await KonfigurasiHargaRepository.get(req.faskes_uuid);
@@ -64,7 +64,7 @@ export default class PenjualanObatService {
                     quantity: item.qty,
                     metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
                     name: item.name,
-                    lokasi_stok_uuid : penjualan.lokasi_stok_uuid
+                    lokasi_stok_uuid: penjualan.lokasi_stok_uuid
                 }, transaction);
 
 
@@ -94,8 +94,8 @@ export default class PenjualanObatService {
 
             // bring back the stock
             const items = await PenjualanObatRepository.getAllCatatanStok(req);
-            for(const item of items){
-                for (const catatan of item.catatan_stok){
+            for (const item of items) {
+                for (const catatan of item.catatan_stok) {
                     await StockMedisRepository.addQuantity(catatan, transaction);
                 }
             }
@@ -116,7 +116,24 @@ export default class PenjualanObatService {
         return await PenjualanObatRepository.getAllOtc(req);
     }
 
-    static async getByUuid(req){
+    static async getByUuid(req) {
         return await PenjualanObatRepository.getOtcByUuid(req);
+    }
+
+    static async generateCode(req) {
+        let isAvailable = false;
+
+        while (!isAvailable) {
+            req.no_transaksi = Utils.generate4Code('OTC');
+            const result = await PenjualanObatRepository.getByCode(req);
+
+            if (result === null) {
+                isAvailable = true;
+            }
+        }
+
+        return {
+            "code" : req.no_transaksi
+        };
     }
 }

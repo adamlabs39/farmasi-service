@@ -107,4 +107,14 @@ export default class PenjualanObatRepository {
             attributes : ["catatan_stok"]
         })
     }
+
+    static getByCode(req){
+        return PenjualanObatModel.findOne({
+            where : {
+                no_transaksi : req.no_transaksi,
+                faskes_uuid : req.faskes_uuid
+            },
+            attributes : ["no_transaksi"]
+        })
+    }
 }

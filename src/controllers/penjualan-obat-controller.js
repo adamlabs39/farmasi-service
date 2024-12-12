@@ -48,4 +48,14 @@ export default class PenjualanObatController {
             nextFunction(error);
         }
     }
+
+    static async getCode(req, res, nextFunction) {
+        try {
+            req.query.faskes_uuid = req.author.faskesUuid;
+            const result = await PenjualanObatService.generateCode(req.query);
+            res.status(200).json(successResponse("data berhasil didapat", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }
