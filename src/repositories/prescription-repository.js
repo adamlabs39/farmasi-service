@@ -146,18 +146,11 @@ export default class PrescriptionRepository {
                 )
             ],
             lokasi_stok_uuid: {[Op.like]: `%${req.lokasi_stok_uuid}%`},
+            order_date: {
+                [Op.between]: [req.start_date, req.end_date]
+            },
             order_status: {
                 [Op.between]: [1, 4]
-            }
-        }
-
-        if (req.status === [5, 5]){
-            wherePrescription.waktu_retur = {
-                [Op.between]: [req.start_date, req.end_date]
-            }
-        } else {
-            wherePrescription.order_date = {
-                [Op.between]: [req.start_date, req.end_date]
             }
         }
 

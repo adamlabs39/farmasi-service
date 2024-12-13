@@ -243,6 +243,9 @@ export default class AlkesRepository {
                         {[Op.iLike]: `%${req.search || ''}%`}
                     )
                 ],
+                created_at : {
+                    [Op.between]: [req.start_date, req.end_date]
+                },
                 lokasi_stok_uuid : { [Op.like]: `%${req.lokasi_stok_uuid}%` },
             },
             attributes : [
@@ -276,16 +279,6 @@ export default class AlkesRepository {
                 }
             ],
         };
-
-        if (req.status === [4, 4]){
-            option.where.waktu_retur = {
-                [Op.between]: [req.start_date, req.end_date]
-            }
-        } else {
-            option.where.created_at = {
-                [Op.between]: [req.start_date, req.end_date]
-            }
-        }
 
         if (req.payment_method !== 0) {
             option.where.payment_method = req.payment_method;
