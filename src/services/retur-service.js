@@ -145,7 +145,10 @@ export default class ReturService {
 
         req.start_date = Utils.numberTo13Digit(req.start_date);
         req.end_date = Utils.numberTo13Digit(req.end_date);
-        req.payment_method = parseInt(req?.payment_method ?? "1");
+        if (!req.payment_method){
+            req.payment_method = 0;
+        }
+        req.payment_method = parseInt(req?.payment_method ?? "0");
 
         let result;
         req.pagination = true;
