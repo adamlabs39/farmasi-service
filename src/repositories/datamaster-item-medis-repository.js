@@ -10,6 +10,7 @@ import {
     JenisStokModel, KategoriObatModel,
     ManufactureModel, SatuanModel
 } from "@adameds/model-sdk/farmasi";
+import moment from "moment";
 
 export default class DataMasterItemMedisRepository {
     static async create(req, transaction) {
@@ -128,7 +129,7 @@ export default class DataMasterItemMedisRepository {
         return await sequelizeInstance.transaction(async tr => {
 
             await ItemMedisJenisStokModel.update({
-                deleted_at: toEpochDate(new Date())
+                deleted_at: moment().unix()
             }, {
                 where: {
                     item_medis_uuid: req.uuid,

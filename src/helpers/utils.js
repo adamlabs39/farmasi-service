@@ -80,14 +80,14 @@ export default class Utils {
         return key
     }
 
-    static numberTo13Digit(num){
+    static numberTo10Digit(num){
         if (num instanceof String){
             num = parseInt(num)
         }
 
-        const power = (num.toString().length - 13) * -1
+        const power = (num.toString().length - 10) * -1
 
-        return num * Math.pow(10, power)
+        return Math.floor(num * Math.pow(10, power))
     }
 
     static generate4Code(initialCode = ""){

@@ -78,8 +78,8 @@ export default class AlkesRepository {
         req.takeaway = Utils.nullToType(req.takeaway)
         req.is_chronic = Utils.nullToType(req.is_chronic)
 
-        req.start_date = Utils.numberTo13Digit(req.start_date)
-        req.end_date = Utils.numberTo13Digit(req.end_date)
+        req.start_date = Utils.numberTo10Digit(req.start_date)
+        req.end_date = Utils.numberTo10Digit(req.end_date)
 
         let wherePrescription =  {
             faskes_uuid: req.faskes_uuid,
@@ -226,8 +226,8 @@ export default class AlkesRepository {
         req.status = Utils.nullToType(req.status, Array)
         req.payment_method = Utils.nullToType(req.payment_method, Number)
 
-        req.start_date = Utils.numberTo13Digit(req.start_date)
-        req.end_date = Utils.numberTo13Digit(req.end_date)
+        req.start_date = Utils.numberTo10Digit(req.start_date)
+        req.end_date = Utils.numberTo10Digit(req.end_date)
 
         const option = {
             where: {

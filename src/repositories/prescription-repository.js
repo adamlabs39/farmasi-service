@@ -132,8 +132,8 @@ export default class PrescriptionRepository {
         req.status = Utils.nullToType(req.status, Array)
         req.payment_method = Utils.nullToType(req.payment_method, Number)
 
-        req.start_date = Utils.numberTo13Digit(req.start_date)
-        req.end_date = Utils.numberTo13Digit(req.end_date)
+        req.start_date = Utils.numberTo10Digit(req.start_date)
+        req.end_date = Utils.numberTo10Digit(req.end_date)
 
         let wherePrescription = {
             faskes_uuid: req.faskes_uuid,
@@ -509,8 +509,8 @@ export default class PrescriptionRepository {
                             where: {
                                 jam_pemberian: {
                                     [Op.between]: [
-                                        moment(selectedDate).startOf('day').valueOf(),
-                                        moment(selectedDate).endOf('day').valueOf()
+                                        moment(selectedDate).startOf('day').unix(),
+                                        moment(selectedDate).endOf('day').unix()
                                     ]
                                 }
                             }

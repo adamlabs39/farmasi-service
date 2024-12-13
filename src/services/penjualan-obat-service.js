@@ -110,8 +110,8 @@ export default class PenjualanObatService {
     static async getAll(req) {
         ZodValidator.validate(PenjualanObatValidation.GET_ALL, req);
 
-        req.start_date = Utils.numberTo13Digit(req.start_date)
-        req.end_date = Utils.numberTo13Digit(req.end_date)
+        req.start_date = Utils.numberTo10Digit(req.start_date)
+        req.end_date = Utils.numberTo10Digit(req.end_date)
 
         return await PenjualanObatRepository.getAllOtc(req);
     }

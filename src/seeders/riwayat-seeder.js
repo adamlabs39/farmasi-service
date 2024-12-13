@@ -16,7 +16,7 @@ export default class RiwayatSeeder {
                 "no_reg": "REG1234",
                 "no_rm": "string",
                 "is_takeaway": false,
-                "order_date" : 1631184000000,
+                "order_date" : 1631184000,
                 "patient_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "jenis_pelayanan" : "ri",
@@ -31,13 +31,14 @@ export default class RiwayatSeeder {
                 "penerima" : "fauzy",
                 "no_hp_penerima" : "08123456789",
                 "total_harga" : 10000,
-                "waktu_verifikasi" : 1631184000000,
+                "waktu_verifikasi" : 1631184000,
                 "status_telaah" : true,
-                "waktu_penyiapan" : 1631384000000,
-                "waktu_pemberian" : 1631584000000,
+                "waktu_penyiapan" : 1631384000,
+                "waktu_pemberian" : 1631584000,
                 "status_edukasi" : true,
                 "petugas_telaah" : "mahen",
                 "petugas_edukasi" : "mahen",
+                "payment_method" : 1,
             },
             // PRESCRIPTION RETUR CONDITION
             {
@@ -46,7 +47,7 @@ export default class RiwayatSeeder {
                 "no_reg": "REG1234",
                 "no_rm": "string",
                 "is_takeaway": false,
-                "order_date" : 1631184000000,
+                "order_date" : 1631184000,
                 "patient_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "jenis_pelayanan" : "ri",
@@ -61,15 +62,16 @@ export default class RiwayatSeeder {
                 "penerima" : "fauzy",
                 "no_hp_penerima" : "08123456789",
                 "total_harga" : 10000,
-                "waktu_verifikasi" : 1631184000000,
+                "waktu_verifikasi" : 1631184000,
                 "status_telaah" : true,
-                "waktu_penyiapan" : 1631384000000,
-                "waktu_pemberian" : 1631584000000,
+                "waktu_penyiapan" : 1631384000,
+                "waktu_pemberian" : 1631584000,
                 "status_edukasi" : true,
                 "petugas_telaah" : "mahen",
                 "petugas_edukasi" : "mahen",
                 "petugas_retur" : "hafis",
-                "waktu_retur" : 1651784000000,
+                "waktu_retur" : 1651784000,
+                "payment_method" : 1,
             },
             // PRESCRIPTION CANCEL CONDITION
             {
@@ -78,7 +80,7 @@ export default class RiwayatSeeder {
                 "no_reg": "REG1234",
                 "no_rm": "string",
                 "is_takeaway": false,
-                "order_date" : 1631184000000,
+                "order_date" : 1631184000,
                 "patient_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "jenis_pelayanan" : "ri",
@@ -88,6 +90,7 @@ export default class RiwayatSeeder {
                 "lokasi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "petugas_pembatalan" : "mahen",
                 "alasan_batal" : "tidak jadi",
+                "payment_method" : 1,
             }
         ];
 
@@ -153,118 +156,121 @@ export default class RiwayatSeeder {
             },
         ]
 
-        // await PrescriptionItemModel.bulkCreate(prescriptionItem, {transaction});
-        //
-        // const alkes = [
-        //     // ALKES FINISHED CONDITION
-        //     {
-        //         "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
-        //         "no_reg": "REG1234",
-        //         "no_rm": "string",
-        //         "patient_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "jenis_pelayanan" : "igd",
-        //         "no_order_alkes" : "ORD199FK",
-        //         "order_status" : 4,
-        //         "petugas_order" : "sujiwo",
-        //         "rekam_medis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "rekam_medis_date" : "2021-01-01",
-        //         "harga_total" : 10000,
-        //         "lokasi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "petugas_verifikasi" : "naya",
-        //         "petugas_penyiapan_obat" : "naya",
-        //         "petugas_pemberi" : "naya",
-        //         "penerima" : "naya",
-        //         "waktu_verifikasi" : 1631184000000,
-        //         "waktu_penyiapan" : 1631384000000,
-        //         "waktu_pemberian" : 1631584000000,
-        //     },
-        //     // ALKES RETUR CONDITION
-        //     {
-        //         "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "uuid": "riwayat2-365d-731c-8b16-3a4565c9475e",
-        //         "no_reg": "REG1234",
-        //         "no_rm": "string",
-        //         "patient_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "jenis_pelayanan" : "igd",
-        //         "no_order_alkes" : "ORD198FK",
-        //         "order_status" : 5,
-        //         "petugas_order" : "sujiwo",
-        //         "rekam_medis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "rekam_medis_date" : "2021-01-01",
-        //         "harga_total" : 10000,
-        //         "lokasi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "petugas_verifikasi" : "naya",
-        //         "petugas_penyiapan_obat" : "naya",
-        //         "petugas_pemberi" : "naya",
-        //         "penerima" : "naya",
-        //         "waktu_verifikasi" : 1631184000000,
-        //         "waktu_penyiapan" : 1631384000000,
-        //         "waktu_pemberian" : 1631584000000,
-        //         "petugas_retur" : "naya",
-        //         "waktu_retur" : 1651784000000,
-        //     },
-        //     // ALKES CANCELED CONDITION
-        //     {
-        //         "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "uuid": "riwayat3-365d-731c-8b16-3a4565c9475e",
-        //         "no_reg": "REG1234",
-        //         "no_rm": "string",
-        //         "patient_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "jenis_pelayanan" : "igd",
-        //         "no_order_alkes" : "ORD197FK",
-        //         "order_status" : 0,
-        //         "petugas_order" : "sujiwo",
-        //         "rekam_medis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "rekam_medis_date" : "2021-01-01",
-        //         "harga_total" : 10000,
-        //         "lokasi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "alasan_batal" : "tidak jadi",
-        //         "petugas_pembatalan" : "naya",
-        //     },
-        // ];
-        //
-        // await OrderAlkesModel.bulkCreate(alkes, { transaction });
-        //
-        // const item = [
-        //     // ALKES FINISHED CONDITION
-        //     {
-        //         "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
-        //         "order_alkes_uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
-        //         "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "qty" : 10,
-        //         "harga_satuan" : 1000,
-        //         "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "stok_medis_uuides" : [{"stock_medis_uuid":"0192b31f-365d-731c-8b16-3a4565c9475e","quantity":10,"expired_date":"2025-12-12T00:00:00.000Z"}],
-        //     },
-        //     // ALKES RETUR CONDITION
-        //     {
-        //         "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "uuid": "riwayat2-365d-731c-8b16-3a4565c9475e",
-        //         "order_alkes_uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
-        //         "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "qty" : 10,
-        //         "harga_satuan" : 1000,
-        //         "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "stok_medis_uuides" : [{"stock_medis_uuid":"0192b31f-365d-731c-8b16-3a4565c9475e","quantity":10,"expired_date":"2025-12-12T00:00:00.000Z"}],
-        //     },
-        //     // ALKES CANCEL CONDITION
-        //     {
-        //         "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "uuid": "riwayat3-365d-731c-8b16-3a4565c9475e",
-        //         "order_alkes_uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
-        //         "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "qty" : 10,
-        //         "harga_satuan" : 1000,
-        //         "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-        //         "stok_medis_uuides" : [{"stock_medis_uuid":"0192b31f-365d-731c-8b16-3a4565c9475e","quantity":10,"expired_date":"2025-12-12T00:00:00.000Z"}],
-        //     },
-        // ];
-        //
-        // await OrderAlkesItemModel.bulkCreate(item, { transaction });
+        await PrescriptionItemModel.bulkCreate(prescriptionItem, {transaction});
+
+        const alkes = [
+            // ALKES FINISHED CONDITION
+            {
+                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
+                "no_reg": "REG1234",
+                "no_rm": "string",
+                "patient_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "jenis_pelayanan" : "igd",
+                "no_order_alkes" : "ORD199FK",
+                "order_status" : 4,
+                "petugas_order" : "sujiwo",
+                "rekam_medis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "rekam_medis_date" : "2021-01-01",
+                "harga_total" : 10000,
+                "lokasi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "petugas_verifikasi" : "naya",
+                "petugas_penyiapan_obat" : "naya",
+                "petugas_pemberi" : "naya",
+                "penerima" : "naya",
+                "waktu_verifikasi" : 1631184000,
+                "waktu_penyiapan" : 1631384000,
+                "waktu_pemberian" : 1631584000,
+                "payment_method" : 1,
+            },
+            // ALKES RETUR CONDITION
+            {
+                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "riwayat2-365d-731c-8b16-3a4565c9475e",
+                "no_reg": "REG1234",
+                "no_rm": "string",
+                "patient_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "jenis_pelayanan" : "igd",
+                "no_order_alkes" : "ORD198FK",
+                "order_status" : 5,
+                "petugas_order" : "sujiwo",
+                "rekam_medis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "rekam_medis_date" : "2021-01-01",
+                "harga_total" : 10000,
+                "lokasi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "petugas_verifikasi" : "naya",
+                "petugas_penyiapan_obat" : "naya",
+                "petugas_pemberi" : "naya",
+                "penerima" : "naya",
+                "waktu_verifikasi" : 1631184000,
+                "waktu_penyiapan" : 1631384000,
+                "waktu_pemberian" : 1631584000,
+                "petugas_retur" : "naya",
+                "waktu_retur" : 1651784000,
+                "payment_method" : 1,
+            },
+            // ALKES CANCELED CONDITION
+            {
+                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "riwayat3-365d-731c-8b16-3a4565c9475e",
+                "no_reg": "REG1234",
+                "no_rm": "string",
+                "patient_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "jenis_pelayanan" : "igd",
+                "no_order_alkes" : "ORD197FK",
+                "order_status" : 0,
+                "petugas_order" : "sujiwo",
+                "rekam_medis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "rekam_medis_date" : "2021-01-01",
+                "harga_total" : 10000,
+                "lokasi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "alasan_batal" : "tidak jadi",
+                "petugas_pembatalan" : "naya",
+                "payment_method" : 1,
+            },
+        ];
+
+        await OrderAlkesModel.bulkCreate(alkes, { transaction });
+
+        const item = [
+            // ALKES FINISHED CONDITION
+            {
+                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
+                "order_alkes_uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
+                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "qty" : 10,
+                "harga_satuan" : 1000,
+                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "stok_medis_uuides" : [{"stock_medis_uuid":"0192b31f-365d-731c-8b16-3a4565c9475e","quantity":10,"expired_date":"2025-12-12T00:00:00.000Z"}],
+            },
+            // ALKES RETUR CONDITION
+            {
+                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "riwayat2-365d-731c-8b16-3a4565c9475e",
+                "order_alkes_uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
+                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "qty" : 10,
+                "harga_satuan" : 1000,
+                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "stok_medis_uuides" : [{"stock_medis_uuid":"0192b31f-365d-731c-8b16-3a4565c9475e","quantity":10,"expired_date":"2025-12-12T00:00:00.000Z"}],
+            },
+            // ALKES CANCEL CONDITION
+            {
+                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "riwayat3-365d-731c-8b16-3a4565c9475e",
+                "order_alkes_uuid": "riwayat1-365d-731c-8b16-3a4565c9475e",
+                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "qty" : 10,
+                "harga_satuan" : 1000,
+                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "stok_medis_uuides" : [{"stock_medis_uuid":"0192b31f-365d-731c-8b16-3a4565c9475e","quantity":10,"expired_date":"2025-12-12T00:00:00.000Z"}],
+            },
+        ];
+
+        await OrderAlkesItemModel.bulkCreate(item, { transaction });
     }
 }

@@ -96,7 +96,7 @@ export default class ReturService {
                 }
             }
 
-            req.waktu_retur = moment.valueOf();
+            req.waktu_retur = moment().unix();
             // update status
             if (req.jenis_retur === "obat") {
                 await PrescriptionRepository.editPrescription({
@@ -143,8 +143,8 @@ export default class ReturService {
     async getAll(req) {
         ZodValidator.validate(ReturValidation.GET_ALL, req);
 
-        req.start_date = Utils.numberTo13Digit(req.start_date);
-        req.end_date = Utils.numberTo13Digit(req.end_date);
+        req.start_date = Utils.numberTo10Digit(req.start_date);
+        req.end_date = Utils.numberTo10Digit(req.end_date);
         if (!req.payment_method){
             req.payment_method = 0;
         }
