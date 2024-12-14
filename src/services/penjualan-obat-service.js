@@ -3,7 +3,7 @@ import PenjualanObatValidation from "../validations/penjualan-obat-validation.js
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import PenjualanObatRepository from "../repositories/penjualan-obat-repository.js";
 import Utils from "../helpers/utils.js";
-import {toEpochDate} from "../helpers/date-helper.js";
+import {setRangeDate, toEpochDate} from "../helpers/date-helper.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
 import KonfigurasiHargaRepository from "../repositories/konfigurasi-harga-repository.js";
 import DataMasterItemMedisRepository from "../repositories/datamaster-item-medis-repository.js";
@@ -108,10 +108,9 @@ export default class PenjualanObatService {
     }
 
     static async getAll(req) {
-        ZodValidator.validate(PenjualanObatValidation.GET_ALL, req);
+        setRangeDate(req);
 
-        req.start_date = Utils.numberTo10Digit(req.start_date)
-        req.end_date = Utils.numberTo10Digit(req.end_date)
+        ZodValidator.validate(PenjualanObatValidation.GET_ALL, req);
 
         return await PenjualanObatRepository.getAllOtc(req);
     }

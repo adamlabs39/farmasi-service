@@ -8,7 +8,7 @@ import InternalServerException from "../errors/internal-server-exception.js";
 import Utils from "../helpers/utils.js";
 import axiosInstance from "../configurations/axios-instance.js";
 import {REKAM_MEDIS_URL} from "../helpers/constants.js";
-import {toEpochDate} from "../helpers/date-helper.js";
+import {setRangeDate, toEpochDate} from "../helpers/date-helper.js";
 import KonfigurasiHargaService from "./konfigurasi-harga-service.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
 import DataMasterItemMedisRepository from "../repositories/datamaster-item-medis-repository.js";
@@ -361,6 +361,8 @@ export default class PrescriptionService {
     }
 
     static async getAll(req) {
+        setRangeDate(req);
+
         ZodValidator.validate(PrescriptionValidation.GET_ALL, req);
         const rawData = await PrescriptionRepository.getAllPrescription(req);
 

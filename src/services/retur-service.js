@@ -11,6 +11,7 @@ import AlkesRepository from "../repositories/alkes-repository.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
 import moment from "moment";
 import Utils from "../helpers/utils.js";
+import {setRangeDate} from "../helpers/date-helper.js";
 
 export default class ReturService {
     static async create(req) {
@@ -143,8 +144,8 @@ export default class ReturService {
     async getAll(req) {
         ZodValidator.validate(ReturValidation.GET_ALL, req);
 
-        req.start_date = Utils.numberTo10Digit(req.start_date);
-        req.end_date = Utils.numberTo10Digit(req.end_date);
+        setRangeDate(req);
+
         if (!req.payment_method){
             req.payment_method = 0;
         }

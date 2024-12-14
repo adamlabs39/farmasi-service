@@ -5,7 +5,7 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import DataMasterLokasiStokRepository from "../repositories/datamaster-lokasi-stok-repository.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import Utils from "../helpers/utils.js";
-import {toEpochDate} from "../helpers/date-helper.js";
+import {setRangeDate, toEpochDate} from "../helpers/date-helper.js";
 import KonfigurasiHargaService from "./konfigurasi-harga-service.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
 import DataMasterItemMedisRepository from "../repositories/datamaster-item-medis-repository.js";
@@ -230,6 +230,7 @@ export default class AlkesService {
     }
 
     static async getAllForFarmacy(req) {
+        setRangeDate(req);
         ZodValidator.validate(PrescriptionValidation.GET_ALL, req);
         const rawData = await AlkesRepository.getAllForFarmacy(req);
 

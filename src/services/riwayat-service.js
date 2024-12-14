@@ -5,6 +5,7 @@ import AlkesRepository from "../repositories/alkes-repository.js";
 import BadRequestException from "../errors/bad-request-exception.js";
 import RiwayatValidation from "../validations/riwayat-validation.js";
 import ReturRepository from "../repositories/retur-repository.js";
+import {setRangeDate} from "../helpers/date-helper.js";
 
 export default class RiwayatService {
     static async getAll(req) {
@@ -13,6 +14,8 @@ export default class RiwayatService {
         let result;
         req.pagination = true;
         req.subQuery = false;
+
+        setRangeDate(req);
 
         if (req.item_type === "obat") {
             if (req.status_type === "resep") {

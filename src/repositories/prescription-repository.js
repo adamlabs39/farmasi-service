@@ -4,7 +4,7 @@ import NotfoundException from "../errors/notfound-exception.js";
 import BadRequestException from "../errors/bad-request-exception.js";
 import {Op} from "sequelize";
 import Utils from "../helpers/utils.js";
-import {toEpochDate} from "../helpers/date-helper.js";
+import {setRangeDate, toEpochDate} from "../helpers/date-helper.js";
 import {
     AturanPakaiModel,
     BentukRacikanModel, CaraiPakaiModel, FpoPemberianModel,
@@ -132,8 +132,7 @@ export default class PrescriptionRepository {
         req.status = Utils.nullToType(req.status, Array)
         req.payment_method = Utils.nullToType(req.payment_method, Number)
 
-        req.start_date = Utils.numberTo10Digit(req.start_date)
-        req.end_date = Utils.numberTo10Digit(req.end_date)
+        req = setRangeDate(req);
 
         let wherePrescription = {
             faskes_uuid: req.faskes_uuid,
