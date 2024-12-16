@@ -601,4 +601,79 @@ export default class PrescriptionRepository {
 
         return await Pagination.init(PrescriptionModel, req, option);
     }
+
+    // get for waktu tunggu
+    static async getTat(req){
+        req.search = Utils.nullToType(req.search)
+        req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
+        req.jenis_pelayanan = Utils.nullToType(req.jenis_pelayanan)
+        req.racikan = Utils.nullToType(req.racikan)
+        req.payment_method = Utils.nullToType(req.payment_method, Number)
+
+        let wherePrescription = {
+            faskes_uuid: req.faskes_uuid,
+            [Op.or]: [
+                {no_resep: {[Op.iLike]: `%${req.search}%`}},
+                {no_rm: {[Op.iLike]: `%${req.search}%`}},
+                sequelizeInstance.where(
+                    sequelizeInstance.col('patient.name'),
+                    {[Op.iLike]: `%${req.search || ''}%`}
+                )
+            ],
+            lokasi_stok_uuid: {[Op.like]: `%${req.lokasi_stok_uuid}%`},
+            order_date: {
+                [Op.between]: [req.start_date, req.end_date]
+            },
+            order_status: {
+                [Op.between]: [5, 6]
+            }
+        }
+
+        let wherePrescriptionItem = {}
+
+        if (req.jenis_pelayanan !== "") {
+            wherePrescription.jenis_pelayanan = req.jenis_pelayanan
+        }
+
+        if (req.racikan === "racikan") {
+            wherePrescriptionItem.is_compound = true
+        } else if (req.racikan === "non-racikan") {
+            wherePrescriptionItem.is_compound = false
+        }
+
+        if (req.payment_method !== 0) {
+            wherePrescription.payment_method = req.payment_method;
+        }
+
+        const options = {
+            attributes: ['uuid', 'no_rm', 'no_reg', 'no_resep', 'waktu_verifikasi', 'jenis_pelayanan', 'order_date', 'waktu_pemberian', 'payment_method'],
+            include: [
+                {
+                    model: PrescriptionItemModel,
+                    as: 'obat',
+                    required: req.racikan === true || req.racikan === false,
+                    attributes: ["is_compound"],
+                    where: wherePrescriptionItem,
+                },
+                {
+                    model: PatientModel,
+                    on : sequelizeInstance.where(sequelizeInstance.cast(sequelizeInstance.col('PrescriptionModel.patient_uuid'), 'TEXT'), {
+                        [Op.eq]: sequelizeInstance.cast(sequelizeInstance.col('patient.uuid'), 'TEXT')
+                    }),
+                    as: 'patient',
+                    required: false,
+                    attributes: ['name']
+                },
+                {
+                    model : LokasiStokModel,
+                    as : 'lokasi_stok',
+                    required: false,
+                    attributes: ["name"]
+                }
+            ],
+            where: wherePrescription,
+        }
+
+        return await Pagination.init(PrescriptionModel, req, options);
+    }
 }

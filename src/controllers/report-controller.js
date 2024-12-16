@@ -10,4 +10,14 @@ export default class ReportController {
             nextFunction(error);
         }
     }
+
+    static async getTat(request, response, nextFunction) {
+        try {
+            request.query.faskes_uuid = request.author.faskesUuid;
+            const result = await ReportService.getTat(request.query);
+            response.status(200).json(result)
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }

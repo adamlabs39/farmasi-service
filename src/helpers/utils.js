@@ -61,7 +61,7 @@ export default class Utils {
     }
 
     static nullToType(key, dataType = String) {
-        if (key === null || key === undefined){
+        if (key === null || key === undefined || key === ''){
             switch (dataType)
             {
                 case String:
