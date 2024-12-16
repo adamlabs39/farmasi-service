@@ -24,7 +24,7 @@ export default class PenjualanObatValidation {
 
     static GET_ALL = z.object({
         status : z.string().min(1, required),
-        start_date : z.string().min(1, required),
-        end_date : z.string().min(1, required),
+        start_date : z.number(),
+        end_date : z.number(),
     })
 }
