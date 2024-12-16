@@ -17,6 +17,10 @@ export default class Pagination{
 
         const mappedRows = query.rows.map(row => Utils.camelToSnakeObject(row.toJSON()));
 
+        if (query.count instanceof Array){
+            query.count = query.count.length;
+        }
+
         return {
             data: mappedRows,
             pagination: Utils.paginationHelper(page, limit, query.count)

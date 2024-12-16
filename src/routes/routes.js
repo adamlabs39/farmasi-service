@@ -156,5 +156,6 @@ routes.get(`${baseUrl}/riwayat/detail`, RiwayatController.getDetail);
 // REKAP
 routes.get(`${baseUrl}/rekap/pendapatan`, ReportController.getPendapatan);
 routes.get(`${baseUrl}/rekap/tat`, ReportController.getTat);
+routes.get(`${baseUrl}/rekap/pendapatan-apotik`, ReportController.getPendapatanPerApotik);
 
 export default routes;

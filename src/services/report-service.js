@@ -40,4 +40,22 @@ export default class ReportService {
 
         return result;
     }
+
+    static async getPendapatanPerApotik(req){
+        setRangeDate(req);
+
+        ZodValidator.validate(ReportValidation.GET_TAT, req);
+
+        const result = await PrescriptionRepository.getPendapatanPerApotik(req);
+
+        if (result.data){
+            result.data.forEach((element) => {
+                element.payment_method = element.payment_method === 1 ? "Tunai" : "Asuransi";
+                element.lokasi_stok_uuid = undefined;
+                element.lokasi_stok = element.lokasi_stok?.name || "-";
+            });
+        }
+
+        return result;
+    }
 }

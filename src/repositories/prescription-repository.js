@@ -676,4 +676,51 @@ export default class PrescriptionRepository {
 
         return await Pagination.init(PrescriptionModel, req, options);
     }
+
+    // get pendapatan per apotik
+    static async getPendapatanPerApotik(req){
+        req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
+
+        let wherePrescription = {
+            faskes_uuid: req.faskes_uuid,
+            lokasi_stok_uuid: {[Op.like]: `%${req.lokasi_stok_uuid}%`},
+            order_date: {
+                [Op.between]: [req.start_date, req.end_date]
+            },
+            order_status: 5
+        }
+
+        const options = {
+            attributes: [
+                'payment_method',
+                [
+                    sequelizeInstance.fn('DATE', sequelizeInstance.fn('TO_TIMESTAMP', sequelizeInstance.col('order_date'))),
+                    'order_date'
+                ],
+                [sequelizeInstance.fn('SUM', sequelizeInstance.col('total_harga')), 'total_harga'],
+                'lokasi_stok_uuid'
+            ],
+            include: [
+                {
+                    model : LokasiStokModel,
+                    as : 'lokasi_stok',
+                    required: false,
+                    attributes: ["name", "uuid"]
+                }
+            ],
+            where: wherePrescription,
+            group: [
+                'payment_method',
+                sequelizeInstance.fn('DATE', sequelizeInstance.fn('TO_TIMESTAMP', sequelizeInstance.col('order_date'))),
+                'lokasi_stok_uuid',
+                'lokasi_stok.uuid',
+                'lokasi_stok.name'
+            ],
+            order: [
+                [sequelizeInstance.fn('DATE', sequelizeInstance.fn('TO_TIMESTAMP', sequelizeInstance.col('order_date'))), 'ASC']
+            ]
+        }
+
+        return await Pagination.init(PrescriptionModel, req, options);
+    }
 }

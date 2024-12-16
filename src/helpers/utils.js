@@ -85,6 +85,10 @@ export default class Utils {
             num = parseInt(num)
         }
 
+        if (num <=0){
+            num = 1
+        }
+
         const power = (num.toString().length - 10) * -1
 
         return Math.floor(num * Math.pow(10, power))
