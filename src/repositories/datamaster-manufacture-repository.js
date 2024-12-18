@@ -74,4 +74,20 @@ export default class DataMasterManufactureRepository {
             }
         });
     }
+
+    static async getUuidesByCodes(codes, faskesUuid) {
+        return ManufactureModel.findAll({
+            where: {
+                code: {
+                    [Op.in]: codes
+                },
+                faskes_uuid: faskesUuid
+            },
+            attributes: ['uuid', 'code']
+        });
+    }
+
+    static bulkCreate(data) {
+        return ManufactureModel.bulkCreate(data);
+    }
 }

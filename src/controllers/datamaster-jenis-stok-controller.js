@@ -1,5 +1,7 @@
 import successResponse from "../responses/success-response.js";
 import DatamasterJenisStokService from "../services/datamaster-jenis-stok-service.js";
+import Utils from "../helpers/utils.js";
+import DatamasterSatuanService from "../services/datamaster-satuan-service.js";
 
 export default class DatamasterJenisStokController {
     static async create(req, res, nextFunction) {
@@ -40,6 +42,19 @@ export default class DatamasterJenisStokController {
             req.body.uuid = uuid;
             await DatamasterJenisStokService.delete(req.body);
             res.status(200).json(successResponse("data berhasil dihapus"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async import(req, res, nextFunction) {
+        try {
+            req.body.data = Utils.parseExcelToJSON(req);
+            req.body.faskes_uuid = req.author.faskesUuid;
+
+            const result = await DatamasterJenisStokService.import(req.body);
+
+            res.status(200).json(successResponse("data berhasil diimport"));
         } catch (error) {
             nextFunction(error);
         }

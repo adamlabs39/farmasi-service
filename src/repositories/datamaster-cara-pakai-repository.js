@@ -58,4 +58,8 @@ export default class DataMasterCaraPakaiRepository {
             }
         );
     }
+
+    static async bulkCreate(data) {
+        return await CaraiPakaiModel.bulkCreate(data);
+    }
 }

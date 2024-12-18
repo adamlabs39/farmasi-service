@@ -1,3 +1,6 @@
+import BadRequestException from "../errors/bad-request-exception.js";
+import * as XLSX from "xlsx";
+
 export default class Utils {
     static camelToSnakeObject(obj, exclude = []) {
         const newObj = {};
@@ -102,5 +105,22 @@ export default class Utils {
         }
 
         return initialCode
+    }
+
+    static parseExcelToJSON(req, sheetOrder = 0){
+        const file = req.files?.files || null;
+        const availableMimeTypes = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+        if (!file) {
+            throw new BadRequestException("kunci 'file' tidak ditemukan");
+        }
+
+        if (!availableMimeTypes.includes(file.mimetype)) {
+            throw new BadRequestException("file bukan excel");
+        }
+
+        const wb = XLSX.read(file.data, {type: 'buffer'});
+        const sheet = wb.Sheets[wb.SheetNames[sheetOrder]];
+
+        return XLSX.utils.sheet_to_json(sheet, {raw: true, defval: null});
     }
 }

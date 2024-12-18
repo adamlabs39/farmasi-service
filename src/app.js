@@ -3,6 +3,7 @@ import cors from "cors";
 import routes from "./routes/routes.js";
 import errorMiddleware from "./middlewares/error-middleware.js";
 import authorizationSdk from "@adameds/authorization-sdk";
+import efp from "express-fileupload";
 import {dbSeeder} from "./seeders/db-seeder.js";
 import MODELMERGE from "./models/model-synchronize.js";
 
@@ -18,6 +19,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(authorizationSdk([]));
+app.use(efp());
 app.use(routes);
 app.use(errorMiddleware);
 app.listen(APPLICATION_PORT, APPLICATION_HOST, async () => {

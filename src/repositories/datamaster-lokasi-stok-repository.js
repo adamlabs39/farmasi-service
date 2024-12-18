@@ -57,4 +57,8 @@ export default class DataMasterLokasiStokRepository {
             }
         });
     }
+
+    static async bulkCreate(data) {
+        return await LokasiStokModel.bulkCreate(data);
+    }
 }

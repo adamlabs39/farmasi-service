@@ -1,5 +1,8 @@
 import DatamasterSatuanService from "../services/datamaster-satuan-service.js";
 import successResponse from "../responses/success-response.js";
+import BadRequestException from "../errors/bad-request-exception.js";
+import * as XLSX from "xlsx";
+import Utils from "../helpers/utils.js";
 
 export default class DatamasterSatuanController {
     static async create(req, res, nextFunction) {
@@ -40,6 +43,19 @@ export default class DatamasterSatuanController {
             req.body.uuid = uuid;
             await DatamasterSatuanService.delete(req.body);
             res.status(200).json(successResponse("data berhasil dihapus"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async import(req, res, nextFunction) {
+        try {
+            req.body.data = Utils.parseExcelToJSON(req);
+            req.body.faskes_uuid = req.author.faskesUuid;
+
+            const result = await DatamasterSatuanService.import(req.body);
+
+            res.status(200).json(successResponse("data berhasil diimport"));
         } catch (error) {
             nextFunction(error);
         }

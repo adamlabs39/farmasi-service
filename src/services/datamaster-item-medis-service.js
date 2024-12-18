@@ -7,16 +7,23 @@ import sequelizeInstance from "../configurations/sequelize-instance.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import KonfigurasiHargaRepository from "../repositories/konfigurasi-harga-repository.js";
 import BadRequestException from "../errors/bad-request-exception.js";
+import ExcelMapper from "../helpers/excel-mapper.js";
+import DataMasterSatuanRepository from "../repositories/datamaster-satuan-repository.js";
+import DatamasterBentukSediaanRepository from "../repositories/datamaster-bentuk-sediaan-repository.js";
+import DataMasterManufactureRepository from "../repositories/datamaster-manufacture-repository.js";
+import DataMasterKategoriObatRepository from "../repositories/datamaster-kategori-obat-repository.js";
+import DataMasterJenisStokRepository from "../repositories/datamaster-jenis-stok-repository.js";
 
 export default class DatamasterItemMedisService {
     static async create(req) {
         ZodValidator.validate(DatamasterValidation.CREATE_ITEM_MEDIS, req);
+        req.code = req.code.toUpperCase();
 
         const tr = await sequelizeInstance.transaction();
         try {
             const itemMedis = await DataMasterItemMedisRepository.create(req, tr);
 
-            if (!!req.jenis_stocks){
+            if (!!req.jenis_stocks) {
                 for (const jenisStock of req.jenis_stocks) {
                     ZodValidator.validate(DatamasterValidation.INSERT_JENIS_STOK_ITEM_MEDIS, jenisStock);
                     await DataMasterItemMedisRepository.insertJenisStok({
@@ -27,13 +34,13 @@ export default class DatamasterItemMedisService {
                 }
             }
 
-            if(req.conversion !== undefined && Array.isArray(req.conversion)){
-                const newConversion = req.conversion.filter(item => (item.uuid === "" || item.uuid === null || item.uuid === undefined) ).map(item => ({
+            if (req.conversion !== undefined && Array.isArray(req.conversion)) {
+                const newConversion = req.conversion.filter(item => (item.uuid === "" || item.uuid === null || item.uuid === undefined)).map(item => ({
                     ...item,
-                    status : true,
+                    status: true,
                     item_medis_uuid: itemMedis.dataValues.uuid,
                     faskes_uuid: req.faskes_uuid,
-                    uuid : uuidv7(),
+                    uuid: uuidv7(),
                 }));
 
                 if (newConversion.length > 0) {
@@ -57,23 +64,23 @@ export default class DatamasterItemMedisService {
         try {
             const itemMedis = await DataMasterItemMedisRepository.update(req, tr);
 
-            if (!!req.jenis_stocks){
+            if (!!req.jenis_stocks) {
                 for (const jenisStock of req.jenis_stocks) {
 
-                    if (jenisStock.uuid === null || jenisStock.uuid === undefined){
+                    if (jenisStock.uuid === null || jenisStock.uuid === undefined) {
                         ZodValidator.validate(DatamasterValidation.INSERT_JENIS_STOK_ITEM_MEDIS, jenisStock);
                         await DataMasterItemMedisRepository.insertJenisStok({
                             item_medis_uuid: req.uuid,
                             jenis_stok_uuid: jenisStock.jenis_stok_uuid,
                             faskes_uuid: req.faskes_uuid,
                         }, tr);
-                    } else if(!!jenisStock.is_updated){
+                    } else if (!!jenisStock.is_updated) {
                         ZodValidator.validate(DatamasterValidation.UPDATE_JENIS_STOK_ITEM_MEDIS, jenisStock);
                         await DataMasterItemMedisRepository.updateJenisStok({
                             jenis_stok_uuid: jenisStock.jenis_stok_uuid,
                             uuid: jenisStock.uuid,
                         }, tr);
-                    } else if (!!jenisStock.is_deleted){
+                    } else if (!!jenisStock.is_deleted) {
                         ZodValidator.validate(DatamasterValidation.DELETE_JENIS_STOK_ITEM_MEDIS, jenisStock);
                         await DataMasterItemMedisRepository.deleteJenisStok({
                             uuid: jenisStock.uuid,
@@ -82,12 +89,12 @@ export default class DatamasterItemMedisService {
                 }
             }
 
-            if(req.conversion !== undefined && Array.isArray(req.conversion)){
+            if (req.conversion !== undefined && Array.isArray(req.conversion)) {
                 const newConversion = req.conversion.filter(item => item.uuid === "").map(item => ({
                     ...item,
                     item_medis_uuid: req.uuid,
                     faskes_uuid: req.faskes_uuid,
-                    uuid : uuidv7(),
+                    uuid: uuidv7(),
                 }));
 
                 const updatedConversion = req.conversion.filter(item => item.is_updated === true).map(item => ({
@@ -98,7 +105,7 @@ export default class DatamasterItemMedisService {
 
                 const deletedConversion = req.conversion.filter(item => item.is_deleted === true).map(item => ({
                     ...item,
-                    status : true,
+                    status: true,
                     item_medis_uuid: req.uuid,
                     faskes_uuid: req.faskes_uuid,
                 }));
@@ -144,21 +151,21 @@ export default class DatamasterItemMedisService {
         return await DataMasterItemMedisRepository.getAllWithoutPagination(req, configInfo.metode_hpp === "avg");
     }
 
-    static async getAvailableJenisStok(req){
+    static async getAvailableJenisStok(req) {
         ZodValidator.validate(DatamasterValidation.GET_AVAILABLE_JENIS_STOK, req);
 
         const configInfo = await KonfigurasiHargaRepository.get(req.faskes_uuid);
 
         const result = await DataMasterItemMedisRepository.getAvailableJenisStok(req, configInfo.metode_hpp === "avg");
 
-        if (result.length === 0){
+        if (result.length === 0) {
             throw new BadRequestException("Tidak ada jenis stok yang tersedia");
         }
 
-        for (const item of result){
+        for (const item of result) {
             let total_stock = 0;
 
-            for (const stock of item.detail_stok.stocks){
+            for (const stock of item.detail_stok.stocks) {
                 total_stock += stock.sisa_stok;
             }
 
@@ -169,5 +176,141 @@ export default class DatamasterItemMedisService {
         }
 
         return result;
+    }
+
+    static async import(req) {
+        const itemMedisRequest = ExcelMapper.mapDatamasterItemMedis(req.data_item_medis, req.faskes_uuid);
+        const conversionRequest = ExcelMapper.mapDatamasterConversion(req.data_conversion, req.faskes_uuid);
+
+        const satuanCodes = [
+            ...new Set(itemMedisRequest.map(item => item.satuan_dosis_code)),
+            ...new Set(itemMedisRequest.map(item => item.satuan_kemasan_code)),
+            ...new Set(itemMedisRequest.map(item => item.satuan_penggunaan_code)),
+            ...new Set(conversionRequest.map(item => item.satuan_pembelian_code)),
+            ...new Set(conversionRequest.map(item => item.satuan_penggunaan_code)),
+        ];
+
+        // --------- START CONVERT CODE TO UUID ------------
+        const [
+            bentukSediaanUuid,
+            manufactureUuid,
+            kategoriObatUuid,
+            satuanUuid,
+            jenisStokUuid
+        ] = await Promise.all([
+            DatamasterBentukSediaanRepository.getUuidesByCode(itemMedisRequest.map(item => item.bentuk_sediaan_code), req.faskes_uuid),
+            DataMasterManufactureRepository.getUuidesByCodes(itemMedisRequest.map(item => item.manufacure_code), req.faskes_uuid),
+            DataMasterKategoriObatRepository.getUuidesByCodes(itemMedisRequest.map(item => item.kategori_obat_code), req.faskes_uuid),
+            DataMasterSatuanRepository.getUuidesByCodes(satuanCodes, req.faskes_uuid),
+            DataMasterJenisStokRepository.getUuidesByCodes(itemMedisRequest.map(item => item.jenis_stok_codes).flat(), req.faskes_uuid),
+        ]);
+        const satuanMap = {};
+        satuanUuid.forEach((satuan) => {
+            satuanMap[satuan.code] = {uuid :satuan.uuid, name : satuan.name};
+        });
+
+        const bentukSediaanMap = {};
+        bentukSediaanUuid.forEach((bentuk) => {
+            bentukSediaanMap[bentuk.code] = bentuk.uuid;
+        });
+        const manufactureMap = {};
+        manufactureUuid.forEach((manufacture) => {
+            manufactureMap[manufacture.code] = manufacture.uuid;
+        });
+        const kategoriObatMap = {};
+        kategoriObatUuid.forEach((kategori) => {
+            kategoriObatMap[kategori.code] = kategori.uuid;
+        });
+        const jenisStokMap = {};
+        jenisStokUuid.forEach((jenis) => {
+            jenisStokMap[jenis.code] = jenis.uuid;
+        });
+        // ---------- END CONVERT CODE TO UUID -------------
+
+        // MAPPING FOR ITEM MEDIS REQUEST
+        itemMedisRequest.forEach((item) => {
+            if (!satuanMap[item.satuan_dosis_code]?.uuid || !satuanMap[item.satuan_kemasan_code]?.uuid || !bentukSediaanMap[item.bentuk_sediaan_code] || !manufactureMap[item.manufacure_code] || !kategoriObatMap[item.kategori_obat_code] || !satuanMap[item.satuan_penggunaan_code]?.uuid) {
+                throw new BadRequestException("ada kode di item medis yang tidak ditemukan datanya");
+            }
+
+            if (item.jenis_stok_codes) {
+                item.jenis_stok_codes.forEach((code) => {
+                    if (!jenisStokMap[code]) {
+                        throw new BadRequestException("ada kode jenis stok yang tidak ditemukan datanya");
+                    }
+                })
+            }
+
+            item.uuid = uuidv7();
+            item.satuan_dosis_uuid = satuanMap[item.satuan_dosis_code]?.uuid;
+            item.satuan_kemasan_uuid = satuanMap[item.satuan_kemasan_code]?.uuid;
+            item.bentuk_sediaan_uuid = bentukSediaanMap[item.bentuk_sediaan_code];
+            item.manufacture_uuid = manufactureMap[item.manufacure_code];
+            item.kategori_obat_uuid = kategoriObatMap[item.kategori_obat_code];
+            item.satuan_penggunaan_uuid = satuanMap[item.satuan_penggunaan_code]?.uuid;
+            item.jenis_stocks = item.jenis_stok_codes.map(code => ({jenis_stok_uuid: jenisStokMap[code]}));
+            item.satuan_pembelian_uuid = "0192b31f-365d-731c-8b16-3a4565c9475e"
+
+            delete item.satuan_dosis_code;
+            delete item.satuan_kemasan_code;
+            delete item.bentuk_sediaan_code;
+            delete item.manufacure_code;
+            delete item.kategori_obat_code;
+            delete item.satuan_penggunaan_code;
+            delete item.jenis_stok_codes;
+        });
+
+        // MAPPING FOR JENIS STOK REQUEST
+        const ItemMedisJenisRequest = [];
+        for (const item of itemMedisRequest) {
+            if (!!item.jenis_stocks) {
+                for (const jenisStock of item.jenis_stocks) {
+                    ItemMedisJenisRequest.push({
+                        item_medis_uuid: item.uuid,
+                        jenis_stok_uuid: jenisStock.jenis_stok_uuid,
+                        faskes_uuid: req.faskes_uuid,
+                    });
+                }
+            }
+        }
+
+        // MAPPING FOR CONVERSION REQUEST
+        conversionRequest.forEach((item) => {
+            if (!satuanMap[item.satuan_pembelian_code]?.uuid || !satuanMap[item.satuan_penggunaan_code]?.uuid) {
+                throw new BadRequestException("ada kode di conversion yang tidak ditemukan datanya");
+            }
+
+            item.uuid = uuidv7();
+            item.satuan_pembelian_uuid = satuanMap[item.satuan_pembelian_code]?.uuid;
+            item.satuan_penggunaan_uuid = satuanMap[item.satuan_penggunaan_code]?.uuid;
+            item.satuan_pembelian = satuanMap[item.satuan_pembelian_code]?.name;
+            item.satuan_penggunaan = satuanMap[item.satuan_penggunaan_code]?.name;
+
+            const itemMedisUuid = itemMedisRequest.find(itemMedis => itemMedis.code === item.item_medis_code)?.uuid;
+
+            if (!itemMedisUuid) {
+                throw new BadRequestException("kode item medis pada conversion tidak ditemukan");
+            }
+
+            item.item_medis_uuid = itemMedisUuid;
+
+            delete item.satuan_pembelian_code;
+            delete item.satuan_penggunaan_code;
+            delete item.item_medis_code;
+        });
+
+        const tr = await sequelizeInstance.transaction();
+
+        try {
+            await DataMasterItemMedisRepository.bulkCreate(itemMedisRequest, tr);
+            await DataMasterItemMedisRepository.bulkInsertJenisStok(ItemMedisJenisRequest, tr);
+            await ConversionRepository.bulkCreate(conversionRequest, tr);
+            await tr.commit();
+        } catch (e) {
+            await tr.rollback();
+            throw new InternalServerException(e.message);
+        }
+
+        return itemMedisRequest;
     }
 }

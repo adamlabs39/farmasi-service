@@ -32,54 +32,64 @@ routes.post(`${baseUrl}/datamaster/satuan`, DatamasterSatuanController.create);
 routes.get(`${baseUrl}/datamaster/satuan`, DatamasterSatuanController.getAll);
 routes.put(`${baseUrl}/datamaster/satuan/:uuid`, DatamasterSatuanController.update);
 routes.delete(`${baseUrl}/datamaster/satuan/:uuid`, DatamasterSatuanController.delete);
+routes.post(`${baseUrl}/datamaster/satuan/import`, DatamasterSatuanController.import);
 
 // DATAMASTER - BENTUK SEDIAAN
 routes.post(`${baseUrl}/datamaster/bentuk-sediaan`, DatamasterBentukSediaanController.create);
 routes.get(`${baseUrl}/datamaster/bentuk-sediaan`, DatamasterBentukSediaanController.getAll);
 routes.put(`${baseUrl}/datamaster/bentuk-sediaan/:uuid`, DatamasterBentukSediaanController.update);
 routes.delete(`${baseUrl}/datamaster/bentuk-sediaan/:uuid`, DatamasterBentukSediaanController.delete);
+routes.post(`${baseUrl}/datamaster/bentuk-sediaan/import`, DatamasterBentukSediaanController.import);
+
 
 // DATAMASTER - KATEGORI OBAT
 routes.post(`${baseUrl}/datamaster/kategori-obat`, DatamasterKategoriObatController.create);
 routes.get(`${baseUrl}/datamaster/kategori-obat`, DatamasterKategoriObatController.getAll);
 routes.put(`${baseUrl}/datamaster/kategori-obat/:uuid`, DatamasterKategoriObatController.update);
 routes.delete(`${baseUrl}/datamaster/kategori-obat/:uuid`, DatamasterKategoriObatController.delete);
+routes.post(`${baseUrl}/datamaster/kategori-obat/import`, DatamasterKategoriObatController.import);
 
 // DATAMASTER - MANUFACTURE
 routes.post(`${baseUrl}/datamaster/manufacture`, DatamasterManufactureController.create);
 routes.get(`${baseUrl}/datamaster/manufacture`, DatamasterManufactureController.getAll);
 routes.put(`${baseUrl}/datamaster/manufacture/:uuid`, DatamasterManufactureController.update);
 routes.delete(`${baseUrl}/datamaster/manufacture/:uuid`, DatamasterManufactureController.delete);
+routes.post(`${baseUrl}/datamaster/manufacture/import`, DatamasterManufactureController.import);
 
 // DATAMASTER - CARA PAKAI
 routes.post(`${baseUrl}/datamaster/cara-pakai`, DatamasterCaraPakaiController.create);
 routes.get(`${baseUrl}/datamaster/cara-pakai`, DatamasterCaraPakaiController.getAll);
 routes.put(`${baseUrl}/datamaster/cara-pakai/:uuid`, DatamasterCaraPakaiController.update);
 routes.delete(`${baseUrl}/datamaster/cara-pakai/:uuid`, DatamasterCaraPakaiController.delete);
+routes.post(`${baseUrl}/datamaster/cara-pakai/import`, DatamasterCaraPakaiController.import);
 
 // DATAMASTER - JENIS STOK
 routes.post(`${baseUrl}/datamaster/jenis-stok`, DatamasterJenisStokController.create);
 routes.get(`${baseUrl}/datamaster/jenis-stok`, DatamasterJenisStokController.getAll);
 routes.put(`${baseUrl}/datamaster/jenis-stok/:uuid`, DatamasterJenisStokController.update);
 routes.delete(`${baseUrl}/datamaster/jenis-stok/:uuid`, DatamasterJenisStokController.delete);
+routes.post(`${baseUrl}/datamaster/jenis-stok/import`, DatamasterJenisStokController.import);
 
 // DATAMASTER - LOKASI STOK
 routes.post(`${baseUrl}/datamaster/lokasi-stok`, DatamasterLokasiStokController.create);
 routes.get(`${baseUrl}/datamaster/lokasi-stok`, DatamasterLokasiStokController.getAll);
 routes.put(`${baseUrl}/datamaster/lokasi-stok/:uuid`, DatamasterLokasiStokController.update);
 routes.delete(`${baseUrl}/datamaster/lokasi-stok/:uuid`, DatamasterLokasiStokController.delete);
+routes.post(`${baseUrl}/datamaster/lokasi-stok/import`, DatamasterLokasiStokController.import);
 
 // DATAMASTER - ATURAN PAKAI
 routes.post(`${baseUrl}/datamaster/aturan-pakai`, DatamasterAturanPakaiController.create);
 routes.get(`${baseUrl}/datamaster/aturan-pakai`, DatamasterAturanPakaiController.getAll);
 routes.put(`${baseUrl}/datamaster/aturan-pakai/:uuid`, DatamasterAturanPakaiController.update);
 routes.delete(`${baseUrl}/datamaster/aturan-pakai/:uuid`, DatamasterAturanPakaiController.delete);
+routes.post(`${baseUrl}/datamaster/aturan-pakai/import`, DatamasterAturanPakaiController.import);
 
 // DATAMASTER - INGREDIENT
 routes.post(`${baseUrl}/datamaster/ingredient`, DatamasterIngredientController.create);
 routes.get(`${baseUrl}/datamaster/ingredient`, DatamasterIngredientController.getAll);
 routes.put(`${baseUrl}/datamaster/ingredient/:uuid`, DatamasterIngredientController.update);
 routes.delete(`${baseUrl}/datamaster/ingredient/:uuid`, DatamasterIngredientController.delete);
+routes.post(`${baseUrl}/datamaster/ingredient/import`, DatamasterIngredientController.import);
 
 // DATAMASTER - BENTUK RACIKAN
 routes.post(`${baseUrl}/datamaster/bentuk-racikan`, DatamasterBentukRacikanController.create);
@@ -91,6 +101,7 @@ routes.delete(`${baseUrl}/datamaster/bentuk-racikan/:uuid`, DatamasterBentukRaci
 routes.post(`${baseUrl}/datamaster/item-medis`, DatamasterItemMedisController.create);
 routes.put(`${baseUrl}/datamaster/item-medis/:uuid`, DatamasterItemMedisController.update);
 routes.post(`${baseUrl}/datamaster/item-medis/all`, DatamasterItemMedisController.getAll);
+routes.post(`${baseUrl}/datamaster/item-medis/import`, DatamasterItemMedisController.import);
 routes.delete(`${baseUrl}/datamaster/item-medis/:uuid`, DatamasterItemMedisController.delete);
 routes.get(`${baseUrl}/datamaster/item-medis/:uuid/conversions`, DatamasterItemMedisController.getConversions);
 routes.get(`${baseUrl}/datamaster/item-medis/without-pagination`, DatamasterItemMedisController.getAllWithoutPagination);

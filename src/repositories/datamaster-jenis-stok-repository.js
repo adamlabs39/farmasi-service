@@ -48,4 +48,20 @@ export default class DataMasterJenisStokRepository {
             }
         });
     }
+
+    static async getUuidesByCodes(codes, faskesUuid){
+        return JenisStokModel.findAll({
+            where: {
+                code: {
+                    [Op.in]: codes
+                },
+                faskes_uuid: faskesUuid
+            },
+            attributes: ['uuid', 'code']
+        });
+    }
+
+    static bulkCreate(data) {
+        return JenisStokModel.bulkCreate(data);
+    }
 }

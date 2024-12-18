@@ -48,4 +48,20 @@ export default class DatamasterBentukSediaanRepository {
             }
         });
     }
+
+    static getUuidesByCode(codes, faskesUuid) {
+        return BentukSediaanModel.findAll({
+            where: {
+                code: {
+                    [Op.in]: codes
+                },
+                faskes_uuid: faskesUuid
+            },
+            attributes: ['uuid', 'code']
+        });
+    }
+
+    static bulkCreate(data) {
+        return BentukSediaanModel.bulkCreate(data);
+    }
 }

@@ -39,7 +39,7 @@ const MODELMERGE = [
     // PegawaiModel,
     // PractitionerModel,
     // UserModel,
-    // PatientModel,
+    PatientModel,
 
     KonfigurasiHargaModel,
     AturanPakaiModel,

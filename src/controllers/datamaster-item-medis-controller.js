@@ -1,5 +1,7 @@
 import DatamasterItemMedisService from "../services/datamaster-item-medis-service.js";
 import successResponse from "../responses/success-response.js";
+import Utils from "../helpers/utils.js";
+import DatamasterSatuanService from "../services/datamaster-satuan-service.js";
 
 export default class DatamasterItemMedisController {
     static async create(req, res, nextFunction) {
@@ -72,6 +74,20 @@ export default class DatamasterItemMedisController {
             req.query.faskes_uuid = req.author.faskesUuid;
             const result = await DatamasterItemMedisService.getAvailableJenisStok(req.query);
             res.status(200).json(successResponse("data berhasil didapat", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async import(req, res, nextFunction) {
+        try {
+            req.body.data_item_medis = Utils.parseExcelToJSON(req);
+            req.body.faskes_uuid = req.author.faskesUuid;
+
+            req.body.data_conversion = Utils.parseExcelToJSON(req, 1)
+            const result = await DatamasterItemMedisService.import(req.body);
+
+            res.status(200).json(successResponse("data berhasil diimport"));
         } catch (error) {
             nextFunction(error);
         }

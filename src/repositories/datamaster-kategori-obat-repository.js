@@ -48,4 +48,20 @@ export default class DataMasterKategoriObatRepository {
             }
         });
     }
+
+    static async getUuidesByCodes(codes, faskesUuid){
+        return KategoriObatModel.findAll({
+            where: {
+                code: {
+                    [Op.in]: codes
+                },
+                faskes_uuid: faskesUuid
+            },
+            attributes: ['uuid', 'code']
+        });
+    }
+
+    static bulkCreate(data) {
+        return KategoriObatModel.bulkCreate(data);
+    }
 }

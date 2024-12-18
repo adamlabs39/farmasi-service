@@ -49,4 +49,8 @@ export default class DataMasterAturanPakaiRepository {
             }
         );
     }
+
+    static bulkCreate(req) {
+        return AturanPakaiModel.bulkCreate(req);
+    }
 }

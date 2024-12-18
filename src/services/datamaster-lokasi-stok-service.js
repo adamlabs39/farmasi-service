@@ -1,6 +1,7 @@
 import ZodValidator from "../validations/zod-validator.js";
 import DatamasterValidation from "../validations/datamaster-validation.js";
 import DataMasterLokasiStokRepository from "../repositories/datamaster-lokasi-stok-repository.js";
+import ExcelMapper from "../helpers/excel-mapper.js";
 
 export default class DatamasterLokasiStokService {
     static async create(req) {
@@ -8,6 +9,7 @@ export default class DatamasterLokasiStokService {
         if (req.jenis_lokasi === "depo") {
             req.default_tujuan_order_permintaan = req.default_tujuan_order_permintaan.join("");
         }
+        req.code = req.code.toUpperCase();
         return await DataMasterLokasiStokRepository.create(req);
     }
 
@@ -31,5 +33,11 @@ export default class DatamasterLokasiStokService {
     static delete(req) {
         let validData = ZodValidator.validate(DatamasterValidation.DELETE_SATUAN, req);
         return DataMasterLokasiStokRepository.delete(validData);
+    }
+
+    static import(req){
+        const data = ExcelMapper.mapDatamasterLokasiStok(req.data, req.faskes_uuid);
+
+        return DataMasterLokasiStokRepository.bulkCreate(data);
     }
 }

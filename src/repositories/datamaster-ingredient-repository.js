@@ -46,4 +46,8 @@ export default class DataMasterIngredientRepository {
             }
         });
     }
+
+    static async bulkCreate(req) {
+        return await IngredientModel.bulkCreate(req);
+    }
 }

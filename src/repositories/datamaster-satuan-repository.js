@@ -55,4 +55,20 @@ export default class DataMasterSatuanRepository {
             }
         );
     }
+
+    static async bulkCreate(data) {
+        return await SatuanModel.bulkCreate(data);
+    }
+
+    static async getUuidesByCodes(codes, faskesUuid) {
+        return await SatuanModel.findAll({
+            where: {
+                code: {
+                    [Op.in]: codes
+                },
+                faskes_uuid: faskesUuid,
+            },
+            attributes: ['uuid', 'code', 'name']
+        });
+    }
 }

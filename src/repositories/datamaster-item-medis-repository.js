@@ -11,6 +11,7 @@ import {
     ManufactureModel, SatuanModel
 } from "@adameds/model-sdk/farmasi";
 import moment from "moment";
+import {StockMedisModel} from "@adameds/model-sdk/inventory";
 
 export default class DataMasterItemMedisRepository {
     static async create(req, transaction) {
@@ -333,5 +334,13 @@ export default class DataMasterItemMedisRepository {
                 }
             ]
             });
+    }
+
+    static async bulkCreate(req, transaction){
+        return await ItemMedisModel.bulkCreate(req, {transaction});
+    }
+
+    static async bulkInsertJenisStok(req, transaction) {
+        return await ItemMedisJenisStokModel.bulkCreate(req, {transaction});
     }
 }

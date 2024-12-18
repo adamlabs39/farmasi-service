@@ -1,4 +1,4 @@
-import LokasiStokModel from "../models/lokasi-stok-model.js";
+import {LokasiStokModel} from "@adameds/model-sdk/farmasi";
 
 export default class LokasiStokSeeder {
     static async seed(transaction) {

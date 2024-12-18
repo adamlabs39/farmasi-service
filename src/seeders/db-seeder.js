@@ -33,12 +33,12 @@ export const dbSeeder = async () => {
     const transaction = await sequelizeInstance.transaction();
     try {
         // user things
-        // await RoleSeeder.seed(transaction);
-        // await FaskesSeeder.seed(transaction);
-        // await PegawaiSeeder.seed(transaction);
-        // await PractitionerSeeder.seed(transaction);
-        // await UserSeeder.seed(transaction);
-        // await PatientSeeder.seed(transaction);
+        await RoleSeeder.seed(transaction);
+        await FaskesSeeder.seed(transaction);
+        await PegawaiSeeder.seed(transaction);
+        await PractitionerSeeder.seed(transaction);
+        await UserSeeder.seed(transaction);
+        await PatientSeeder.seed(transaction);
 
         // datamaster things
         await KonfigurasiHargaSeeder.seed(transaction);

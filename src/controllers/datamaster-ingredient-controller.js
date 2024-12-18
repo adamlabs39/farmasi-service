@@ -1,5 +1,7 @@
 import successResponse from "../responses/success-response.js";
 import DatamasterIngredientService from "../services/datamaster-ingredient-service.js";
+import Utils from "../helpers/utils.js";
+import DatamasterSatuanService from "../services/datamaster-satuan-service.js";
 
 export default class DatamasterIngredientController {
     static async create(req, res, nextFunction) {
@@ -40,6 +42,19 @@ export default class DatamasterIngredientController {
             req.body.uuid = uuid;
             await DatamasterIngredientService.delete(req.body);
             res.status(200).json(successResponse("data berhasil dihapus"));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async import(req, res, nextFunction) {
+        try {
+            req.body.data = Utils.parseExcelToJSON(req);
+            req.body.faskes_uuid = req.author.faskesUuid;
+
+            const result = await DatamasterIngredientService.import(req.body);
+
+            res.status(200).json(successResponse("data berhasil diimport"));
         } catch (error) {
             nextFunction(error);
         }
