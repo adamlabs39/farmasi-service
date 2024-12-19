@@ -92,4 +92,15 @@ export default class DatamasterItemMedisController {
             nextFunction(error);
         }
     }
+
+    static async export(req, res, nextFunction) {
+        try {
+            req.query.faskes_uuid = req.author.faskesUuid;
+            req.query.jenis_stok_uuides = req.body.jenis_stok_uuides;
+            const result = await DatamasterItemMedisService.export(req.query);
+            res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }

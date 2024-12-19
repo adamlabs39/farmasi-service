@@ -150,6 +150,7 @@ export default class PrescriptionController {
     static async updateLokasiStok(req, res, nextFunction){
         try {
             await PrescriptionService.updateLokasiStok(req.body);
+            console.log("data berhasil diupdate");
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
             nextFunction(error);

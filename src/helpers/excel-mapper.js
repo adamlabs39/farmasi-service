@@ -1,4 +1,3 @@
-import {DataTypes} from "sequelize";
 import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class ExcelMapper {
@@ -132,17 +131,17 @@ export default class ExcelMapper {
 
     static mapDatamasterManufacture(data, faskesUuid) {
         data.forEach((item) => {
-            if (!item['Kode Manufaktur*'] || !item['Nama Manufaktur*'] || !item['Provinsi Kode*'] || !item['Kabupaten Kode*'] || !item['Kecamatan Kode*'] || !item['Kelurahan Kode*'] || !item['Kode Pos*'] || !item['Alamat*']) {
+            if (!item['Kode Manufaktur*'] || !item['Nama Manufaktur*'] || !item['Provinsi*'] || !item['Kabupaten*'] || !item['Kecamatan*'] || !item['Kelurahan*'] || !item['Kode Pos*'] || !item['Alamat*']) {
                 throw new BadRequestException("data tidak lengkap atau kunci salah");
             }
 
             item.faskes_uuid = faskesUuid;
             item.code = item['Kode Manufaktur*'] || "";
             item.name = item['Nama Manufaktur*'] || "";
-            item.provinsi_code = item['Provinsi Kode*'] || "";
-            item.kabupaten_code = item['Kabupaten Kode*'] || "";
-            item.kecamatan_code = item['Kecamatan Kode*'] || "";
-            item.kelurahan_code = item['Kelurahan Kode*'] || "";
+            item.provinsi_code = item['Provinsi*'] || "";
+            item.kabupaten_code = item['Kabupaten*'] || "";
+            item.kecamatan_code = item['Kecamatan*'] || "";
+            item.kelurahan_code = item['Kelurahan*'] || "";
             item.kode_pos = item['Kode Pos*'] || "";
             item.alamat = item['Alamat*'] || "";
             item.status = true;
@@ -234,6 +233,7 @@ export default class ExcelMapper {
                 throw new BadRequestException("data tidak lengkap atau kunci salah");
             }
 
+            // Satuan Pembelian*
             item.faskes_uuid = faskesUuid;
             item.code = item['Kode Item Medis*'] || "";
             item.name = item['Nama Item Medis*'] || "";
@@ -245,6 +245,7 @@ export default class ExcelMapper {
             item.isi_kemasan = item['Isi Kemasan'] || "";
             item.dosis = item['Dosis Kemasan*'] || "";
             item.kategori_obat_code = (item['Kategori Item*'] || "").toUpperCase();
+            item.satuan_pembelian_code = (item['Satuan Pembelian*'] || "").toUpperCase();
             item.status = true;
 
             item.code = item.code.toUpperCase();
@@ -269,6 +270,7 @@ export default class ExcelMapper {
             delete item['Satuan Kemasan'];
             delete item['Kategori Item*'];
             delete item['Komposisi'];
+            delete item['Satuan Pembelian*']
             delete item['No'];
         })
 

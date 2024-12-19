@@ -186,6 +186,8 @@ export default class DatamasterItemMedisService {
             ...new Set(itemMedisRequest.map(item => item.satuan_dosis_code)),
             ...new Set(itemMedisRequest.map(item => item.satuan_kemasan_code)),
             ...new Set(itemMedisRequest.map(item => item.satuan_penggunaan_code)),
+            ...new Set(itemMedisRequest.map(item => item.satuan_pembelian_code)),
+
             ...new Set(conversionRequest.map(item => item.satuan_pembelian_code)),
             ...new Set(conversionRequest.map(item => item.satuan_penggunaan_code)),
         ];
@@ -249,7 +251,7 @@ export default class DatamasterItemMedisService {
             item.kategori_obat_uuid = kategoriObatMap[item.kategori_obat_code];
             item.satuan_penggunaan_uuid = satuanMap[item.satuan_penggunaan_code]?.uuid;
             item.jenis_stocks = item.jenis_stok_codes.map(code => ({jenis_stok_uuid: jenisStokMap[code]}));
-            item.satuan_pembelian_uuid = "0192b31f-365d-731c-8b16-3a4565c9475e"
+            item.satuan_pembelian_uuid = satuanMap[item.satuan_pembelian_uuid]?.uuid
 
             delete item.satuan_dosis_code;
             delete item.satuan_kemasan_code;
@@ -312,5 +314,54 @@ export default class DatamasterItemMedisService {
         }
 
         return itemMedisRequest;
+    }
+
+    static async export(req){
+        const data = await this.getAll(req);
+
+        const medicalItems = data.data;
+
+        const conversions = [];
+
+        medicalItems.map((item) => {
+            item.satuan_dosis = item.satuan_dosis?.name;
+            item.satuan_kemasan = item.satuan_kemasan?.name;
+            item.satuan_penggunaan = item.satuan_penggunaan?.name;
+            item.satuan_pembelian = item.satuan_pembelian?.name;
+            item.bentuk_sediaan = item.bentuk_sediaan?.name
+            item.manufacture = item.manufacture?.name;
+            item.kategori_obat = item.kategori_obat?.name;
+
+            if (item.jenis_stok){
+                item.jenis_stok = item.jenis_stok.map((jenis) => jenis.detail_stok.name).join(", ");
+            }
+
+            if (item.ingridients){
+                item.ingridients = item.ingridients.map((ingridient) => ingridient.name).join(", ");
+            }
+
+            item.status = item.status ? "Aktif" : "Non-Aktif"
+
+            if (item.conversions){
+                item.conversions.forEach((conversion) => {
+                    conversions.push({
+                        item_medis : item.name,
+                        satuan_pembelian : conversion.satuan_pembelian,
+                        satuan_penggunaan : conversion.satuan_penggunaan,
+                        konversi: conversion.konversi,
+                    })
+                })
+
+                item.conversions = undefined;
+            }
+        });
+
+        return {
+            data : {
+                item_medis : medicalItems,
+                conversions : conversions
+            },
+            pagination : data.pagination
+        }
     }
 }

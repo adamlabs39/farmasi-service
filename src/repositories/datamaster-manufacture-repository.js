@@ -18,40 +18,6 @@ export default class DataMasterManufactureRepository {
                     [Op.is]: null,
                 },
             },
-            include: [
-                {
-                    model: ProvinceModel,
-                    as: "province",
-                    required: false,
-                    attributes: [
-                        "code", "name"
-                    ]
-                },
-                {
-                    model: KabupatenModel,
-                    as: "kabupaten",
-                    required: false,
-                    attributes: [
-                        "code", "name"
-                    ]
-                },
-                {
-                    model: KecamatanModel,
-                    as: "kecamatan",
-                    required: false,
-                    attributes: [
-                        "code", "name"
-                    ]
-                },
-                {
-                    model: KelurahanModel,
-                    as: "kelurahan",
-                    required: false,
-                    attributes: [
-                        "code", "name"
-                    ]
-                }
-            ],
         };
 
         return Pagination.init(ManufactureModel, req, option);

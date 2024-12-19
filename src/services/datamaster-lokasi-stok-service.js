@@ -35,9 +35,27 @@ export default class DatamasterLokasiStokService {
         return DataMasterLokasiStokRepository.delete(validData);
     }
 
-    static import(req){
+    static import(req) {
         const data = ExcelMapper.mapDatamasterLokasiStok(req.data, req.faskes_uuid);
 
         return DataMasterLokasiStokRepository.bulkCreate(data);
+    }
+
+    static async export(req) {
+        ZodValidator.validate(DatamasterValidation.GET_ALL_SATUAN, req);
+
+        const result = await DataMasterLokasiStokRepository.getAll(req);
+
+        const mapping = ['RI', 'RJ', 'IGD', 'FISIO'];
+        for (let i = 0; i < result.data.length; i++) {
+            result.data[i].jenis_lokasi = result.data[i].jenis_lokasi === "depo" ? "Depo" : "Gudang";
+            if (result.data[i].default_tujuan_order_permintaan.length > 1) {
+                result.data[i].default_tujuan_order_permintaan = result.data[i].split('')
+                    .map(num => mapping[parseInt(num, 10)])
+                    .join(',');
+            }
+        }
+
+        return result;
     }
 }

@@ -6,21 +6,21 @@ export default class PrescriptionItemRacikanSeeder {
             {
                 "faskes_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "uuid": "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475t",
                 "medication_qty": 5,
                 "prescription_item_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e"
             },
             {
                 "faskes_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475t",
                 "medication_qty": 5,
                 "prescription_item_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e"
             },
             {
                 "faskes_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "uuid": "0192b31f-365d-731c-8b16-3a4565c9475t",
-                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475t",
                 "medication_qty": 5,
                 "prescription_item_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e"
             }

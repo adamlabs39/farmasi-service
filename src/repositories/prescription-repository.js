@@ -303,11 +303,13 @@ export default class PrescriptionRepository {
 
     // edit prescription item
     static async editPrescriptionItem(req, transaction) {
+        let isUsingTransaction = true;
         if (transaction === null || transaction === undefined) {
-            transaction = await sequelizeInstance.transaction()
+            transaction = await sequelizeInstance.transaction();
+            isUsingTransaction = false;
         }
 
-        return await PrescriptionItemModel.update(
+        const result = await PrescriptionItemModel.update(
             req,
             {
                 where: {
@@ -316,6 +318,12 @@ export default class PrescriptionRepository {
                 transaction
             },
         );
+
+        if(!isUsingTransaction){
+            await transaction.commit();
+        }
+
+        return result;
     }
 
     static async getHistoryObat(req) {
