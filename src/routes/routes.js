@@ -179,4 +179,9 @@ routes.get(`${baseUrl}/rekap/pendapatan`, ReportController.getPendapatan);
 routes.get(`${baseUrl}/rekap/tat`, ReportController.getTat);
 routes.get(`${baseUrl}/rekap/pendapatan-apotik`, ReportController.getPendapatanPerApotik);
 
+// CETAK
+routes.get(`${baseUrl}/cetak/e-ticket/:uuid`, PrescriptionController.getEticketData);
+routes.get(`${baseUrl}/cetak/e-resep/:uuid`, PrescriptionController.getPrintPrescription);
+routes.get(`${baseUrl}/cetak/invoice/:uuid`, PrescriptionController.getForInvoicePrint);
+
 export default routes;

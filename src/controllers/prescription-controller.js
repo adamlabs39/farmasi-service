@@ -185,4 +185,31 @@ export default class PrescriptionController {
             nextFunction(error);
         }
     }
+
+    static async getEticketData(req, res, nextFunction) {
+        try {
+            const result = await PrescriptionService.getEticketData(req.params.uuid);
+            res.status(200).json(successResponse("data berhasil ditemukan", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async getPrintPrescription(req, res, nextFunction) {
+        try {
+            const result = await PrescriptionService.getPrintPrescription(req.params.uuid);
+            res.status(200).json(successResponse("data berhasil ditemukan", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
+
+    static async getForInvoicePrint(req, res, nextFunction) {
+        try {
+            const result = await PrescriptionService.getForInvoicePrint(req.params.uuid);
+            res.status(200).json(successResponse("data berhasil ditemukan", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }

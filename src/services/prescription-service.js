@@ -512,4 +512,51 @@ export default class PrescriptionService {
         ZodValidator.validate(PrescriptionValidation.GET_FOR_FPO, req);
         return await PrescriptionRepository.getForFpo(req);
     }
+
+    static async getEticketData(uuid){
+        const prescription = await PrescriptionRepository.getEticketData(uuid);
+        if (prescription === null) {
+            throw new BadRequestException("data tidak ditemukan");
+        }
+
+        const items = [];
+
+        if (prescription.obat){
+            prescription.obat.forEach((item) => {
+              items.push({
+                  nama_faskes : prescription.faskes?.name,
+                  no_resep : prescription.no_resep,
+                  date : prescription.order_date,
+                  nama_pasien : prescription.patient?.name,
+                  tanggal_lahir : prescription.patient?.birth_detail?.birth_date,
+                  jenis : item.is_compound ? "Racikan" : "Non-Racikan",
+                  jumlah_obat : item.medication_qty,
+                  nama_obat : item.item_medis.name,
+                  satuan : item.is_compound ? item.bentuk_racikan?.nama_bentuk_racikan : item.item_medis?.satuan_penggunaan?.name,
+                  aturan_pakai : `${item.aturan_pakai?.frekuensi}x ${item.aturan_pakai?.periode_unit} ${item.aturan_pakai?.periode}`,
+                  cara_pakai : item.cara_pakai?.cara_pakai,
+                  catatan : item.prescription_notes,
+              })
+            })
+
+        }
+
+        return items;
+    }
+
+    static async getPrintPrescription(uuid) {
+        const prescription = await PrescriptionRepository.getForPrescriptionPrint(uuid);
+        if (prescription === null) {
+            throw new BadRequestException("data tidak ditemukan");
+        }
+        return prescription;
+    }
+
+    static async getForInvoicePrint(uuid) {
+        const prescription = await PrescriptionRepository.getForInvoicePrint(uuid);
+        if (prescription === null) {
+            throw new BadRequestException("data tidak ditemukan");
+        }
+        return prescription;
+    }
 }

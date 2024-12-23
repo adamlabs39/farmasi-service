@@ -13,9 +13,10 @@ import {
     PrescriptionItemRacikanModel, PrescriptionModel,
     SatuanModel
 } from "@adameds/model-sdk/farmasi";
-import {PatientModel} from "@adameds/model-sdk/admisi";
+import {BirthDetailModel, PatientModel} from "@adameds/model-sdk/admisi";
 import Pagination from "../helpers/pagination.js";
-import {LokasiModel} from "@adameds/model-sdk/datamaster";
+import {FaskesModel, LokasiModel} from "@adameds/model-sdk/datamaster";
+import {FaskesProfilesModel} from "@adameds/model-sdk/setting";
 
 export default class PrescriptionRepository {
     // get prescription by uuid
@@ -730,5 +731,308 @@ export default class PrescriptionRepository {
         }
 
         return await Pagination.init(PrescriptionModel, req, options);
+    }
+
+    static async getEticketData(uuid) {
+        return await PrescriptionModel.findOne(
+            {
+                where: {
+                    uuid: uuid
+                },
+                attributes: ['dokter_order', 'no_resep', 'order_date'],
+                include: [
+                    {
+                        model: PrescriptionItemModel,
+                        as: 'obat',
+                        required: false,
+                        attributes: ['prescription_notes', 'is_compound', 'medication_qty'],
+                        include: [
+                            {
+                                model: ItemMedisModel,
+                                as: 'item_medis',
+                                required: false,
+                                attributes: ['name', 'uuid'],
+                                include: [
+                                    {
+                                        model: SatuanModel,
+                                        as: 'satuan_penggunaan',
+                                        required: false,
+                                        attributes: ['name']
+                                    }
+                                ]
+                            },
+                            {
+                                model: AturanPakaiModel,
+                                as: 'aturan_pakai',
+                                required: false,
+                                attributes: ['name', 'periode', 'periode_unit', 'frekuensi']
+                            },
+                            {
+                                model: CaraiPakaiModel,
+                                as: 'cara_pakai',
+                                required: false,
+                                attributes: ['cara_pakai']
+                            },
+                            {
+                                model: BentukRacikanModel,
+                                as: 'bentuk_racikan',
+                                required: false,
+                                attributes: ['nama_bentuk_racikan']
+                            },
+                        ],
+                    },
+                    {
+                        model : PatientModel,
+                        on : sequelizeInstance.where(sequelizeInstance.cast(sequelizeInstance.col('PrescriptionModel.patient_uuid'), 'TEXT'), {
+                            [Op.eq]: sequelizeInstance.cast(sequelizeInstance.col('patient.uuid'), 'TEXT')
+                        }),
+                        as : 'patient',
+                        required : false,
+                        attributes : ['name'],
+                        include : [
+                            {
+                                model : BirthDetailModel,
+                                as : 'birth_detail',
+                                required : false,
+                                attributes : ['birth_date'],
+                            }
+                        ]
+                    },
+                    {
+                        model : FaskesModel,
+                        as : 'faskes',
+                        required : false,
+                        attributes : ['name'],
+                    }
+                ],
+            }
+        );
+    }
+
+    static async getForPrescriptionPrint(uuid) {
+        return await PrescriptionModel.findOne(
+            {
+                where: {
+                    uuid: uuid
+                },
+                attributes: ['dokter_order', 'no_resep', 'order_date', 'no_rm', 'jenis_pelayanan'],
+                include: [
+                    {
+                        model: PrescriptionItemModel,
+                        as: 'obat',
+                        required: false,
+                        attributes: ['prescription_notes', 'is_compound', 'medication_qty'],
+                        include: [
+                            {
+                                model: PrescriptionItemRacikanModel,
+                                as: 'racikan',
+                                required: false,
+                                attributes: {
+                                    exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
+                                },
+                                include: [
+                                    {
+                                        model: ItemMedisModel,
+                                        as: 'item_medis',
+                                        required: false,
+                                        attributes: ['name', 'uuid'],
+                                        include: [
+                                            {
+                                                model: SatuanModel,
+                                                as: 'satuan_penggunaan',
+                                                required: false,
+                                                attributes: ['name']
+                                            }
+                                        ]
+                                    },
+                                ]
+                            },
+                            {
+                                model: ItemMedisModel,
+                                as: 'item_medis',
+                                required: false,
+                                attributes: ['name', 'uuid'],
+                                include: [
+                                    {
+                                        model: SatuanModel,
+                                        as: 'satuan_penggunaan',
+                                        required: false,
+                                        attributes: ['name']
+                                    }
+                                ]
+                            },
+                            {
+                                model: AturanPakaiModel,
+                                as: 'aturan_pakai',
+                                required: false,
+                                attributes: ['name', 'periode', 'periode_unit', 'frekuensi']
+                            },
+                            {
+                                model: CaraiPakaiModel,
+                                as: 'cara_pakai',
+                                required: false,
+                                attributes: ['cara_pakai']
+                            },
+                            {
+                                model: BentukRacikanModel,
+                                as: 'bentuk_racikan',
+                                required: false,
+                                attributes: ['nama_bentuk_racikan']
+                            },
+                        ],
+                    },
+                    {
+                        model : PatientModel,
+                        on : sequelizeInstance.where(sequelizeInstance.cast(sequelizeInstance.col('PrescriptionModel.patient_uuid'), 'TEXT'), {
+                            [Op.eq]: sequelizeInstance.cast(sequelizeInstance.col('patient.uuid'), 'TEXT')
+                        }),
+                        as : 'patient',
+                        required : false,
+                        attributes : ['name'],
+                        include : [
+                            {
+                                model : BirthDetailModel,
+                                as : 'birth_detail',
+                                required : false,
+                                attributes : ['birth_date'],
+                            }
+                        ]
+                    },
+                    {
+                        model : FaskesModel,
+                        as : 'faskes',
+                        required : false,
+                        attributes : ['name'],
+                    },
+                    {
+                        model : LokasiModel,
+                        on : sequelizeInstance.where(sequelizeInstance.cast(sequelizeInstance.col('PrescriptionModel.lokasi_uuid'), 'TEXT'), {
+                            [Op.eq]: sequelizeInstance.cast(sequelizeInstance.col('lokasi.uuid'), 'TEXT')
+                        }),
+                        as : 'lokasi',
+                        required : false,
+                        attributes : ['name'],
+                    }
+                ],
+            }
+        );
+    }
+
+    static async getForInvoicePrint(uuid) {
+        return await PrescriptionModel.findOne(
+            {
+                where: {
+                    uuid: uuid
+                },
+                attributes: ['dokter_order', 'no_resep', 'order_date', 'no_rm', 'jenis_pelayanan', 'payment_method'],
+                include: [
+                    {
+                        model: PrescriptionItemModel,
+                        as: 'obat',
+                        required: false,
+                        attributes: ['prescription_notes', 'is_compound', 'medication_qty', 'harga_satuan'],
+                        include: [
+                            {
+                                model: PrescriptionItemRacikanModel,
+                                as: 'racikan',
+                                required: false,
+                                attributes: {
+                                    exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
+                                },
+                                include: [
+                                    {
+                                        model: ItemMedisModel,
+                                        as: 'item_medis',
+                                        required: false,
+                                        attributes: ['name', 'uuid'],
+                                        include: [
+                                            {
+                                                model: SatuanModel,
+                                                as: 'satuan_penggunaan',
+                                                required: false,
+                                                attributes: ['name']
+                                            }
+                                        ]
+                                    },
+                                ]
+                            },
+                            {
+                                model: ItemMedisModel,
+                                as: 'item_medis',
+                                required: false,
+                                attributes: ['name', 'uuid'],
+                                include: [
+                                    {
+                                        model: SatuanModel,
+                                        as: 'satuan_penggunaan',
+                                        required: false,
+                                        attributes: ['name']
+                                    }
+                                ]
+                            },
+                            {
+                                model: AturanPakaiModel,
+                                as: 'aturan_pakai',
+                                required: false,
+                                attributes: ['name', 'periode', 'periode_unit', 'frekuensi']
+                            },
+                            {
+                                model: CaraiPakaiModel,
+                                as: 'cara_pakai',
+                                required: false,
+                                attributes: ['cara_pakai']
+                            },
+                            {
+                                model: BentukRacikanModel,
+                                as: 'bentuk_racikan',
+                                required: false,
+                                attributes: ['nama_bentuk_racikan']
+                            },
+                        ],
+                    },
+                    {
+                        model : PatientModel,
+                        on : sequelizeInstance.where(sequelizeInstance.cast(sequelizeInstance.col('PrescriptionModel.patient_uuid'), 'TEXT'), {
+                            [Op.eq]: sequelizeInstance.cast(sequelizeInstance.col('patient.uuid'), 'TEXT')
+                        }),
+                        as : 'patient',
+                        required : false,
+                        attributes : ['name'],
+                        include : [
+                            {
+                                model : BirthDetailModel,
+                                as : 'birth_detail',
+                                required : false,
+                                attributes : ['birth_date'],
+                            }
+                        ]
+                    },
+                    {
+                        model : FaskesModel,
+                        as : 'faskes',
+                        required : false,
+                        attributes : ['name'],
+                        include: [
+                            {
+                                model: FaskesProfilesModel,
+                                as: 'faskes_profile',
+                                required: false,
+                                attributes: ['phone', 'email', 'logo']
+                            }
+                        ]
+                    },
+                    {
+
+                        model : LokasiModel,
+                        as : 'lokasi',
+                        on : sequelizeInstance.where(sequelizeInstance.cast(sequelizeInstance.col('PrescriptionModel.lokasi_uuid'), 'TEXT'), {
+                            [Op.eq]: sequelizeInstance.cast(sequelizeInstance.col('lokasi.uuid'), 'TEXT')
+                        }),
+                        required : false,
+                        attributes : ['name'],
+                    }
+                ],
+            }
+        );
     }
 }
