@@ -318,6 +318,7 @@ export default class PrescriptionService {
             // update prescription
             req.order_status = 3;
             req.waktu_verifikasi = toEpochDate(new Date());
+            req.no_invoice = Utils.generate4Code("INV");
             await PrescriptionRepository.editPrescription(req, transaction);
 
             await transaction.commit();
