@@ -171,8 +171,8 @@ routes.get(`${baseUrl}/retur/detail`, ReturController.getDetail);
 routes.get(`${baseUrl}/retur/all`, ReturController.getAll);
 
 // RIWAYAT
-routes.get(`${baseUrl}/riwayat/all`, RiwayatController.getAll);
-routes.get(`${baseUrl}/riwayat/detail`, RiwayatController.getDetail);
+routes.post(`${baseUrl}/riwayat/all`, RiwayatController.getAll);
+routes.post(`${baseUrl}/riwayat/detail`, RiwayatController.getDetail);
 
 // REKAP
 routes.get(`${baseUrl}/rekap/pendapatan`, ReportController.getPendapatan);
