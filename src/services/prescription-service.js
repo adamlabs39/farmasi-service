@@ -253,6 +253,7 @@ export default class PrescriptionService {
 
     static async updateTelaah(req) {
         req.status_telaah = true;
+        req.order_status = 2;
         ZodValidator.validate(PrescriptionValidation.UPDATE_TELAAH, req);
         return await PrescriptionRepository.editPrescription(req);
     }
