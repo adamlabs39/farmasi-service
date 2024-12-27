@@ -389,7 +389,7 @@ export default class PrescriptionService {
 
             resep.dataValues.patient = resep.patient?.name ?? "-";
 
-            if (resep.order_status === 1) {
+            if (resep.order_status === 1 || resep.order_status === 2) {
                 resep_masuk.push(resep);
             } else if (resep.order_status === 3) {
                 obat_disiapkan.push(resep);
