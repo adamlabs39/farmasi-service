@@ -95,8 +95,10 @@ export default class PenjualanObatService {
             // bring back the stock
             const items = await PenjualanObatRepository.getAllCatatanStok(req);
             for (const item of items) {
-                for (const catatan of item.catatan_stok) {
-                    await StockMedisRepository.addQuantity(catatan, transaction);
+                if (item.catatan_stok) {
+                    for (const catatan of item.catatan_stok) {
+                        await StockMedisRepository.addQuantity(catatan, transaction);
+                    }
                 }
             }
 
@@ -132,7 +134,7 @@ export default class PenjualanObatService {
         }
 
         return {
-            "code" : req.no_transaksi
+            "code": req.no_transaksi
         };
     }
 }
