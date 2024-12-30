@@ -233,7 +233,6 @@ export default class ExcelMapper {
                 throw new BadRequestException("data tidak lengkap atau kunci salah");
             }
 
-            // Satuan Pembelian*
             item.faskes_uuid = faskesUuid;
             item.code = item['Kode Item Medis*'] || "";
             item.name = item['Nama Item Medis*'] || "";
@@ -245,7 +244,6 @@ export default class ExcelMapper {
             item.isi_kemasan = item['Isi Kemasan'] || "";
             item.dosis = item['Dosis Kemasan*'] || "";
             item.kategori_obat_code = (item['Kategori Item*'] || "").toUpperCase();
-            item.satuan_pembelian_code = (item['Satuan Pembelian*'] || "").toUpperCase();
             item.status = true;
 
             item.code = item.code.toUpperCase();

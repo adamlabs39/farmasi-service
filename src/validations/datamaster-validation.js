@@ -131,7 +131,6 @@ export default class DatamasterValidation {
         isi_kemasan : z.number(),
         satuan_kemasan_uuid : z.string().min(1, required),
         kategori_obat_uuid : z.string().min(1, required),
-        satuan_pembelian_uuid : z.string().min(1, required),
         status : z.boolean(),
     });
 
@@ -149,7 +148,6 @@ export default class DatamasterValidation {
         isi_kemasan : z.number(),
         satuan_kemasan_uuid : z.string().min(1, required),
         kategori_obat_uuid : z.string().min(1, required),
-        satuan_pembelian_uuid : z.string().min(1, required),
         status : z.boolean(),
     });
 

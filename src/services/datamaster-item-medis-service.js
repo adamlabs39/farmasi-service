@@ -186,7 +186,6 @@ export default class DatamasterItemMedisService {
             ...new Set(itemMedisRequest.map(item => item.satuan_dosis_code)),
             ...new Set(itemMedisRequest.map(item => item.satuan_kemasan_code)),
             ...new Set(itemMedisRequest.map(item => item.satuan_penggunaan_code)),
-            ...new Set(itemMedisRequest.map(item => item.satuan_pembelian_code)),
 
             ...new Set(conversionRequest.map(item => item.satuan_pembelian_code)),
             ...new Set(conversionRequest.map(item => item.satuan_penggunaan_code)),
@@ -251,7 +250,6 @@ export default class DatamasterItemMedisService {
             item.kategori_obat_uuid = kategoriObatMap[item.kategori_obat_code];
             item.satuan_penggunaan_uuid = satuanMap[item.satuan_penggunaan_code]?.uuid;
             item.jenis_stocks = item.jenis_stok_codes.map(code => ({jenis_stok_uuid: jenisStokMap[code]}));
-            item.satuan_pembelian_uuid = satuanMap[item.satuan_pembelian_uuid]?.uuid
 
             delete item.satuan_dosis_code;
             delete item.satuan_kemasan_code;
@@ -327,7 +325,6 @@ export default class DatamasterItemMedisService {
             item.satuan_dosis = item.satuan_dosis?.name;
             item.satuan_kemasan = item.satuan_kemasan?.name;
             item.satuan_penggunaan = item.satuan_penggunaan?.name;
-            item.satuan_pembelian = item.satuan_pembelian?.name;
             item.bentuk_sediaan = item.bentuk_sediaan?.name
             item.manufacture = item.manufacture?.name;
             item.kategori_obat = item.kategori_obat?.name;

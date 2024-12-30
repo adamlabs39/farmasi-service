@@ -72,9 +72,6 @@ export default class DataMasterItemMedisRepository {
                             attributes: ["name", "uuid"]
                         }
                     ]
-                    // attributes: [
-                    //     "satuan_pembelian", "satuan_penggunaan", "konversi", "uuid"
-                    // ]
                 },
                 {
                     model: SatuanModel,
