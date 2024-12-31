@@ -62,7 +62,7 @@ export default class DataMasterItemMedisRepository {
                     as: "jenis_stok",
                     required: true,
                     where: whereJenisStok,
-                    attributes: ["uuid"],
+                    attributes: ["uuid", "jenis_stok_uuid"],
                     include: [
                         {
                             model: JenisStokModel,
