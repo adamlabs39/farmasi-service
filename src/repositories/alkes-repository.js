@@ -256,7 +256,7 @@ export default class AlkesRepository {
                 "no_reg",
                 "no_rm",
                 "jenis_pelayanan",
-                "payment_method"
+                "payment_method",
             ],
             include: [
                 {

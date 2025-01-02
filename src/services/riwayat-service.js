@@ -57,7 +57,8 @@ export default class RiwayatService {
                     "jenis_pelayanan": data.jenis_pelayanan,
                     "lokasi_stok": data.lokasi_stok?.name,
                     "racikan": data.obat && data.obat.some(obat => obat.is_compound),
-                    "kronis" : data.obat && data.obat.some(obat => obat.is_chronic)
+                    "kronis" : data.obat && data.obat.some(obat => obat.is_chronic),
+                    "payment_method": data.payment_method,
                 }
             }
         )
