@@ -96,7 +96,7 @@ export default class ReturRepository {
                             model : PrescriptionItemModel,
                             as: "detail_prescription_item",
                             required: false,
-                            attributes : ['medication_qty'],
+                            attributes : ['medication_qty', 'sisa_qty_order'],
                             include : [
                                 {
                                     model : JenisStokModel,

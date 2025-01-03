@@ -101,8 +101,15 @@ export default class RiwayatService {
         result.dataValues.history = this.mapStatusHistory(result, req.item_type);;
         result.dataValues.item_type = req.item_type;
         result.dataValues.status_type = req.status_type;
-        result.dataValues.items = this.mapItems(result);
-        result.dataValues.grand_total = result.dataValues.history.reduce((acc, item) => acc + item.total_harga, 0);
+        if (req.status_type === "retur"){
+            result.dataValues.alasan_retur = result.dataValues.retur.alasan_retur;
+            result.dataValues.retur = this.mapItemRetur(result);
+            result.dataValues.grand_total = result.dataValues.retur.reduce((acc, item) => acc + item.total_harga, 0);
+        } else {
+            result.dataValues.items = this.mapItems(result, req.item_type);
+            result.dataValues.grand_total = result.dataValues.history.reduce((acc, item) => acc + item.total_harga, 0);
+        }
+    
         result.dataValues.obat = undefined;
         result.dataValues.alkes_items = undefined;
         
@@ -164,37 +171,59 @@ export default class RiwayatService {
         return data;
     }
 
-    static mapItems(result){
+    static mapItems(result, itemType){
         let data = [];
 
-        if (result.obat){
+        if (itemType === "obat"){
             data = result.obat.map((obat) => {
                 return {
-                    "name": obat.name?.item_medis?.name,
+                    "name": obat.item_medis?.name,
                     "qty": `${obat.medication_qty} ${obat.item_medis?.satuan_penggunaan?.name}`,
-                    "jenis_stok": obat.jenis_stok?.name,
-                    "is_compound": obat.is_compound ?? undefined,
                     "is_chronic": obat.is_chronic ?? undefined,
-                    "aturan_pakai": `${obat.aturan_pakai?.frekuensi} x ${obat.aturan_pakai?.periode} (${obat.aturan_pakai?.periode_unit}) ${obat.cara_pakai?.cara_pakai}`,
-                    "harga_satuan" : obat.harga_satuan,
-                    "jasa_resep" : obat.biaya_racik + obat.biaya_embalase,
-                    "total_harga" : obat.biaya_racik + obat.biaya_embalase + (obat.harga_satuan * obat.medication_qty),
-                }
+                    "is_compound": obat.is_compound ?? undefined,
+                    "detail" : [
+                        {"jenis_stok": obat.jenis_stok?.name,},
+                        {"aturan_pakai": `${obat.aturan_pakai?.frekuensi} x ${obat.aturan_pakai?.periode} (${obat.aturan_pakai?.periode_unit}) ${obat.cara_pakai?.cara_pakai}`},
+                        {"harga_satuan" : obat.harga_satuan,},
+                        {"jasa_resep" : obat.biaya_racik + obat.biaya_embalase,},
+                        {"total_harga" : obat.biaya_racik + obat.biaya_embalase + (obat.harga_satuan * obat.medication_qty),},
+                    ],
+                } 
             })
         }
 
-        if (result.alkes_items){
+        if (itemType === "alkes"){
             data = result.alkes_items.map((obat) => {
                 return {
-                    "name": obat.name?.item_medis?.name,
+                    "name": obat.item_medis?.name,
                     "qty": `${obat.medication_qty} ${obat.name?.item_medis?.satuan_penggunaan?.name}`,
-                    "jenis_stok": obat.jenis_stok?.name,
-                    "harga_satuan" : obat.harga_satuan,
-                    "total_harga" : obat.harga_satuan * obat.medication_qty,
+                    "detail" : [
+                        {"jenis_stok": obat.jenis_stok?.name,},
+                        {"harga_satuan" : obat.harga_satuan,},
+                        {"total_harga" : obat.harga_satuan * obat.medication_qty,},
+                    ],
                 }
             })
         }
 
+
+        return data;
+    }
+
+    static mapItemRetur(result){
+        const data = [];
+
+        result.dataValues.retur.items.forEach(item => {
+            data.push({
+                "name" : item.detail_prescription_item?.item_medis?.name,
+                "retur_qty": item.qty_retur,
+                "expired_date": item.detail_prescription_item?.expired_date,
+                "harga_satuan": item.harga_satuan,
+                "jenis_stok" : item.detail_prescription_item?.jenis_stok?.name,
+                "total_harga" : item.harga_satuan * item.qty_retur,
+                "used_qty" : item.detail_prescription_item?.sisa_qty_order,
+            })
+        });
 
         return data;
     }
