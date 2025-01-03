@@ -97,11 +97,25 @@ export default class RiwayatService {
             }
         }
 
+        result.dataValues.payment_method = result.payment_method == 1 ? "Tunai" : "Non Tunai";
+        result.dataValues.history = this.mapStatusHistory(result, req.item_type);;
+        result.dataValues.item_type = req.item_type;
+        result.dataValues.status_type = req.status_type;
+        result.dataValues.items = this.mapItems(result);
+        result.dataValues.grand_total = result.dataValues.history.reduce((acc, item) => acc + item.total_harga, 0);
+        result.dataValues.obat = undefined;
+        result.dataValues.alkes_items = undefined;
+        
+
+        return result
+    }
+
+    static mapStatusHistory(result, itemType){
         const data = [];
 
         if (result.order_date ?? result.created_at) {
             data.push({
-                "status": "Order Resep",
+                "status": `Order ${itemType}`,
                 "date": result.order_date ?? result.created_at,
                 "petugas": result.dokter_order ?? result.petugas_order,
             })
@@ -109,7 +123,7 @@ export default class RiwayatService {
 
         if (result.waktu_verifikasi) {
             data.push({
-                "status": "Verifikasi Resep",
+                "status": `Verifikasi ${itemType}`,
                 "date": result.waktu_verifikasi,
                 "petugas": result.petugas_verifikasi,
             })
@@ -147,9 +161,41 @@ export default class RiwayatService {
             })
         }
 
-        result.dataValues.payment_method = result.payment_method == 1 ? "Tunai" : "Non Tunai";
-        result.dataValues.history = data;
+        return data;
+    }
 
-        return result
+    static mapItems(result){
+        let data = [];
+
+        if (result.obat){
+            data = result.obat.map((obat) => {
+                return {
+                    "name": obat.name?.item_medis?.name,
+                    "qty": `${obat.medication_qty} ${obat.item_medis?.satuan_penggunaan?.name}`,
+                    "jenis_stok": obat.jenis_stok?.name,
+                    "is_compound": obat.is_compound ?? undefined,
+                    "is_chronic": obat.is_chronic ?? undefined,
+                    "aturan_pakai": `${obat.aturan_pakai?.frekuensi} x ${obat.aturan_pakai?.periode} (${obat.aturan_pakai?.periode_unit}) ${obat.cara_pakai?.cara_pakai}`,
+                    "harga_satuan" : obat.harga_satuan,
+                    "jasa_resep" : obat.biaya_racik + obat.biaya_embalase,
+                    "total_harga" : obat.biaya_racik + obat.biaya_embalase + (obat.harga_satuan * obat.medication_qty),
+                }
+            })
+        }
+
+        if (result.alkes_items){
+            data = result.alkes_items.map((obat) => {
+                return {
+                    "name": obat.name?.item_medis?.name,
+                    "qty": `${obat.medication_qty} ${obat.name?.item_medis?.satuan_penggunaan?.name}`,
+                    "jenis_stok": obat.jenis_stok?.name,
+                    "harga_satuan" : obat.harga_satuan,
+                    "total_harga" : obat.harga_satuan * obat.medication_qty,
+                }
+            })
+        }
+
+
+        return data;
     }
 }

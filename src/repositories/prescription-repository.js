@@ -80,7 +80,7 @@ export default class PrescriptionRepository {
                                 model: AturanPakaiModel,
                                 as: 'aturan_pakai',
                                 required: false,
-                                attributes: ['name']
+                                attributes: ['name', 'periode_unit', 'periode', 'frekuensi']
                             },
                             {
                                 model: CaraiPakaiModel,
