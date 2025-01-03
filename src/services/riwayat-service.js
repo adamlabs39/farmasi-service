@@ -147,8 +147,8 @@ export default class RiwayatService {
             })
         }
 
-        result.payment_method = result.payment_method == 1 ? "Tunai" : "Non Tunai";
-        result.history = data;
+        result.dataValues.payment_method = result.payment_method == 1 ? "Tunai" : "Non Tunai";
+        result.dataValues.history = data;
 
         return result
     }
