@@ -22,7 +22,7 @@ export default class AlkesRepository {
                     uuid: uuid
                 },
                 attributes : {
-                  exclude: ['deleted_at', 'created_at', 'updated_at', 'faskes_uuid']
+                  exclude: ['deleted_at', 'faskes_uuid']
                 },
                 include : [
                     {

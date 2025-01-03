@@ -58,7 +58,7 @@ export default class RiwayatService {
                     "lokasi_stok": data.lokasi_stok?.name,
                     "racikan": data.obat && data.obat.some(obat => obat.is_compound),
                     "kronis" : data.obat && data.obat.some(obat => obat.is_chronic),
-                    "payment_method": data.payment_method,
+                    "payment_method": data.payment_method === 1 ? "Tunai" : "Non Tunai",
                 }
             }
         )
@@ -96,6 +96,59 @@ export default class RiwayatService {
                 result.dataValues.retur = retur;
             }
         }
+
+        const data = [];
+
+        if (result.order_date ?? result.created_at) {
+            data.push({
+                "status": "Order Resep",
+                "date": result.order_date ?? result.created_at,
+                "petugas": result.dokter_order ?? result.petugas_order,
+            })
+        }
+
+        if (result.waktu_verifikasi) {
+            data.push({
+                "status": "Verifikasi Resep",
+                "date": result.waktu_verifikasi,
+                "petugas": result.petugas_verifikasi,
+            })
+        }
+
+        if (result.waktu_penyiapan) {
+            data.push({
+                "status": "Disiapkan Oleh",
+                "date": result.waktu_penyiapan,
+                "petugas": result.petugas_penyiapan_obat,
+            })
+        }
+
+        if (result.waktu_pemberian) {
+            data.push({
+                "status": "Diberikan Oleh",
+                "date": result.waktu_pemberian,
+                "petugas": result.petugas_pemberi,
+            })
+        }
+
+        if (result.waktu_retur){
+            data.push({
+                "status": "Diretur Oleh",
+                "date": result.waktu_retur,
+                "petugas": result.petugas_retur,
+            })
+        }
+
+        if (result.petugas_pembatalan){
+            data.push({
+                "status": "Dibatalkan Oleh",
+                "date": result.updated_at,
+                "petugas": result.petugas_pembatalan,
+            })
+        }
+
+        result.payment_method = result.payment_method == 1 ? "Tunai" : "Non Tunai";
+        result.history = data;
 
         return result
     }
