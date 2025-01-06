@@ -129,15 +129,22 @@ export default class ReturService {
 
     }
 
-    static
-    async getDetail(req) {
+    static async getDetail(req) {
         ZodValidator.validate(ReturValidation.GET_DETAIL, req);
 
+        let result;
         if (req.item_type === "obat") {
-            return await ReturRepository.getObatDetail(req);
+            result = await ReturRepository.getObatDetail(req);
         } else if (req.item_type === "alkes") {
-            return await ReturRepository.getAlkesDetail(req);
+            result = await ReturRepository.getAlkesDetail(req);
         }
+
+        result = this.mapReturDetail(result);
+        if (!result) {
+            throw new BadRequestException("Data not found");
+        }
+
+        return result;
     }
 
     static
@@ -170,5 +177,26 @@ export default class ReturService {
         }
 
         return result;
+    }
+
+    static mapReturDetail(req, type) {
+        const data = [];
+
+        req.forEach((item) => {
+            const detail = {
+                "name": item.dataValues?.item_medis?.name,
+                "available_qty": `${item.dataValues?.sisa_qty_order ?? item.dataValues.qty} ${item.dataValues?.item_medis?.satuan_penggunaan?.name}`,
+                "detail" : [{
+                    "jenis_stok": item.dataValues?.jenis_stok?.name,
+                    "used_qty" : type === 'obat' ? (item.dataValues?.medication_qty - item.dataValues?.sisa_qty_order) : item.dataValues.qty,
+                    "price" : item.dataValues?.harga_satuan,
+                    "total" : item.dataValues?.harga_satuan * ( type === 'obat' ? (item.dataValues?.medication_qty - item.dataValues?.sisa_qty_order) : item.dataValues.qty),
+                    "exp_date" : item.dataValues?.stok_medis_uuides[0]?.expired_date
+                }]
+            }
+            data.push(detail);
+        })
+
+        return data;
     }
 }
