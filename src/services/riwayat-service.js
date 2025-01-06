@@ -97,11 +97,12 @@ export default class RiwayatService {
             }
         }
 
+        result.dataValues.order_date = result.order_date ?? result.created_at;
         result.dataValues.payment_method = result.payment_method == 1 ? "Tunai" : "Non Tunai";
-        result.dataValues.history = this.mapStatusHistory(result, req.item_type);;
+        result.dataValues.history = this.mapStatusHistory(result, req.item_type);
         result.dataValues.item_type = req.item_type;
         result.dataValues.status_type = req.status_type;
-        if (req.status_type === "retur"){
+        if (req.status_type === "retur" && result.dataValues.retur) {
             result.dataValues.alasan_retur = result.dataValues.retur.alasan_retur;
             result.dataValues.retur = this.mapItemRetur(result);
             result.dataValues.grand_total = result.dataValues.retur.reduce((acc, item) => acc + item.total_harga, 0);
@@ -215,7 +216,8 @@ export default class RiwayatService {
 
         result.dataValues.retur.items.forEach(item => {
             data.push({
-                "name" : item.detail_prescription_item?.item_medis?.name,
+                "name" : item.detail_prescription_item?.item_medis?.name ??
+                    item.detail_order_alkes_item?.item_medis?.name,
                 "retur_qty": item.qty_retur,
                 "expired_date": item.detail_prescription_item?.expired_date,
                 "harga_satuan": item.harga_satuan,
