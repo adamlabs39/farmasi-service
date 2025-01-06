@@ -181,13 +181,13 @@ export default class RiwayatService {
                     "qty": `${obat.medication_qty} ${obat.item_medis?.satuan_penggunaan?.name}`,
                     "is_chronic": obat.is_chronic ?? undefined,
                     "is_compound": obat.is_compound ?? undefined,
-                    "detail" : {
+                    "detail" : [{
                         "jenis_stok": obat.jenis_stok?.name,
                         "aturan_pakai": `${obat.aturan_pakai?.frekuensi} x ${obat.aturan_pakai?.periode} (${obat.aturan_pakai?.periode_unit}) ${obat.cara_pakai?.cara_pakai}`,
                         "harga_satuan": obat.harga_satuan,
                         "jasa_resep": obat.biaya_racik + obat.biaya_embalase,
                         "total_harga": obat.biaya_racik + obat.biaya_embalase + (obat.harga_satuan * obat.medication_qty)
-                    }
+                    }]
                 } 
             })
         }
@@ -197,11 +197,11 @@ export default class RiwayatService {
                 return {
                     "name": obat.item_medis?.name,
                     "qty": `${obat.medication_qty} ${obat.name?.item_medis?.satuan_penggunaan?.name}`,
-                    "detail" : {
+                    "detail" : [{
                         "jenis_stok": obat.jenis_stok?.name,
                         "harga_satuan": obat.harga_satuan,
                         "total_harga": obat.harga_satuan * obat.medication_qty,
-                    },
+                    }],
                 }
             })
         }
