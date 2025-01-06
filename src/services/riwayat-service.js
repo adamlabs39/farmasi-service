@@ -105,10 +105,10 @@ export default class RiwayatService {
         if (req.status_type === "retur" && result.dataValues.retur) {
             result.dataValues.alasan_retur = result.dataValues.retur.alasan_retur;
             result.dataValues.retur = this.mapItemRetur(result);
-            result.dataValues.grand_total = result.dataValues.retur.reduce((acc, item) => acc + item.total_harga, 0);
+            result.dataValues.grand_total = result.dataValues.retur.reduce((acc, item) => acc + item.detail[0]?.total_harga, 0);
         } else {
             result.dataValues.items = this.mapItems(result, req.item_type);
-            result.dataValues.grand_total = result.dataValues.history.reduce((acc, item) => acc + item.total_harga, 0);
+            result.dataValues.grand_total = result.dataValues.items.reduce((acc, item) => acc + item.detail[0]?.total_harga, 0);
         }
     
         result.dataValues.obat = undefined;
@@ -214,16 +214,21 @@ export default class RiwayatService {
     static mapItemRetur(result){
         const data = [];
 
+        console.log(result.dataValues.retur.items[0].detail_prescription_item);
+
         result.dataValues.retur.items.forEach(item => {
             data.push({
                 "name" : item.detail_prescription_item?.item_medis?.name ??
                     item.detail_order_alkes_item?.item_medis?.name,
-                "retur_qty": item.qty_retur,
-                "expired_date": item.detail_prescription_item?.expired_date,
-                "harga_satuan": item.harga_satuan,
-                "jenis_stok" : item.detail_prescription_item?.jenis_stok?.name,
-                "total_harga" : item.harga_satuan * item.qty_retur,
-                "used_qty" : item.detail_prescription_item?.sisa_qty_order,
+                "detail" : [{
+                    "retur_qty": item.qty_retur,
+                    "expired_date": item.expired_date,
+                    "harga_satuan": item.harga_satuan,
+                    "jenis_stok" : item.detail_prescription_item?.jenis_stok?.name ??
+                        item.detail_order_alkes_item?.jenis_stok?.name,
+                    "total_harga" : item.harga_satuan * item.qty_retur,
+                    "used_qty" : item.detail_prescription_item?.sisa_qty_order,
+                }]
             })
         });
 
