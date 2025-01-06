@@ -139,7 +139,7 @@ export default class ReturService {
             result = await ReturRepository.getAlkesDetail(req);
         }
 
-        result = this.mapReturDetail(result);
+        result = this.mapReturDetail(result, req.item_type);
         if (!result) {
             throw new BadRequestException("Data not found");
         }
@@ -188,7 +188,7 @@ export default class ReturService {
                 "available_qty": `${item.dataValues?.sisa_qty_order ?? item.dataValues.qty} ${item.dataValues?.item_medis?.satuan_penggunaan?.name}`,
                 "detail" : [{
                     "jenis_stok": item.dataValues?.jenis_stok?.name,
-                    "used_qty" : type === 'obat' ? (item.dataValues?.medication_qty - item.dataValues?.sisa_qty_order) : item.dataValues.qty,
+                    "used_qty" : type === 'obat' ? (item.dataValues?.medication_qty - item.dataValues?.sisa_qty_order) : undefined,
                     "price" : item.dataValues?.harga_satuan,
                     "total" : item.dataValues?.harga_satuan * ( type === 'obat' ? (item.dataValues?.medication_qty - item.dataValues?.sisa_qty_order) : item.dataValues.qty),
                     "exp_date" : item.dataValues?.stok_medis_uuides[0]?.expired_date
