@@ -195,7 +195,7 @@ export default class ReturService {
                     "jenis_stok": item.dataValues?.jenis_stok?.name,
                     "used_qty" : type === 'obat' ? (item.dataValues?.medication_qty - item.dataValues?.sisa_qty_order) : undefined,
                     "price" : item.dataValues?.harga_satuan,
-                    "total" : item.dataValues?.harga_satuan * ( type === 'obat' ? (item.dataValues?.medication_qty - item.dataValues?.sisa_qty_order) : item.dataValues.qty),
+                    "total" : 0,
                     "exp_date" : item.dataValues?.stok_medis_uuides[0]?.expired_date,
                     "qty_retur" : 0,
                 }]
