@@ -185,9 +185,9 @@ export default class ReturService {
         req.forEach((item) => {
             const detail = {
                 "name": item.dataValues?.item_medis?.name,
-                "uuid" : item.dataValues?.uuid,
                 "available_qty": `${item.dataValues?.sisa_qty_order ?? item.dataValues.qty} ${item.dataValues?.item_medis?.satuan_penggunaan?.name}`,
                 "detail" : [{
+                    "uuid" : item.dataValues?.uuid,
                     "jenis_stok": item.dataValues?.jenis_stok?.name,
                     "used_qty" : type === 'obat' ? (item.dataValues?.medication_qty - item.dataValues?.sisa_qty_order) : undefined,
                     "price" : item.dataValues?.harga_satuan,
