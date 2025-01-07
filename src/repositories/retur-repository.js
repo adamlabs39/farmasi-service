@@ -23,7 +23,8 @@ export default class ReturRepository {
                 "medication_qty",
                 "sisa_qty_order",
                 "harga_satuan",
-                "stok_medis_uuides"
+                "stok_medis_uuides",
+                "uuid"
             ],
             include : [{
                 model : ItemMedisModel,
@@ -52,7 +53,7 @@ export default class ReturRepository {
             where : {
                 order_alkes_uuid : req.order_alkes_uuid,
             },
-            attributes : ["qty", "stok_medis_uuides", "harga_satuan"],
+            attributes : ["qty", "stok_medis_uuides", "harga_satuan", "uuid"],
             include : [{
                 model : JenisStokModel,
                 as : 'jenis_stok',
