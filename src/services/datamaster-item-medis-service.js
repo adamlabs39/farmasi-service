@@ -157,7 +157,6 @@ export default class DatamasterItemMedisService {
         const configInfo = await KonfigurasiHargaRepository.get(req.faskes_uuid);
 
         const result = await DataMasterItemMedisRepository.getAvailableJenisStok(req, configInfo.metode_hpp === "avg");
-
         if (result.length === 0) {
             throw new BadRequestException("Tidak ada jenis stok yang tersedia");
         }
@@ -165,14 +164,14 @@ export default class DatamasterItemMedisService {
         for (const item of result) {
             let total_stock = 0;
 
-            for (const stock of item.detail_stok.stocks) {
+            for (const stock of item.stocks) {
                 total_stock += stock.sisa_stok;
             }
 
             item.dataValues.harga = item.detail_harga[0].dataValues.harga;
             item.dataValues.total_stok = total_stock;
             item.dataValues.detail_harga = undefined;
-            item.dataValues.detail_stok.dataValues.stocks = undefined;
+            item.dataValues.stocks = undefined;
         }
 
         return result;

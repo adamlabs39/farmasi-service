@@ -271,23 +271,22 @@ export default class DataMasterItemMedisRepository {
                         },
                         status : true
                     },
-                    include : [
-                        {
-                            model : StockMedisModel,
-                            as : "stocks",
-                            required: true,
-                            attributes : ["sisa_stok", "exp_date"],
-                            where: {
-                                deleted_at: {
-                                    [Op.is]: null
-                                },
-                                exp_date: {
-                                    [Op.gt]: new Date()
-                                },
-                                lokasi_stok_uuid : {[Op.iLike]: `%${req.lokasi_stok_uuid || ""}%`}
-                            }
-                        }
-                    ],
+                },
+                {
+                    model : StockMedisModel,
+                    as : "stocks",
+                    required: true,
+                    attributes : ["sisa_stok", "exp_date"],
+                    where: {
+                        deleted_at: {
+                            [Op.is]: null
+                        },
+                        exp_date: {
+                            [Op.gt]: new Date()
+                        },
+                        lokasi_stok_uuid : {[Op.iLike]: `%${req.lokasi_stok_uuid || ""}%`}
+                    }
+
                 },
                 {
                     model: HargaItemModel,

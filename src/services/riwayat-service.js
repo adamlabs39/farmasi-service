@@ -214,8 +214,6 @@ export default class RiwayatService {
     static mapItemRetur(result){
         const data = [];
 
-        console.log(result.dataValues.retur.items[0].detail_prescription_item);
-
         result.dataValues.retur.items.forEach(item => {
             data.push({
                 "name" : item.detail_prescription_item?.item_medis?.name ??

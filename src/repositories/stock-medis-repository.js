@@ -2,6 +2,7 @@ import {Op} from "sequelize";
 import sequelizeInstance from "../configurations/sequelize-instance.js";
 import BadRequestException from "../errors/bad-request-exception.js";
 import {StockMedisModel} from "@adameds/model-sdk/inventory";
+import {ItemMedisJenisStokModel} from "@adameds/model-sdk/farmasi";
 
 export default class StockMedisRepository {
     static async reduceQuantity(req, t) {
@@ -21,20 +22,34 @@ export default class StockMedisRepository {
             order.push(["created_at", "DESC"]);
         }
 
-        const totalStock = await StockMedisModel.sum('sisa_stok', {
+        const sisaStockRaw = await StockMedisModel.findAll( {
             where: {
-                item_medis_uuid: req.item_medis_uuid,
                 sisa_stok: {
                     [Op.gt]: 0
                 },
                 exp_date: {
                     [Op.gt]: today
                 },
-                jenis_stok_uuid : req.jenis_stok_uuid,
                 lokasi_stok_uuid : req.lokasi_stok_uuid,
             },
+            attributes : ['sisa_stok'],
+            include: [
+                {
+                    model : ItemMedisJenisStokModel,
+                    as : 'item_medis_jenis_stok',
+                    required: true,
+                    where: {
+                        jenis_stok_uuid : req.jenis_stok_uuid,
+                        item_medis_uuid: req.item_medis_uuid,
+                    },
+                    attributes : ['uuid'],
+                }
+            ],
             transaction: t,
         });
+
+        const totalStock = sisaStockRaw.reduce((acc, curr) => acc + curr.sisa_stok, 0);
+
 
         if (totalStock < req.quantity) {
             throw new BadRequestException(`${req.name} not enough or empty (total stock : ${totalStock})`);
@@ -43,16 +58,26 @@ export default class StockMedisRepository {
         while (remainingQuantity > 0) {
             stock = await StockMedisModel.findOne({
                 where: {
-                    item_medis_uuid: req.item_medis_uuid,
                     sisa_stok: {
                         [Op.gt]: 0
                     },
                     exp_date: {
                         [Op.gt]: today
                     },
-                    jenis_stok_uuid : req.jenis_stok_uuid,
                     lokasi_stok_uuid : req.lokasi_stok_uuid,
                 },
+                include: [
+                    {
+                        model : ItemMedisJenisStokModel,
+                        as : 'item_medis_jenis_stok',
+                        required: true,
+                        where: {
+                            item_medis_uuid: req.item_medis_uuid,
+                            jenis_stok_uuid : req.jenis_stok_uuid,
+                        },
+                        attributes : ['uuid'],
+                    }
+                ],
                 order: order,
                 transaction: t,
                 lock: t.LOCK.UPDATE,
