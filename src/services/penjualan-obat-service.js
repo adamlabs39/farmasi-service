@@ -26,6 +26,8 @@ export default class PenjualanObatService {
         try {
             const penjualan = await PenjualanObatRepository.createOtc(req, transaction);
 
+            const itemMedises = await DataMasterItemMedisRepository.getSome(req.items.map(item => item.item_medis_uuid));
+
             for (const item of req.items) {
                 ZodValidator.validate(PenjualanObatValidation.CREATE_OTC_ITEM, item);
                 item.penjualan_obat_uuid = penjualan.uuid;
@@ -63,12 +65,15 @@ export default class PenjualanObatService {
                     jenis_stok_uuid: item.jenis_stok_uuid,
                     quantity: item.qty,
                     metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
-                    name: item.name,
+                    name: itemMedises.find(itemMedis => itemMedis.uuid === item.item_medis_uuid)?.name,
                     lokasi_stok_uuid: penjualan.lokasi_stok_uuid
                 }, transaction);
 
 
-                await PenjualanObatRepository.createOtcItem(item, transaction);
+                await PenjualanObatRepository.createOtcItem({
+                    ...item,
+                    satuan_uuid : itemMedises.find(itemMedis => itemMedis.uuid === item.item_medis_uuid)?.satuan_penggunaan?.name},
+                    transaction);
             }
 
             await PenjualanObatRepository.updateOtc({

@@ -14,7 +14,6 @@ export default class PenjualanObatValidation {
         item_medis_uuid: z.string().min(1, required),
         qty: z.number(),
         jenis_stok_uuid: z.string().min(1, required),
-        satuan_uuid: z.string().min(1, required),
     });
 
     static BATAL_OTC = z.object({

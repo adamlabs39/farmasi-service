@@ -340,4 +340,23 @@ export default class DataMasterItemMedisRepository {
     static async bulkInsertJenisStok(req, transaction) {
         return await ItemMedisJenisStokModel.bulkCreate(req, {transaction});
     }
+
+    static async getSome(uuidArray){
+        return await ItemMedisModel.findAll({
+            where: {
+                uuid : {
+                    [Op.in]: uuidArray,
+                }
+            },
+            include : [
+                {
+                    model: SatuanModel,
+                    as: "satuan_penggunaan",
+                    required: false,
+                    attributes: ["name"]
+                },
+            ],
+            attributes : ["uuid", "name"],
+        });
+    }
 }
