@@ -10,6 +10,7 @@ export default class OrderAlkesItemSeeder {
                 "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "qty" : 10,
                 "harga_satuan" : 1000,
+                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
             },
         ];
 

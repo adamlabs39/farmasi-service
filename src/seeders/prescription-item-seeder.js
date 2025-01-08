@@ -18,6 +18,7 @@ export default class PrescriptionItemSeeder {
                 "is_chronic" : true,
                 "route" : "anal",
                 "prescription_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
             },
             {
                 "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
@@ -36,6 +37,7 @@ export default class PrescriptionItemSeeder {
                 "is_compound" : true,
                 "prescription_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "bentuk_racikan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
             },
             {
                 "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
@@ -51,6 +53,7 @@ export default class PrescriptionItemSeeder {
                 "prescription_notes" : "",
                 "is_chronic" : false,
                 "route" : "anal",
+                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "prescription_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
             },
         ];

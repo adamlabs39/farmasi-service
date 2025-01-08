@@ -11,12 +11,11 @@ import {
     OrderAlkesModel,
     PenjualanObatModel,
     PrescriptionItemModel,
-    PrescriptionItemRacikanModel,
+    PrescriptionItemRacikanModel, PrescriptionModel,
     ReturItemModel,
     ReturModel,
     SatuanModel
 } from "@adameds/model-sdk/farmasi";
-import PrescriptionModel from "./prescription-model.js";
 import {
     FaskesModel,
     LokasiModel,
@@ -29,9 +28,6 @@ import {StockMedisModel} from "@adameds/model-sdk/inventory";
 import {PatientModel} from "@adameds/model-sdk/admisi";
 import PractitionerSeeder from "../seeders/practitioner-seeder.js";
 
-function JenisStokItemMedisModel() {
-    return undefined;
-}
 
 const MODELMERGE = [
     // RoleModel,
@@ -39,7 +35,7 @@ const MODELMERGE = [
     // PegawaiModel,
     // PractitionerModel,
     // UserModel,
-    PatientModel,
+    // PatientModel,
 
     KonfigurasiHargaModel,
     AturanPakaiModel,
@@ -52,6 +48,7 @@ const MODELMERGE = [
     ManufactureModel,
     JenisStokModel,
     ItemMedisJenisStokModel,
+    ConversionModel,
 
     LokasiModel,
     PrescriptionModel,
@@ -65,7 +62,10 @@ const MODELMERGE = [
     ItemPenjualanObatModel,
 
     OrderAlkesModel,
-    OrderAlkesItemModel
+    OrderAlkesItemModel,
+
+    ReturModel,
+    ReturItemModel,
 ];
 
 export default MODELMERGE;

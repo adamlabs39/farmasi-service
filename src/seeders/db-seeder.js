@@ -28,17 +28,19 @@ import BentukRacikanSeeder from "./bentuk-racikan-seeder.js";
 import PatientSeeder from "./patient-seeder.js";
 import PenjualanObatSeeder from "./penjualan-obat-seeder.js";
 import RiwayatSeeder from "./riwayat-seeder.js";
+import ReturSeeder from "./retur-seeder.js";
+import ConversionSeeder from "./conversion-seeder.js";
 
 export const dbSeeder = async () => {
     const transaction = await sequelizeInstance.transaction();
     try {
-        // user things
-        await RoleSeeder.seed(transaction);
-        await FaskesSeeder.seed(transaction);
-        await PegawaiSeeder.seed(transaction);
-        await PractitionerSeeder.seed(transaction);
-        await UserSeeder.seed(transaction);
-        await PatientSeeder.seed(transaction);
+        //user things
+        // await RoleSeeder.seed(transaction);
+        // await FaskesSeeder.seed(transaction);
+        // await PegawaiSeeder.seed(transaction);
+        // await PractitionerSeeder.seed(transaction);
+        // await UserSeeder.seed(transaction);
+        // await PatientSeeder.seed(transaction);
 
         // datamaster things
         await KonfigurasiHargaSeeder.seed(transaction);
@@ -52,8 +54,9 @@ export const dbSeeder = async () => {
         await ManufacureSeeder.seed(transaction);
         await JenisStokSeeder.seed(transaction);
         await ItemMedisJenisStokSeeder.seed(transaction);
+        await ConversionSeeder.seed(transaction);
 
-        // prescription things
+        // // prescription things
         await LokasiSeeder.seed(transaction);
         await PrescriptionSeeder.seed(transaction);
         await PrescriptionItemSeeder.seed(transaction);
@@ -62,8 +65,9 @@ export const dbSeeder = async () => {
         await StokMedisSeeder.seed(transaction);
         await HargaItemSeeder.seed(transaction);
         await RiwayatSeeder.seed(transaction);
+        await ReturSeeder.seed(transaction);
 
-        // PENJUALAN OBAT
+        // // PENJUALAN OBAT
         await PenjualanObatSeeder.seed(transaction);
 
         // FARMASI RUANGAN
