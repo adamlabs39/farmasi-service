@@ -16,9 +16,6 @@ export default class PenjualanObatService {
         const transaction = await sequelizeInstance.transaction();
 
         // create no transaksi
-        req.no_transaksi = Utils.generate4Code('OTC');
-
-        req.tanggal_pembelian = toEpochDate(new Date());
         req.total_item = 0;
         req.total_harga = 0;
         req.status = 'belum_lunas';

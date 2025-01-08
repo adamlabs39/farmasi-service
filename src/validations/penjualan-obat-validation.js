@@ -8,6 +8,8 @@ export default class PenjualanObatValidation {
         dokter_pemberi_resep: z.string().min(1, required),
         nama_pembeli: z.string().min(1, required),
         no_hp: z.string().min(1, required),
+        tanggal_pemberian  : z.number().min(1, required),
+        no_transaksi: z.string().min(1, required),
     });
 
     static CREATE_OTC_ITEM = z.object({
