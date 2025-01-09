@@ -11,6 +11,9 @@ export default class ReportService {
 
         req.start_date = Number(req.start_date);
         req.end_date = Number(req.end_date);
+        if (req.payment_method){
+            req.payment_method = Number(req.payment_method);
+        }
 
         return await PrescriptionRepository.getPendapatan(req);
     }
