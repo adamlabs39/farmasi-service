@@ -9,6 +9,9 @@ export default class ReportService {
 
         ZodValidator.validate(ReportValidation.GET_PENDAPATAN, req);
 
+        req.start_date = Number(req.start_date);
+        req.end_date = Number(req.end_date);
+
         return await PrescriptionRepository.getPendapatan(req);
     }
 
