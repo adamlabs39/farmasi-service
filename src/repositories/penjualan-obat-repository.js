@@ -117,4 +117,30 @@ export default class PenjualanObatRepository {
             attributes : ["no_transaksi"]
         })
     }
+
+    static getPendapatan(req){
+        req.search = Utils.nullToType(req.search)
+
+        let option = {
+            where : {
+                tanggal_pembelian : {
+                    [Op.between]: [req.start_date, req.end_date]
+                },
+                status : "lunas",
+                faskes_uuid : req.faskes_uuid,
+                [Op.or]: [
+                    { nama_pembeli: { [Op.iLike]: `%${req.search}%` } },
+                    { no_transaksi: { [Op.iLike]: `%${req.search}%` } }
+                ],
+            },
+            attributes : [
+                "no_transaksi",
+                "nama_pembeli",
+                "total_harga",
+                "tanggal_pembelian",
+            ],
+        }
+
+        return Pagination.init(PenjualanObatModel, req, option);
+    }
 }

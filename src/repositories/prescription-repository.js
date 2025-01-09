@@ -563,6 +563,7 @@ export default class PrescriptionRepository {
                 },
                 [Op.or]: [
                     {no_rm: {[Op.iLike]: `%${req.search}%`}},
+                    {no_resep: {[Op.iLike]: `%${req.search}%`}},
                     sequelizeInstance.where(
                         sequelizeInstance.col('patient.name'),
                         {[Op.iLike]: `%${req.search || ''}%`}
@@ -614,7 +615,7 @@ export default class PrescriptionRepository {
     // get for waktu tunggu
     static async getTat(req){
         req.search = Utils.nullToType(req.search)
-        req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
+        req.lokasi_uuid = Utils.nullToType(req.lokasi_uuid)
         req.jenis_pelayanan = Utils.nullToType(req.jenis_pelayanan)
         req.racikan = Utils.nullToType(req.racikan)
         req.payment_method = Utils.nullToType(req.payment_method, Number)
@@ -629,7 +630,7 @@ export default class PrescriptionRepository {
                     {[Op.iLike]: `%${req.search || ''}%`}
                 )
             ],
-            lokasi_stok_uuid: {[Op.like]: `%${req.lokasi_stok_uuid}%`},
+            lokasi_uuid: {[Op.like]: `%${req.lokasi_uuid}%`},
             order_date: {
                 [Op.between]: [req.start_date, req.end_date]
             },
@@ -674,8 +675,8 @@ export default class PrescriptionRepository {
                     attributes: ['name']
                 },
                 {
-                    model : LokasiStokModel,
-                    as : 'lokasi_stok',
+                    model : LokasiModel,
+                    as : 'lokasi',
                     required: false,
                     attributes: ["name"]
                 }
