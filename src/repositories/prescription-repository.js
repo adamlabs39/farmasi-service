@@ -690,6 +690,7 @@ export default class PrescriptionRepository {
     // get pendapatan per apotik
     static async getPendapatanPerApotik(req){
         req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
+        req.payment_method = Utils.nullToType(req.payment_method, Number)
 
         let wherePrescription = {
             faskes_uuid: req.faskes_uuid,
@@ -698,6 +699,11 @@ export default class PrescriptionRepository {
                 [Op.between]: [req.start_date, req.end_date]
             },
             order_status: 5
+        }
+
+        if (req.payment_method){
+            req.payment_method = Number(req.payment_method);
+            wherePrescription.payment_method = req.payment_method;
         }
 
         const options = {
