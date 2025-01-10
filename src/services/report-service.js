@@ -9,6 +9,10 @@ export default class ReportService {
     static async getPendapatan(req){
         setRangeDate(req);
 
+        if(!req.pendapatan){
+            return [];
+        }
+
         ZodValidator.validate(ReportValidation.GET_PENDAPATAN, req);
 
         req.start_date = Number(req.start_date);

@@ -6,7 +6,6 @@ export default class ReportValidation {
         start_date: z.number().min(1, required),
         end_date: z.number().min(1, required),
         faskes_uuid : z.string().min(1, required),
-        pendapatan: z.string().min(1, required),
     })
 
     static GET_TAT = z.object({
