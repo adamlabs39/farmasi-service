@@ -21,13 +21,18 @@ export default class ReportService {
             req.payment_method = Number(req.payment_method);
         }
 
+        let result;
         if (req.pendapatan === "prescription"){
-            return await PrescriptionRepository.getPendapatan(req);
+            result = await PrescriptionRepository.getPendapatan(req);
         } else if (req.pendapatan === "penjualan_obat"){
-            return await PenjualanObatRepository.getPendapatan(req);
+            result = await PenjualanObatRepository.getPendapatan(req);
         } else {
             throw new BadRequestException("Invalid pendapatan type");
         }
+
+        result.data.payment_method = result.data.payment_method === 1 ? "Tunai" : "Asuransi";
+
+        return result;
     }
 
     static async getTat(req){
