@@ -77,6 +77,7 @@ export default class ReturService {
                 // bring back stock
                 if (req.jenis_retur === "obat") {
                     const prescriptionItem = await PrescriptionRepository.getPrescriptionByUuid(item.prescription_item_uuid);
+
                     if (!prescriptionItem.stok_medis_uuides) {
                         throw new BadRequestException("Stock medis uuides not found");
                     }
@@ -88,16 +89,19 @@ export default class ReturService {
                         }, transaction)
                     }
                 } else if (req.jenis_retur === "alkes") {
-                    const alkesItem = await OrderAlkesRepository.getByUuid(item.order_alkes_item_uuid);
+                    const alkesItem = await OrderAlkesRepository.getAlkesItem(item.order_alkes_item_uuid);
 
-                    if (!alkesItem.stock_medis_uuid) {
+
+                    if (!alkesItem.stok_medis_uuides) {
                         throw new BadRequestException("Stock medis uuides not found");
                     }
 
-                    await StockMedisRepository.addQuantity({
-                        stock_medis_uuid: alkesItem.stock_medis_uuid,
-                        quantity: alkesItem.qty,
-                    }, transaction)
+                    for (const stock of alkesItem.stok_medis_uuides) {
+                        await StockMedisRepository.addQuantity({
+                            stock_medis_uuid: stock.stock_medis_uuid,
+                            quantity: stock.quantity,
+                        }, transaction)
+                    }
                 }
             }
 

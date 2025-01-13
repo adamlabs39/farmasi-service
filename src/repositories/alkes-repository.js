@@ -289,4 +289,13 @@ export default class AlkesRepository {
             return await Pagination.init(OrderAlkesModel, req, option);
         }
     }
+
+    static async getAlkesItem(uuid){
+        return await OrderAlkesItemModel.findOne({
+            where : {
+                uuid : uuid,
+            },
+            attributes : ["qty", "stok_medis_uuides"],
+        })
+    }
 }
