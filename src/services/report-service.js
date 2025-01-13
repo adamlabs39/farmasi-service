@@ -30,7 +30,11 @@ export default class ReportService {
             throw new BadRequestException("Invalid pendapatan type");
         }
 
-        result.data.payment_method = result.data.payment_method === 1 ? "Tunai" : "Asuransi";
+        if (result.data){
+            result.data.forEach((element) => {
+                element.payment_method = element.payment_method === 1 ? "Tunai" : "Asuransi";
+            });
+        }
 
         return result;
     }
