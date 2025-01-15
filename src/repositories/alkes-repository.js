@@ -231,7 +231,7 @@ export default class AlkesRepository {
         const option = {
             where: {
                 order_status : {
-                    [Op.between]: (req.status.length > 0) ? req.status : [1, 2, 3],
+                    [Op.between]: (req.status.length > 0) ? req.status : [1, 3],
                 },
                 faskes_uuid : req.faskes_uuid,
                 [Op.or]: [
@@ -263,6 +263,7 @@ export default class AlkesRepository {
                     model : LokasiModel,
                     as : 'lokasi',
                     required : false,
+                    attributes: ['name', 'uuid']
                 },
                 {
                     model : PatientModel,
