@@ -151,7 +151,7 @@ routes.get(`${baseUrl}/penjualan-obat/:uuid`, PenjualanObatController.getDetail)
 // ALKES
 routes.post(`${baseUrl}/alkes`, AlkesController.orderAlkes);
 routes.get(`${baseUrl}/alkes/some-order`, AlkesController.getOrderByRekamMedis);
-routes.get(`${baseUrl}/alkes/all`, AlkesController.getAllForFarmacy);
+routes.post(`${baseUrl}/alkes/all`, AlkesController.getAllForFarmacy);
 routes.put(`${baseUrl}/alkes/lokasi-stok`, AlkesController.updateLokasiStok);
 routes.put(`${baseUrl}/alkes/update-verifikasi`, AlkesController.updateVerifikasi);
 routes.put(`${baseUrl}/alkes/siap-diserahkan`, AlkesController.updateSiapDiserahkan);
