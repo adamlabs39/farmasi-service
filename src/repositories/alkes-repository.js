@@ -223,6 +223,7 @@ export default class AlkesRepository {
     static async getAllForFarmacy(req){
         req.search = Utils.nullToType(req.search)
         req.lokasi_stok_uuid = Utils.nullToType(req.lokasi_stok_uuid)
+        req.lokasi_uuid = Utils.nullToType(req.lokasi_uuid)
         req.status = Utils.nullToType(req.status, Array)
         req.payment_method = Utils.nullToType(req.payment_method, Number)
 
@@ -246,6 +247,7 @@ export default class AlkesRepository {
                     [Op.between]: [req.start_date, req.end_date]
                 },
                 lokasi_stok_uuid : { [Op.like]: `%${req.lokasi_stok_uuid}%` },
+                lokasi_uuid : {[Op.like]: `%${req.lokasi_uuid}%`},
             },
             attributes : [
                 'uuid',

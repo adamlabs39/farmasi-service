@@ -239,6 +239,7 @@ export default class AlkesService {
         let penyerahan_alkes = [];
 
         for (const resep of rawData) {
+            resep.dataValues.payment_method = resep.payment_method === 1 ? "Tunai" : "Asuransi";
             if (resep.order_status === 1) {
                 order_masuk.push(resep);
             } else if (resep.order_status === 2) {
