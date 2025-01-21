@@ -20,6 +20,7 @@ export default class AlkesService {
         }
 
         alkes.dataValues.payment_method = alkes.payment_method === 1 ? "Tunai" : "Asuransi";
+        alkes.dataValues.user_uuid = req.user_uuid;
 
         alkes.dataValues.alkes_items = alkes.alkes_items.map(item => {
             item.dataValues.list_alkes = [{
