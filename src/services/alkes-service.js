@@ -238,7 +238,21 @@ export default class AlkesService {
 
     static async updateLokasiStok(req) {
         ZodValidator.validate(PrescriptionValidation.UPDATE_LOKASI_STOK, req);
-        return await AlkesRepository.editAlkesItem(req);
+
+        const transaction = await sequelizeInstance.transaction();
+
+        try {
+            await AlkesRepository.editAlkes(req, transaction);
+
+            await AlkesRepository.removeJenisStok({
+                uuid : req.uuid,
+            }, transaction)
+
+            await transaction.commit();
+        } catch (e) {
+            await transaction.rollback();
+            throw e;
+        }
     }
 
     static async getAllForFarmacy(req) {

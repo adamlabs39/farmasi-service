@@ -297,4 +297,24 @@ export default class AlkesRepository {
             attributes : ["qty", "stok_medis_uuides"],
         })
     }
+
+    static async removeJenisStok(req, transaction){
+        const affectedRow = await OrderAlkesItemModel.update(
+            {
+                jenis_stok_uuid : null
+            },
+            {
+                where: {
+                    order_alkes_uuid: req.uuid
+                },
+                transaction: transaction
+            }
+        );
+
+        if(affectedRow[0] === 0){
+            throw new InternalServerException("Tidak ada data yang diubah");
+        }
+
+        return affectedRow;
+    }
 }
