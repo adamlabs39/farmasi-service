@@ -111,7 +111,7 @@ export default class Utils {
         const file = req.files?.files || null;
         const availableMimeTypes = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
         if (!file) {
-            throw new BadRequestException("kunci 'file' tidak ditemukan");
+            throw new BadRequestException("kunci 'files' tidak ditemukan");
         }
 
         if (!availableMimeTypes.includes(file.mimetype)) {
