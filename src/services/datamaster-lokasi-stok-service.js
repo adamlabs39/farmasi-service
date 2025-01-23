@@ -50,7 +50,7 @@ export default class DatamasterLokasiStokService {
         for (let i = 0; i < result.data.length; i++) {
             result.data[i].jenis_lokasi = result.data[i].jenis_lokasi === "depo" ? "Depo" : "Gudang";
             if (result.data[i].default_tujuan_order_permintaan.length > 1) {
-                result.data[i].default_tujuan_order_permintaan = result.data[i].split('')
+                result.data[i].default_tujuan_order_permintaan = result.data[i].default_tujuan_order_permintaan.split('')
                     .map(num => mapping[parseInt(num, 10)])
                     .join(',');
             }
