@@ -96,7 +96,7 @@ export default class ExcelMapper {
 
             item.faskes_uuid = faskesUuid;
             item.code = item['Kode Cara Pakai*'] || "";
-            item.name = item['Nama Cara Pakai*'] || "";
+            item.cara_pakai = item['Nama Cara Pakai*'] || "";
             item.status = true;
 
             item.code = item.code.toUpperCase();
