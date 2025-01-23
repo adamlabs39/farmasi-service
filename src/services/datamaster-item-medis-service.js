@@ -190,7 +190,7 @@ export default class DatamasterItemMedisService {
             ...new Set(conversionRequest.map(item => item.satuan_penggunaan_code)),
         ];
 
-        // --------- START CONVERT CODE TO UUID ------------
+        // region CONVERT CODE TO UUID
         const [
             bentukSediaanUuid,
             manufactureUuid,
@@ -225,9 +225,9 @@ export default class DatamasterItemMedisService {
         jenisStokUuid.forEach((jenis) => {
             jenisStokMap[jenis.code] = jenis.uuid;
         });
-        // ---------- END CONVERT CODE TO UUID -------------
+        // endregion
 
-        // MAPPING FOR ITEM MEDIS REQUEST
+        // region MAPPING FOR ITEM MEDIS REQUEST
         itemMedisRequest.forEach((item) => {
             if (!satuanMap[item.satuan_dosis_code]?.uuid || !satuanMap[item.satuan_kemasan_code]?.uuid || !bentukSediaanMap[item.bentuk_sediaan_code] || !manufactureMap[item.manufacure_code] || !kategoriObatMap[item.kategori_obat_code] || !satuanMap[item.satuan_penggunaan_code]?.uuid) {
                 throw new BadRequestException("ada kode di item medis yang tidak ditemukan datanya");
@@ -249,6 +249,7 @@ export default class DatamasterItemMedisService {
             item.kategori_obat_uuid = kategoriObatMap[item.kategori_obat_code];
             item.satuan_penggunaan_uuid = satuanMap[item.satuan_penggunaan_code]?.uuid;
             item.jenis_stocks = item.jenis_stok_codes.map(code => ({jenis_stok_uuid: jenisStokMap[code]}));
+            item.jenis_item = item.jenis_item.toLowerCase()
 
             delete item.satuan_dosis_code;
             delete item.satuan_kemasan_code;
@@ -258,8 +259,9 @@ export default class DatamasterItemMedisService {
             delete item.satuan_penggunaan_code;
             delete item.jenis_stok_codes;
         });
+        // endregion
 
-        // MAPPING FOR JENIS STOK REQUEST
+        // region MAPPING FOR JENIS STOK REQUEST
         const ItemMedisJenisRequest = [];
         for (const item of itemMedisRequest) {
             if (!!item.jenis_stocks) {
@@ -272,8 +274,9 @@ export default class DatamasterItemMedisService {
                 }
             }
         }
+        // endregion
 
-        // MAPPING FOR CONVERSION REQUEST
+        // region MAPPING FOR CONVERSION REQUEST
         conversionRequest.forEach((item) => {
             if (!satuanMap[item.satuan_pembelian_code]?.uuid || !satuanMap[item.satuan_penggunaan_code]?.uuid) {
                 throw new BadRequestException("ada kode di conversion yang tidak ditemukan datanya");
@@ -297,6 +300,7 @@ export default class DatamasterItemMedisService {
             delete item.satuan_penggunaan_code;
             delete item.item_medis_code;
         });
+        // endregion
 
         const tr = await sequelizeInstance.transaction();
 
