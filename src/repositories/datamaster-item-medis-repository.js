@@ -37,6 +37,7 @@ export default class DataMasterItemMedisRepository {
                 deleted_at: {
                     [Op.is]: null,
                 },
+                jenis_item :  {[Op.iLike]: `%${req.jenis_item || ""}%`},
             },
             include: [
                 {
