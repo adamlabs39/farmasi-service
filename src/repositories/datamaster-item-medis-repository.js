@@ -37,7 +37,7 @@ export default class DataMasterItemMedisRepository {
                 deleted_at: {
                     [Op.is]: null,
                 },
-                jenis_item :  {[Op.iLike]: `%${req.jenis_item || ""}%`},
+                // jenis_item : req.jenis_item,
             },
             include: [
                 {
@@ -111,6 +111,10 @@ export default class DataMasterItemMedisRepository {
                 }
             ]
         };
+
+        if (req.jenis_item){
+            option.where.jenis_item = req.jenis_item;
+        }
 
         return Pagination.init(ItemMedisModel, req, option);
     }
