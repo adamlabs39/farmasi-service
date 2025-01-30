@@ -13,8 +13,8 @@ import AlkesValidation from "../validations/alkes-validation.js";
 import AlkesRepository from "../repositories/alkes-repository.js";
 
 export default class AlkesService {
-    static async getByUuid(uuid) {
-        const alkes = await AlkesRepository.getByUuid(uuid);
+    static async getByUuid(req) {
+        const alkes = await AlkesRepository.getByUuid(req.uuid);
         if (alkes === null) {
             throw new BadRequestException("data tidak ditemukan");
         }
@@ -24,7 +24,7 @@ export default class AlkesService {
 
         alkes.dataValues.alkes_items = alkes.alkes_items.map(item => {
             item.dataValues.list_alkes = [{
-                stok_alkes: item.jenis_stok.name,
+                stok_alkes: item.jenis_stok?.name,
                 harga_satuan: item.harga_satuan,
                 total: item.harga_satuan * item.qty
             }];
