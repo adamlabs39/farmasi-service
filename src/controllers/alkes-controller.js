@@ -41,7 +41,6 @@ export default class AlkesController {
         try {
             req.query.uuid = req.params.uuid;
             req.query.user_uuid = req.user_uuid ?? null;
-            console.log(req.query);
             const result = await AlkesService.getByUuid(req.query);
             res.status(200).json(successResponse("data berhasil ditemukan", result));
         } catch (error) {

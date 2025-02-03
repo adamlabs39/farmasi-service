@@ -171,6 +171,29 @@ export default class DataMasterItemMedisRepository {
                         attributes : ['name']
                     },
                     {
+                        model : BentukSediaanModel,
+                        as : "bentuk_sediaan",
+                        required: false,
+                        where: {deleted_at: {[Op.is]: null}},
+                        attributes: ["name"]
+                    },
+                    {
+                        model: ManufactureModel,
+                        as: "manufacture",
+                        required: false,
+                        where: {deleted_at: {[Op.is]: null}},
+                        attributes: [
+                            "code", "name"
+                        ]
+                    },
+                    {
+                        model: SatuanModel,
+                        as: "satuan_dosis",
+                        required: false,
+                        where: {deleted_at: {[Op.is]: null}},
+                        attributes: ["name"]
+                    },
+                    {
                         model: ItemMedisJenisStokModel,
                         as: "jenis_stok",
                         required: false,
