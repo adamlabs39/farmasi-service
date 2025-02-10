@@ -226,7 +226,7 @@ export default class AlkesService {
 
     static async batalSiapDiserahkan(req) {
         ZodValidator.validate(PrescriptionValidation.BATAL_DISERAHKAN, req);
-        req.order_status = 3;
+        req.order_status = 2;
         return await AlkesRepository.editAlkes(req);
     }
 
