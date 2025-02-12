@@ -20,6 +20,17 @@ export default class PrescriptionService {
         if (prescription === null) {
             throw new BadRequestException("data tidak ditemukan");
         }
+
+        if (prescription.order_status === 1){
+            prescription.dataValues.obat.forEach((item) => {
+                item.dataValues.jenis_stok_uuid = ""
+                item.dataValues.racikan.forEach((racikan) => {
+                    racikan.dataValues.jenis_stok_uuid = ""
+                })
+            })
+        }
+
+        console.log(prescription);
         return prescription;
     }
 
