@@ -30,7 +30,19 @@ export default class PrescriptionService {
             })
         }
 
-        console.log(prescription);
+        prescription.dataValues.is_chronic = false;
+        prescription.dataValues.is_compound = false;
+
+        prescription.dataValues.obat.forEach((item) => {
+            if (item.is_chronic) {
+                prescription.dataValues.is_chronic = true;
+            }
+
+            if (item.is_compound) {
+                prescription.dataValues.is_compound = true;
+            }
+        })
+
         return prescription;
     }
 
