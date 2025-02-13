@@ -579,7 +579,8 @@ export default class PrescriptionRepository {
                 'payment_method',
                 'dokter_order',
                 'total_harga',
-                'jenis_pelayanan'
+                'jenis_pelayanan',
+                'no_invoice'
             ],
             include : [
                 {
