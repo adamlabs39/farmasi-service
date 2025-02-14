@@ -4,6 +4,8 @@ import ReportValidation from "../validations/report-validation.js";
 import {setRangeDate} from "../helpers/date-helper.js";
 import PenjualanObatRepository from "../repositories/penjualan-obat-repository.js";
 import BadRequestException from "../errors/bad-request-exception.js";
+import FaskesRepository from "../repositories/faskes-repository.js";
+import Utils from "../helpers/utils.js";
 
 export default class ReportService {
     static async getPendapatan(req){
@@ -30,10 +32,22 @@ export default class ReportService {
             throw new BadRequestException("Invalid pendapatan type");
         }
 
+        const faskes = await FaskesRepository.getFaskes(req.faskes_uuid);
+        const faskesProfile = await FaskesRepository.getFaskesProfile(req.faskes_uuid);
+
         if (result.data){
             result.data.forEach((element) => {
                 element.payment_method = element.payment_method === 1 ? "Tunai" : "Asuransi";
             });
+        }
+
+        const now = new Date();
+
+        result.data = {
+            items : result.data,
+            faskes : faskes.name,
+            message : `DICETAK OLEH: ${req.user}, ${Utils.convertDateInReport()}`,
+            address : faskesProfile?.address?.full_address ?? "",
         }
 
         return result;
@@ -65,6 +79,16 @@ export default class ReportService {
             });
         }
 
+        const faskesProfile = await FaskesRepository.getFaskesProfile(req.faskes_uuid);
+        const faskes = await FaskesRepository.getFaskes(req.faskes_uuid);
+
+        result.data = {
+            items : result.data,
+            faskes : faskes.name,
+            message : `DICETAK OLEH: ${req.user}, ${Utils.convertDateInReport()}`,
+            address : faskesProfile?.address?.full_address ?? "",
+        }
+
         return result;
     }
 
@@ -81,6 +105,16 @@ export default class ReportService {
                 element.lokasi_stok_uuid = undefined;
                 element.lokasi_stok = element.lokasi_stok?.name || "-";
             });
+        }
+
+        const faskesProfile = await FaskesRepository.getFaskesProfile(req.faskes_uuid);
+        const faskes = await FaskesRepository.getFaskes(req.faskes_uuid);
+
+        result.data = {
+            items : result.data,
+            faskes : faskes.name,
+            message : `DICETAK OLEH: ${req.user}, ${Utils.convertDateInReport()}`,
+            address : faskesProfile?.address?.full_address ?? "",
         }
 
         return result;

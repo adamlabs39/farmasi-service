@@ -123,4 +123,26 @@ export default class Utils {
 
         return XLSX.utils.sheet_to_json(sheet, {raw: true, defval: null});
     }
+
+    static convertDateInReport(){
+        const now = new Date(Date.now());
+
+        const bulan = [
+            "JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI",
+            "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"
+        ];
+
+        const tanggal = now.getDate();
+
+        const bulanIndex = now.getMonth();
+
+        const tahun = now.getFullYear();
+
+        const jam = now.getHours();
+
+        const menit = now.getMinutes();
+
+        const menitString = menit < 10 ? '0' + menit : menit;
+
+       return `${tanggal} ${bulan[bulanIndex]} ${tahun} PUKUL ${jam}.${menitString}`;}
 }
