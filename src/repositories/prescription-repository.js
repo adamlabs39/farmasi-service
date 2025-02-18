@@ -57,6 +57,12 @@ export default class PrescriptionRepository {
                                                 as: 'satuan_penggunaan',
                                                 required: false,
                                                 attributes: ['name']
+                                            },
+                                            {
+                                                model: SatuanModel,
+                                                as: 'satuan_dosis',
+                                                required: false,
+                                                attributes: ['name']
                                             }
                                         ]
                                     },
