@@ -58,12 +58,6 @@ export default class PrescriptionRepository {
                                                 required: false,
                                                 attributes: ['name']
                                             },
-                                            {
-                                                model: SatuanModel,
-                                                as: 'satuan_dosis',
-                                                required: false,
-                                                attributes: ['name']
-                                            }
                                         ]
                                     },
                                 ]
@@ -103,6 +97,12 @@ export default class PrescriptionRepository {
                             {
                                 model : JenisStokModel,
                                 as : 'jenis_stok',
+                                required: false,
+                                attributes: ["name"]
+                            },
+                            {
+                                model : SatuanModel,
+                                as : 'satuan_dosis',
                                 required: false,
                                 attributes: ["name"]
                             }
