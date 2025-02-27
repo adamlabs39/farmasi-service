@@ -8,6 +8,9 @@ import StockMedisRepository from "../repositories/stock-medis-repository.js";
 import KonfigurasiHargaRepository from "../repositories/konfigurasi-harga-repository.js";
 import DataMasterItemMedisRepository from "../repositories/datamaster-item-medis-repository.js";
 import BadRequestException from "../errors/bad-request-exception.js";
+import axiosInstance from "../configurations/axios-instance.js";
+import {INVENTORY_URL, REKAM_MEDIS_URL} from "../helpers/constants.js";
+import InternalServerException from "../errors/internal-server-exception.js";
 
 export default class PenjualanObatService {
 
@@ -79,6 +82,48 @@ export default class PenjualanObatService {
                 total_harga: req.total_harga
             }, transaction);
 
+            // region UPLOAD TO INVENTORY
+            const mutasiItems = [];
+
+            for (const item of req.items) {
+                for (const catatan of item.catatan_stok) {
+                    mutasiItems.push({
+                        item_uuid: item.item_medis_uuid,
+                        exp_date: catatan.exp_date,
+                        stok_awal: catatan.stock_before,
+                        stok_mutasi: catatan.stock_before - catatan.quantity,
+                        jenis_stok_uuid: item.jenis_stok_uuid,
+                        lokasi_stok_uuid: req.lokasi_stok_uuid,
+                        type: "defisit"
+                    });
+                }
+            }
+
+            try {
+                await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
+                    sumber_mutasi: "farmasi",
+                    with_check_stock: true,
+                    code: req.no_transaksi,
+                    keterangan: {
+                        description: "Penjualan Obat (OTC)",
+                    },
+                    items: mutasiItems,
+                }, {
+                    headers: {
+                        Authorization: req.token
+                    }
+                });
+            } catch (error) {
+                if (error.response) {
+                    throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
+                } else if (error.request) {
+                    throw new InternalServerException("Tidak ada respons dari server inventory");
+                } else {
+                    throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
+                }
+            }
+            // endregion
+
             await transaction.commit();
         } catch (error) {
             await transaction.rollback();
@@ -96,11 +141,48 @@ export default class PenjualanObatService {
 
             // bring back the stock
             const items = await PenjualanObatRepository.getAllCatatanStok(req);
+            const mutasiItems = [];
+
             for (const item of items) {
                 if (item.catatan_stok) {
                     for (const catatan of item.catatan_stok) {
-                        await StockMedisRepository.addQuantity(catatan, transaction);
+                        const stockMedis = await StockMedisRepository.addQuantity(catatan, transaction);
+
+                        mutasiItems.push({
+                            item_uuid: item.item_medis_uuid,
+                            exp_date: stockMedis.exp_date,
+                            stok_awal: stockMedis.sisa_stok,
+                            stok_mutasi: stockMedis.sisa_stok + catatan.quantity,
+                            jenis_stok_uuid: item.jenis_stok_uuid,
+                            lokasi_stok_uuid: stockMedis.lokasi_stok_uuid,
+                            type: "surplus"
+                        })
                     }
+                }
+            }
+
+
+            try {
+                await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
+                    sumber_mutasi: "farmasi",
+                    with_check_stock: true,
+                    code: req.no_transaksi,
+                    keterangan: {
+                        description: "Penjualan Obat (OTC)",
+                    },
+                    items: mutasiItems,
+                }, {
+                    headers: {
+                        Authorization: req.token
+                    }
+                });
+            } catch (error) {
+                if (error.response) {
+                    throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
+                } else if (error.request) {
+                    throw new InternalServerException("Tidak ada respons dari server inventory");
+                } else {
+                    throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
                 }
             }
 

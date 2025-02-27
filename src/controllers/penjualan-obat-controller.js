@@ -5,6 +5,7 @@ export default class PenjualanObatController {
     static async create(req, res, nextFunction) {
         try {
             req.body.faskes_uuid = req.author.faskesUuid;
+            req.body.token =req.get("Authorization");
 
             const result = await PenjualanObatService.create(req.body);
 

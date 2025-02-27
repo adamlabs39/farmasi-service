@@ -98,6 +98,7 @@ export default class StockMedisRepository {
                     stock_medis_uuid: stock.uuid,
                     quantity: remainingQuantity,
                     expired_date : stock.exp_date,
+                    stock_before : stock.sisa_stok,
                 });
 
                 remainingQuantity = 0;
@@ -115,6 +116,7 @@ export default class StockMedisRepository {
                     stock_medis_uuid: stock.uuid,
                     quantity:  stock.sisa_stok,
                     expired_date : stock.exp_date,
+                    stock_before : stock.sisa_stok,
                 });
 
                 remainingQuantity = Math.abs(newStock);
@@ -125,6 +127,13 @@ export default class StockMedisRepository {
     }
 
     static async addQuantity(req, transaction){
+        const stock = await StockMedisModel.findOne({
+            where: {
+                uuid: req.stock_medis_uuid
+            },
+            transaction
+        });
+
         await StockMedisModel.update({
             sisa_stok: sequelizeInstance.literal(`sisa_stok + ${req.quantity}`)
         }, {
@@ -133,5 +142,7 @@ export default class StockMedisRepository {
             },
             transaction
         });
+
+        return stock;
     }
 }

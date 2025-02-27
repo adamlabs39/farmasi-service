@@ -119,7 +119,6 @@ export default class PrescriptionService {
 
             // insert into rekam medis
             try {
-                console.log(req.token);
                 await axiosInstance.post(`${REKAM_MEDIS_URL}/rekam-medis/order-obat`, {
                     session_uuid: req.session_uuid,
                     order_obat_uuid: prescription_uuid
@@ -134,8 +133,6 @@ export default class PrescriptionService {
                 } else if (error.request) {
                     throw new InternalServerException("Tidak ada respons dari server rekam medis");
                 } else {
-                    // TODO : REMOVE THIS LOG
-                    console.log(error);
                     throw new InternalServerException("Kesalahan saat menyiapkan permintaan rekam medis");
                 }
             }
