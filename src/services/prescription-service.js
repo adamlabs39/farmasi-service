@@ -7,7 +7,7 @@ import DataMasterLokasiStokRepository from "../repositories/datamaster-lokasi-st
 import InternalServerException from "../errors/internal-server-exception.js";
 import Utils from "../helpers/utils.js";
 import axiosInstance from "../configurations/axios-instance.js";
-import {REKAM_MEDIS_URL} from "../helpers/constants.js";
+import {INVENTORY_URL, REKAM_MEDIS_URL} from "../helpers/constants.js";
 import {setRangeDate, toEpochDate} from "../helpers/date-helper.js";
 import KonfigurasiHargaService from "./konfigurasi-harga-service.js";
 import StockMedisRepository from "../repositories/stock-medis-repository.js";
@@ -300,6 +300,7 @@ export default class PrescriptionService {
         // get all prescription item
         const prescription = await PrescriptionRepository.getByUuid(req.uuid);
 
+        const mutasiItems = [];
 
         try {
             req.total_harga = await this.setPriceInPrescription(prescription, konfigurasiHarga, transaction);
@@ -318,6 +319,16 @@ export default class PrescriptionService {
                             name: racikan.item_medis?.name,
                             lokasi_stok_uuid: prescription.lokasi_stok_uuid
                         }, transaction)
+
+                        mutasiItems.push({
+                            item_uuid: racikan.item_medis_uuid,
+                            exp_date: usedStock.exp_date,
+                            stok_awal: usedStock.stock_before,
+                            stok_mutasi: usedStock.stock_before - usedStock.quantity,
+                            jenis_stok_uuid: racikan.jenis_stok_uuid,
+                            lokasi_stok_uuid: prescription.lokasi_stok_uuid,
+                            type: "defisit"
+                        });
                     }
                 } else {
                     usedStock = await StockMedisRepository.reduceQuantity({
@@ -328,6 +339,16 @@ export default class PrescriptionService {
                         metode_pemotongan_stok: konfigurasiHarga.metode_pemotongan_stok,
                         name: obat.item_medis?.name
                     }, transaction)
+
+                    mutasiItems.push({
+                        item_uuid: obat.item_medis_uuid,
+                        exp_date: usedStock.exp_date,
+                        stok_awal: usedStock.stock_before,
+                        stok_mutasi: usedStock.stock_before - usedStock.quantity,
+                        jenis_stok_uuid: obat.jenis_stok_uuid,
+                        lokasi_stok_uuid: prescription.lokasi_stok_uuid,
+                        type: "defisit"
+                    });
                 }
 
                 const prescriptionItem = {
@@ -344,6 +365,32 @@ export default class PrescriptionService {
             req.waktu_verifikasi = toEpochDate(new Date());
             req.no_invoice = Utils.generate4Code("INV");
             await PrescriptionRepository.editPrescription(req, transaction);
+
+            // region UPLOAD TO INVENTORY
+            try {
+                await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
+                    sumber_mutasi: "farmasi",
+                    with_check_stock: true,
+                    code: req.no_invoice,
+                    keterangan: {
+                        description: "Resep Dokter",
+                    },
+                    items: mutasiItems,
+                }, {
+                    headers: {
+                        Authorization: req.token
+                    }
+                });
+            } catch (error) {
+                if (error.response) {
+                    throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
+                } else if (error.request) {
+                    throw new InternalServerException("Tidak ada respons dari server inventory");
+                } else {
+                    throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
+                }
+            }
+            // endregion
 
             await transaction.commit();
         } catch (e) {

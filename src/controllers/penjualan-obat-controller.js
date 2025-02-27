@@ -19,6 +19,8 @@ export default class PenjualanObatController {
         try {
             const { uuid } = req.params;
             req.body.uuid = uuid;
+            req.body.token =req.get("Authorization");
+
             const result = await PenjualanObatService.batalOtc(req.body);
 
             res.status(200).json(successResponse("data berhasil dibatalkan", result));

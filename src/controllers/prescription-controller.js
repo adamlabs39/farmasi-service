@@ -111,6 +111,8 @@ export default class PrescriptionController {
         try {
             req.body.petugas_verifikasi = req.author.username;
             req.body.faskes_uuid = req.author.faskesUuid;
+            req.body.token = req.get("Authorization");
+
             await PrescriptionService.updateVerifikasi(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
