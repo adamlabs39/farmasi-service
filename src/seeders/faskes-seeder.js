@@ -7,7 +7,10 @@ export default class FaskesSeeder {
                 "uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                 "name": "RSUD Dr. Fauzy & Fauziah",
                 "code": "ABCDD",
-                "status": true
+                "status": true,
+                "organization_ihs_number": "1234567890",
+                "client_id": "1234567890",
+                "client_secret": "123hfgy4g7gr927fgbfygyg",
             }
         ];
 

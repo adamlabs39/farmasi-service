@@ -13,7 +13,7 @@ export default class RoleSeeder {
                 code: "ADM1",
                 status: true,
             },
-            transaction: transaction
+            // transaction: transaction
         });
     }
 }

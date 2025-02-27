@@ -24,6 +24,27 @@ export default class HargaItemSeeder {
                 "harga_terakhir" : 5780,
                 "harga_avg" : 6000,
             },
+            {
+                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "alkes1-365d-731c-8b16-3a4565c9475q",
+                "item_medis_jenis_stok_uuid" : "alkes-365d-731c-8b16-3a4565c9475e",
+                "harga_terakhir" : 5780,
+                "harga_avg" : 6000,
+            },
+            {
+                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "alkes-365d-731c-8b16-3a4565c9475z",
+                "item_medis_jenis_stok_uuid" : "alkes1-365d-731c-8b16-3a4565c9475e",
+                "harga_terakhir" : 5780,
+                "harga_avg" : 6000,
+            },
+            {
+                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
+                "uuid": "hargaparadential-365d-731c-8b16-3a4565c9475z",
+                "item_medis_jenis_stok_uuid" : "paradential-365d-731c-8b16-3a4565c9475e",
+                "harga_terakhir" : 5780,
+                "harga_avg" : 6000,
+            },
         ];
 
         await HargaItemModel.bulkCreate(item, { transaction });

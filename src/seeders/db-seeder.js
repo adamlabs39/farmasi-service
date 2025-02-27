@@ -30,53 +30,59 @@ import PenjualanObatSeeder from "./penjualan-obat-seeder.js";
 import RiwayatSeeder from "./riwayat-seeder.js";
 import ReturSeeder from "./retur-seeder.js";
 import ConversionSeeder from "./conversion-seeder.js";
+import RawatJalanSeeder from "./rawat-jalan-seeder.js";
 
 export const dbSeeder = async () => {
-    const transaction = await sequelizeInstance.transaction();
+    // const transaction = await sequelizeInstance.transaction();
     try {
-        //user things
-        // await RoleSeeder.seed(transaction);
-        // await FaskesSeeder.seed(transaction);
-        // await PegawaiSeeder.seed(transaction);
-        // await PractitionerSeeder.seed(transaction);
-        // await UserSeeder.seed(transaction);
-        // await PatientSeeder.seed(transaction);
+        await  sequelizeInstance.transaction(async transaction => {
+            //user things
+            // await RoleSeeder.seed(transaction);
+            // await FaskesSeeder.seed(transaction);
+            // await PegawaiSeeder.seed(transaction);
+            // await PractitionerSeeder.seed(transaction);
+            // await UserSeeder.seed(transaction);
+            // await PatientSeeder.seed(transaction);
 
-        // datamaster things
-        await KonfigurasiHargaSeeder.seed(transaction);
-        await AturanPakaiSeeder.seed(transaction);
-        await CaraPakaiSeeder.seed(transaction);
-        await LokasiStokSeeder.seed(transaction);
-        await ItemMedisSeeder.seed(transaction);
-        await SatuanSeeder.seed(transaction);
-        await BentukSediaanSeeder.seed(transaction);
-        await KategoriObatSeeder.seed(transaction);
-        await ManufacureSeeder.seed(transaction);
-        await JenisStokSeeder.seed(transaction);
-        await ItemMedisJenisStokSeeder.seed(transaction);
-        await ConversionSeeder.seed(transaction);
+            // // datamaster things
+            await KonfigurasiHargaSeeder.seed(transaction);
+            // await AturanPakaiSeeder.seed(transaction);
+            // await CaraPakaiSeeder.seed(transaction);
+            // await LokasiStokSeeder.seed(transaction);
+            // await ItemMedisSeeder.seed(transaction);
+            // await SatuanSeeder.seed(transaction);
+            // await BentukSediaanSeeder.seed(transaction);
+            // await KategoriObatSeeder.seed(transaction);
+            // await ManufacureSeeder.seed(transaction);
+            await JenisStokSeeder.seed(transaction);
+            await ItemMedisJenisStokSeeder.seed(transaction);
+            // await ConversionSeeder.seed(transaction);
+            //
+            // // // prescription things
+            // await LokasiSeeder.seed(transaction);
+            await PrescriptionSeeder.seed(transaction);
+            await PrescriptionItemSeeder.seed(transaction);
+            await PrescriptionItemRacikanSeeder.seed(transaction);
+            // await BentukRacikanSeeder.seed(transaction);
+            await StokMedisSeeder.seed(transaction);
+            await HargaItemSeeder.seed(transaction);
+            await RiwayatSeeder.seed(transaction);
+            // await ReturSeeder.seed(transaction);
+            //
+            // // // PENJUALAN OBAT
+            await PenjualanObatSeeder.seed(transaction);
 
-        // // prescription things
-        await LokasiSeeder.seed(transaction);
-        await PrescriptionSeeder.seed(transaction);
-        await PrescriptionItemSeeder.seed(transaction);
-        await PrescriptionItemRacikanSeeder.seed(transaction);
-        await BentukRacikanSeeder.seed(transaction);
-        await StokMedisSeeder.seed(transaction);
-        await HargaItemSeeder.seed(transaction);
-        await RiwayatSeeder.seed(transaction);
-        await ReturSeeder.seed(transaction);
+            // FARMASI RUANGAN
+            await OrderAlkesSeeder.seed(transaction);
+            await OrderAlkesItemSeeder.seed(transaction);
 
-        // // PENJUALAN OBAT
-        await PenjualanObatSeeder.seed(transaction);
+            await RawatJalanSeeder.seed(transaction);
+        })
 
-        // FARMASI RUANGAN
-        await OrderAlkesSeeder.seed(transaction);
-        await OrderAlkesItemSeeder.seed(transaction);
 
-        await transaction.commit();
+        // await transaction.commit();
     } catch (error) {
-        await transaction.rollback();
+        // await transaction.rollback();
         throw error;
     }
 };
