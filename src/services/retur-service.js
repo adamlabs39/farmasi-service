@@ -12,6 +12,8 @@ import StockMedisRepository from "../repositories/stock-medis-repository.js";
 import moment from "moment";
 import Utils from "../helpers/utils.js";
 import {setRangeDate} from "../helpers/date-helper.js";
+import axiosInstance from "../configurations/axios-instance.js";
+import {INVENTORY_URL} from "../helpers/constants.js";
 
 export default class ReturService {
     static async create(req) {
@@ -55,6 +57,8 @@ export default class ReturService {
             req.lokasi_stok_uuid = alkes.lokasi_stok_uuid;
         }
 
+        const mutasiItems = [];
+
         const transaction = await sequelizeInstance.transaction();
 
         try {
@@ -83,10 +87,20 @@ export default class ReturService {
                     }
 
                     for (const stock of prescriptionItem.stok_medis_uuides) {
-                        await StockMedisRepository.addQuantity({
+                        const stockRetured = await StockMedisRepository.addQuantity({
                             stock_medis_uuid: stock.stock_medis_uuid,
                             quantity: stock.quantity,
                         }, transaction)
+
+                        mutasiItems.push({
+                            item_uuid: prescriptionItem.item_medis_uuid,
+                            exp_date: stock.exp_date,
+                            stok_awal: stockRetured.dataValues.sisa_stok,
+                            stok_mutasi: stockRetured.dataValues.sisa_stok + stock.quantity,
+                            jenis_stok_uuid: prescriptionItem.jenis_stok_uuid,
+                            lokasi_stok_uuid: stockRetured.dataValues.lokasi_stok_uuid,
+                            type: "surplus"
+                        });
                     }
                 } else if (req.jenis_retur === "alkes") {
                     const alkesItem = await OrderAlkesRepository.getAlkesItem(item.order_alkes_item_uuid);
@@ -97,10 +111,20 @@ export default class ReturService {
                     }
 
                     for (const stock of alkesItem.stok_medis_uuides) {
-                        await StockMedisRepository.addQuantity({
+                        const stockRetured = await StockMedisRepository.addQuantity({
                             stock_medis_uuid: stock.stock_medis_uuid,
                             quantity: stock.quantity,
                         }, transaction)
+
+                        mutasiItems.push({
+                            item_uuid: alkesItem.item_medis_uuid,
+                            exp_date: stock.exp_date,
+                            stok_awal: stockRetured.dataValues.sisa_stok,
+                            stok_mutasi: stockRetured.dataValues.sisa_stok + stock.quantity,
+                            jenis_stok_uuid: alkesItem.jenis_stok_uuid,
+                            lokasi_stok_uuid: stockRetured.dataValues.lokasi_stok_uuid,
+                            type: "surplus"
+                        });
                     }
                 }
             }
@@ -127,6 +151,32 @@ export default class ReturService {
             req.uuid = retur_uuid;
             req.total = total;
             const retur = await ReturRepository.create(req, transaction);
+
+            // region UPLOAD TO INVENTORY
+            try {
+                await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
+                    sumber_mutasi: "farmasi",
+                    with_check_stock: true,
+                    code: req.no_order_alkes ? req.no_order_alkes : req.no_resep,
+                    keterangan: {
+                        description: `Retur ${req.jenis_retur === "obat" ? "Obat" : "Farmasi Ruangan"}`,
+                    },
+                    items: mutasiItems,
+                }, {
+                    headers: {
+                        Authorization: req.token
+                    }
+                });
+            } catch (error) {
+                if (error.response) {
+                    throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
+                } else if (error.request) {
+                    throw new InternalServerException("Tidak ada respons dari server inventory");
+                } else {
+                    throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
+                }
+            }
+            // endregion
 
             await transaction.commit();
             return retur;

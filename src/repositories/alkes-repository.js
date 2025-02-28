@@ -294,7 +294,7 @@ export default class AlkesRepository {
             where : {
                 uuid : uuid,
             },
-            attributes : ["qty", "stok_medis_uuides"],
+            attributes : ["qty", "stok_medis_uuides", "item_medis_uuid", "jenis_stok_uuid"],
         })
     }
 
