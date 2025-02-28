@@ -371,7 +371,7 @@ export default class PrescriptionService {
                 await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
                     sumber_mutasi: "farmasi",
                     with_check_stock: true,
-                    code: req.no_invoice,
+                    code: prescription.dataValues.no_resep,
                     keterangan: {
                         description: "Resep Dokter",
                     },

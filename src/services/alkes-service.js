@@ -11,6 +11,8 @@ import StockMedisRepository from "../repositories/stock-medis-repository.js";
 import DataMasterItemMedisRepository from "../repositories/datamaster-item-medis-repository.js";
 import AlkesValidation from "../validations/alkes-validation.js";
 import AlkesRepository from "../repositories/alkes-repository.js";
+import axiosInstance from "../configurations/axios-instance.js";
+import {INVENTORY_URL} from "../helpers/constants.js";
 
 export default class AlkesService {
     static async getByUuid(req) {
@@ -181,6 +183,8 @@ export default class AlkesService {
         // get all prescription item
         const alkes = await AlkesRepository.getByUuid(req.uuid);
 
+        const mutasiItems = [];
+
         try {
             req.harga_total = await this.setPriceInOrderAlkes(alkes, konfigurasiHarga, transaction);
 
@@ -200,6 +204,18 @@ export default class AlkesService {
                     stok_medis_uuides: usedStock
                 }
 
+                for (const stock of usedStock) {
+                    mutasiItems.push({
+                        item_uuid: alkesIitem.item_medis_uuid,
+                        exp_date: stock.exp_date,
+                        stok_awal: stock.stock_before,
+                        stok_mutasi: stock.stock_before - stock.quantity,
+                        jenis_stok_uuid: alkesIitem.jenis_stok_uuid,
+                        lokasi_stok_uuid: alkes.lokasi_stok_uuid,
+                        type: "defisit"
+                    });
+                }
+
                 await AlkesRepository.editAlkesItem(item, transaction);
             }
 
@@ -207,6 +223,32 @@ export default class AlkesService {
             req.order_status = 2;
             req.waktu_verifikasi = toEpochDate(new Date());
             await AlkesRepository.editAlkes(req, transaction);
+
+            // region UPLOAD TO INVENTORY
+            try {
+                await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
+                    sumber_mutasi: "farmasi",
+                    with_check_stock: true,
+                    code: alkes.dataValues.no_order_alkes,
+                    keterangan: {
+                        description: "Order Farmasi Ruangan",
+                    },
+                    items: mutasiItems,
+                }, {
+                    headers: {
+                        Authorization: req.token
+                    }
+                });
+            } catch (error) {
+                if (error.response) {
+                    throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
+                } else if (error.request) {
+                    throw new InternalServerException("Tidak ada respons dari server inventory");
+                } else {
+                    throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
+                }
+            }
+            // endregion
 
             await transaction.commit();
         } catch (e) {

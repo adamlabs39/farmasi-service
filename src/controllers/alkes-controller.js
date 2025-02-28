@@ -93,6 +93,8 @@ export default class AlkesController {
         try {
             req.body.petugas_verifikasi = req.author.username;
             req.body.faskes_uuid = req.author.faskesUuid;
+            req.body.token = req.get("Authorization");
+
             await AlkesService.updateVerifikasi(req.body);
             res.status(200).json(successResponse("data berhasil diupdate"));
         } catch (error) {
