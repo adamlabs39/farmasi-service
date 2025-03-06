@@ -96,12 +96,9 @@ export default class PenjualanObatService {
                         lokasi_stok_uuid: req.lokasi_stok_uuid,
                         type: "defisit"
                     });
-                console.log(catatan);
                 }
 
             }
-
-            console.log(mutasiItems);
 
             try {
                 await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
