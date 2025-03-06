@@ -207,7 +207,7 @@ export default class AlkesService {
                 for (const stock of usedStock) {
                     mutasiItems.push({
                         item_uuid: alkesIitem.item_medis_uuid,
-                        exp_date: stock.exp_date,
+                        exp_date: stock.expired_date,
                         stok_awal: stock.stock_before,
                         stok_mutasi: stock.stock_before - stock.quantity,
                         jenis_stok_uuid: alkesIitem.jenis_stok_uuid,
@@ -227,7 +227,7 @@ export default class AlkesService {
             // region UPLOAD TO INVENTORY
             try {
                 await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
-                    sumber_mutasi: "farmasi",
+                    sumber_mutasi: "pelayanan",
                     with_check_stock: true,
                     code: alkes.dataValues.no_order_alkes,
                     keterangan: {

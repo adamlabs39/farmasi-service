@@ -89,19 +89,23 @@ export default class PenjualanObatService {
                 for (const catatan of item.catatan_stok) {
                     mutasiItems.push({
                         item_uuid: item.item_medis_uuid,
-                        exp_date: catatan.exp_date,
+                        exp_date: catatan.expired_date,
                         stok_awal: catatan.stock_before,
                         stok_mutasi: catatan.stock_before - catatan.quantity,
                         jenis_stok_uuid: item.jenis_stok_uuid,
                         lokasi_stok_uuid: req.lokasi_stok_uuid,
                         type: "defisit"
                     });
+                console.log(catatan);
                 }
+
             }
+
+            console.log(mutasiItems);
 
             try {
                 await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
-                    sumber_mutasi: "farmasi",
+                    sumber_mutasi: "pelayanan",
                     with_check_stock: true,
                     code: req.no_transaksi,
                     keterangan: {
@@ -164,7 +168,7 @@ export default class PenjualanObatService {
 
             try {
                 await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
-                    sumber_mutasi: "farmasi",
+                    sumber_mutasi: "pelayanan",
                     with_check_stock: true,
                     code: req.no_transaksi,
                     keterangan: {

@@ -95,7 +95,7 @@ export default class ReturService {
 
                         mutasiItems.push({
                             item_uuid: prescriptionItem.item_medis_uuid,
-                            exp_date: stock.exp_date,
+                            exp_date: stock.expired_date,
                             stok_awal: stockRetured.dataValues.sisa_stok,
                             stok_mutasi: stockRetured.dataValues.sisa_stok + stock.quantity,
                             jenis_stok_uuid: prescriptionItem.jenis_stok_uuid,
@@ -119,7 +119,7 @@ export default class ReturService {
 
                         mutasiItems.push({
                             item_uuid: alkesItem.item_medis_uuid,
-                            exp_date: stock.exp_date,
+                            exp_date: stock.expired_date,
                             stok_awal: stockRetured.dataValues.sisa_stok,
                             stok_mutasi: stockRetured.dataValues.sisa_stok + stock.quantity,
                             jenis_stok_uuid: alkesItem.jenis_stok_uuid,
@@ -156,7 +156,7 @@ export default class ReturService {
             // region UPLOAD TO INVENTORY
             try {
                 await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
-                    sumber_mutasi: "farmasi",
+                    sumber_mutasi: "pelayanan",
                     with_check_stock: true,
                     code: req.no_order_alkes ? req.no_order_alkes : req.no_resep,
                     keterangan: {

@@ -322,7 +322,7 @@ export default class PrescriptionService {
 
                         mutasiItems.push({
                             item_uuid: racikan.item_medis_uuid,
-                            exp_date: usedStock.exp_date,
+                            exp_date: usedStock.expired_date,
                             stok_awal: usedStock.stock_before,
                             stok_mutasi: usedStock.stock_before - usedStock.quantity,
                             jenis_stok_uuid: racikan.jenis_stok_uuid,
@@ -342,7 +342,7 @@ export default class PrescriptionService {
 
                     mutasiItems.push({
                         item_uuid: obat.item_medis_uuid,
-                        exp_date: usedStock.exp_date,
+                        exp_date: usedStock.expired_date,
                         stok_awal: usedStock.stock_before,
                         stok_mutasi: usedStock.stock_before - usedStock.quantity,
                         jenis_stok_uuid: obat.jenis_stok_uuid,
@@ -369,7 +369,7 @@ export default class PrescriptionService {
             // region UPLOAD TO INVENTORY
             try {
                 await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
-                    sumber_mutasi: "farmasi",
+                    sumber_mutasi: "pelayanan",
                     with_check_stock: true,
                     code: prescription.dataValues.no_resep,
                     keterangan: {
