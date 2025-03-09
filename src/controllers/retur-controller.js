@@ -7,6 +7,8 @@ export default class ReturController {
             req.body.faskes_uuid = req.author.faskesUuid;
             req.body.petugas_retur = req.author.username;
 
+            req.body.token = req.get("Authorization");
+
             await ReturService.create(req.body);
 
             res.status(200).json(successResponse("data berhasil diretur"));

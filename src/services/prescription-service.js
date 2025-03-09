@@ -320,15 +320,17 @@ export default class PrescriptionService {
                             lokasi_stok_uuid: prescription.lokasi_stok_uuid
                         }, transaction)
 
-                        mutasiItems.push({
-                            item_uuid: racikan.item_medis_uuid,
-                            exp_date: usedStock.expired_date,
-                            stok_awal: usedStock.stock_before,
-                            stok_mutasi: usedStock.stock_before - usedStock.quantity,
-                            jenis_stok_uuid: racikan.jenis_stok_uuid,
-                            lokasi_stok_uuid: prescription.lokasi_stok_uuid,
-                            type: "defisit"
-                        });
+                        for (const stock of usedStock) {
+                            mutasiItems.push({
+                                item_uuid: racikan.item_medis_uuid,
+                                exp_date: stock.expired_date,
+                                stok_awal: stock.stock_before,
+                                stok_mutasi: stock.stock_before - stock.quantity,
+                                jenis_stok_uuid: racikan.item_medis_uuid,
+                                lokasi_stok_uuid: prescription.lokasi_stok_uuid,
+                                type: "defisit"
+                            });
+                        }
                     }
                 } else {
                     usedStock = await StockMedisRepository.reduceQuantity({
@@ -340,15 +342,17 @@ export default class PrescriptionService {
                         name: obat.item_medis?.name
                     }, transaction)
 
-                    mutasiItems.push({
-                        item_uuid: obat.item_medis_uuid,
-                        exp_date: usedStock.expired_date,
-                        stok_awal: usedStock.stock_before,
-                        stok_mutasi: usedStock.stock_before - usedStock.quantity,
-                        jenis_stok_uuid: obat.jenis_stok_uuid,
-                        lokasi_stok_uuid: prescription.lokasi_stok_uuid,
-                        type: "defisit"
-                    });
+                    for (const stock of usedStock) {
+                        mutasiItems.push({
+                            item_uuid: obat.item_medis_uuid,
+                            exp_date: stock.expired_date,
+                            stok_awal: stock.stock_before,
+                            stok_mutasi: stock.stock_before - stock.quantity,
+                            jenis_stok_uuid: obat.jenis_stok_uuid,
+                            lokasi_stok_uuid: prescription.lokasi_stok_uuid,
+                            type: "defisit"
+                        });
+                    }
                 }
 
                 const prescriptionItem = {
@@ -368,6 +372,8 @@ export default class PrescriptionService {
 
             // region UPLOAD TO INVENTORY
             try {
+
+                console.log(mutasiItems);
                 await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
                     sumber_mutasi: "pelayanan",
                     with_check_stock: true,
