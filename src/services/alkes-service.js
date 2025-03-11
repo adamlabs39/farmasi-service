@@ -163,6 +163,10 @@ export default class AlkesService {
             data.push(resep.dataValues);
         }
 
+        if (data.length <= 0) {
+            throw new BadRequestException("data tidak ditemukan");
+        }
+
         return data;
     }
 
