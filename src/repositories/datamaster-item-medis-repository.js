@@ -12,6 +12,7 @@ import {
 } from "@adameds/model-sdk/farmasi";
 import moment from "moment";
 import {StockMedisModel} from "@adameds/model-sdk/inventory";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class DataMasterItemMedisRepository {
     static async create(req, transaction) {
@@ -140,7 +141,7 @@ export default class DataMasterItemMedisRepository {
                 tr
             });
 
-            return await ItemMedisModel.update({
+            const [affectedRow] = await ItemMedisModel.update({
                 deleted_at: toEpochDate(new Date())
             }, {
                 where: {
@@ -148,6 +149,12 @@ export default class DataMasterItemMedisRepository {
                 },
                 tr
             });
+
+            if (affectedRow === 0) {
+                throw new BadRequestException("Data tidak ditemukan");
+            }
+
+            return affectedRow;
         })
     }
 

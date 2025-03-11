@@ -1,5 +1,6 @@
 import {toEpochDate} from "../helpers/date-helper.js";
 import {ConversionModel} from "@adameds/model-sdk/farmasi";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class ConversionRepository {
     static async bulkCreate(req, transaction) {
@@ -29,7 +30,7 @@ export default class ConversionRepository {
     }
 
     static async delete(req, transaction) {
-        return await ConversionModel.update({
+        const [affectedRow] = await ConversionModel.update({
             deleted_at : toEpochDate(new Date())
         },{
             where: {
@@ -37,5 +38,11 @@ export default class ConversionRepository {
             },
             transaction
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 }

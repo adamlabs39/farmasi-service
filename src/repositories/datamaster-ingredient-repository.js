@@ -2,6 +2,7 @@ import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import {IngredientModel} from "@adameds/model-sdk/farmasi";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class DataMasterIngredientRepository {
     static async create(req) {
@@ -38,13 +39,19 @@ export default class DataMasterIngredientRepository {
     }
 
     static async delete(req) {
-        return await IngredientModel.update({
+        const [affectedRow] = await IngredientModel.update({
             deleted_at : toEpochDate(new Date())
         },{
             where: {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async bulkCreate(req) {

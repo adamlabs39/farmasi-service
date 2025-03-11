@@ -3,6 +3,7 @@ import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import {KabupatenModel, KecamatanModel, KelurahanModel, ProvinceModel} from "@adameds/model-sdk/datamaster";
 import {ManufactureModel} from "@adameds/model-sdk/farmasi";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class DataMasterManufactureRepository {
     static async create(req) {
@@ -66,13 +67,19 @@ export default class DataMasterManufactureRepository {
     }
 
     static async delete(req) {
-        return await ManufactureModel.update({
+        const [affectedRow] = await ManufactureModel.update({
             deleted_at : toEpochDate(new Date())
         },{
             where: {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async getUuidesByCodes(codes, faskesUuid) {

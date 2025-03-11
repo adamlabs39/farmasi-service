@@ -2,6 +2,7 @@ import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import {CaraiPakaiModel} from "@adameds/model-sdk/farmasi";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class DataMasterCaraPakaiRepository {
     static async create(req) {
@@ -40,13 +41,19 @@ export default class DataMasterCaraPakaiRepository {
     }
 
     static async delete(req) {
-        return await CaraiPakaiModel.update({
+        const [affectedRow] = await CaraiPakaiModel.update({
             deleted_at : toEpochDate(new Date())
         },{
             where: {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async getAllWithoutPagination(faskes_uuid) {

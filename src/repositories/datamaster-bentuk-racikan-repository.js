@@ -2,6 +2,7 @@ import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import {BentukRacikanModel} from "@adameds/model-sdk/farmasi";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class DataMasterBentukRacikanRepository {
     static async create(req) {
@@ -31,13 +32,19 @@ export default class DataMasterBentukRacikanRepository {
     }
 
     static async delete(req) {
-        return await BentukRacikanModel.update({
+        const [affectedRow] = await BentukRacikanModel.update({
             deleted_at : toEpochDate(new Date())
         },{
             where: {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async getAllWithoutPagination(faskes_uuid) {

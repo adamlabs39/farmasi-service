@@ -2,6 +2,7 @@ import Pagination from "../helpers/pagination.js";
 import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import {KategoriObatModel} from "@adameds/model-sdk/farmasi";
+import BadRequestException from "../errors/bad-request-exception.js";
 
 export default class DataMasterKategoriObatRepository {
     static async create(req) {
@@ -40,13 +41,19 @@ export default class DataMasterKategoriObatRepository {
     }
 
     static async delete(req) {
-        return await KategoriObatModel.update({
+        const [affectedRow] = await KategoriObatModel.update({
             deleted_at : toEpochDate(new Date())
         },{
             where: {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async getUuidesByCodes(codes, faskesUuid){
