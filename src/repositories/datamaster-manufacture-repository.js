@@ -59,11 +59,17 @@ export default class DataMasterManufactureRepository {
     }
 
     static async update(req) {
-        return await ManufactureModel.update(req, {
+        const [affectedRow] =  await ManufactureModel.update(req, {
             where: {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {

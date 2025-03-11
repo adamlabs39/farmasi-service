@@ -29,7 +29,7 @@ export default class DatamasterBentukSediaanRepository {
     }
 
     static async update(req) {
-        return await BentukSediaanModel.update({
+        const [affectedRow] =  await BentukSediaanModel.update({
             code: req.code,
             name: req.name,
             status: req.status,
@@ -38,6 +38,12 @@ export default class DatamasterBentukSediaanRepository {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {

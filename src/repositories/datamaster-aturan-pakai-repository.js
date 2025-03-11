@@ -24,11 +24,17 @@ export default class DataMasterAturanPakaiRepository {
     }
 
     static async update(req) {
-        return await AturanPakaiModel.update(req, {
+        const [affectedRow] =  await AturanPakaiModel.update(req, {
             where: {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {

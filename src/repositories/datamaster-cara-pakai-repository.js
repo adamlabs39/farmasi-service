@@ -29,7 +29,7 @@ export default class DataMasterCaraPakaiRepository {
     }
 
     static async update(req) {
-        return await CaraiPakaiModel.update({
+        const [affectedRow] =  await CaraiPakaiModel.update({
             code: req.code,
             cara_pakai: req.cara_pakai,
             status: req.status,
@@ -38,6 +38,12 @@ export default class DataMasterCaraPakaiRepository {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {

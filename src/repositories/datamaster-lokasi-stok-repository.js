@@ -36,7 +36,7 @@ export default class DataMasterLokasiStokRepository {
     }
 
     static async update(req) {
-        return await LokasiStokModel.update({
+        const [affectedRow] =  await LokasiStokModel.update({
             code: req.code,
             name: req.name,
             status: req.status,
@@ -47,6 +47,12 @@ export default class DataMasterLokasiStokRepository {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {

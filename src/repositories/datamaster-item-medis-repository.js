@@ -121,12 +121,18 @@ export default class DataMasterItemMedisRepository {
     }
 
     static async update(req, transaction) {
-        return await ItemMedisModel.update(req, {
+        const [affectedRow] =  await ItemMedisModel.update(req, {
             where: {
                 uuid: req.uuid,
             },
             transaction
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {
@@ -240,16 +246,22 @@ export default class DataMasterItemMedisRepository {
     }
 
     static async updateJenisStok(req, transaction) {
-        return ItemMedisJenisStokModel.update(req, {
+        const [affectedRow] =  ItemMedisJenisStokModel.update(req, {
             where: {
                 uuid: req.uuid,
             },
             transaction
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async deleteJenisStok(req, transaction) {
-        return await ItemMedisJenisStokModel.update({
+        const [affectedRow] = await ItemMedisJenisStokModel.update({
             deleted_at: toEpochDate(new Date())
         }, {
             where: {
@@ -257,6 +269,12 @@ export default class DataMasterItemMedisRepository {
             },
             transaction
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async getItemMedisJenisStok(req) {

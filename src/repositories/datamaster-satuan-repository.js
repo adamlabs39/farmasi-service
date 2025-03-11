@@ -24,7 +24,7 @@ export default class DataMasterSatuanRepository {
     }
 
     static async update(req) {
-        return await SatuanModel.update({
+        const [affectedRow] =  await SatuanModel.update({
             code: req.code,
             name: req.name,
             status: req.status,
@@ -34,6 +34,12 @@ export default class DataMasterSatuanRepository {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {

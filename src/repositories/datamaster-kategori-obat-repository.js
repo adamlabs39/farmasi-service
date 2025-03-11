@@ -29,7 +29,7 @@ export default class DataMasterKategoriObatRepository {
     }
 
     static async update(req) {
-        return await KategoriObatModel.update({
+        const [affectedRow] =  await KategoriObatModel.update({
             code: req.code,
             name: req.name,
             status: req.status,
@@ -38,6 +38,12 @@ export default class DataMasterKategoriObatRepository {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {

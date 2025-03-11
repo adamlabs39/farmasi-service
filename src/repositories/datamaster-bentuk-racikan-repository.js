@@ -24,11 +24,17 @@ export default class DataMasterBentukRacikanRepository {
     }
 
     static async update(req) {
-        return await BentukRacikanModel.update(req, {
+        const [affectedRow] =  await BentukRacikanModel.update(req, {
             where: {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {

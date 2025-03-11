@@ -29,7 +29,7 @@ export default class DataMasterJenisStokRepository {
     }
 
     static async update(req) {
-        return await JenisStokModel.update({
+        const [affectedRow] =  await JenisStokModel.update({
             code: req.code,
             name: req.name,
             status: req.status,
@@ -38,6 +38,12 @@ export default class DataMasterJenisStokRepository {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {

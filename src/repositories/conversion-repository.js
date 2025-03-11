@@ -21,12 +21,18 @@ export default class ConversionRepository {
     }
 
     static async update(req, transaction) {
-        return await ConversionModel.update(req, {
+        const [affectedRow] =  await ConversionModel.update(req, {
             where: {
                 uuid: req.uuid,
             },
             transaction
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req, transaction) {

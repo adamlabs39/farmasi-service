@@ -27,7 +27,7 @@ export default class DataMasterIngredientRepository {
     }
 
     static async update(req) {
-        return await IngredientModel.update({
+        const [affectedRow] =  await IngredientModel.update({
             code: req.code,
             name: req.name,
             status: req.status,
@@ -36,6 +36,12 @@ export default class DataMasterIngredientRepository {
                 uuid: req.uuid,
             }
         });
+
+        if (affectedRow === 0) {
+            throw new BadRequestException("Data tidak ditemukan");
+        }
+
+        return affectedRow;
     }
 
     static async delete(req) {
