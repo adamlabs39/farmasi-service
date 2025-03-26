@@ -19,7 +19,7 @@ services:
       REKAM_MEDIS_URL : ${REKAM_MEDIS_URL}
     volumes:
       - type: bind
-        source: ${HOME}/adameds/prod/.env.vault
+        source: /home/gitlab-runner/adameds/.env.vault
         target: /adameds-farmasi/.env.vault
 networks:
     farmasi-network:
