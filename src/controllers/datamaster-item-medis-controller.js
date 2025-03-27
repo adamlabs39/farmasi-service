@@ -52,7 +52,7 @@ export default class DatamasterItemMedisController {
             req.query.faskes_uuid = req.author.faskesUuid;
             req.query.item_medis_uuid = req.params.uuid;
             const data = await DatamasterItemMedisService.getConversions(req.query);
-            res.status(200).json(successResponse(data));
+            res.status(200).json(successResponse("data berhasil didapat",data));
         } catch (error) {
             nextFunction(error);
         }
