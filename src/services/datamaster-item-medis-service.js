@@ -364,4 +364,8 @@ export default class DatamasterItemMedisService {
             pagination : data.pagination
         }
     }
+    
+    static async getForPengadaan(req){
+        return await DataMasterItemMedisRepository.getForPengadaan(req);
+    }
 }

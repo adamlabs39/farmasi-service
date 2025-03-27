@@ -103,4 +103,14 @@ export default class DatamasterItemMedisController {
             nextFunction(error);
         }
     }
+
+    static async getForPengadaan(req, res, nextFunction) {
+        try {
+            req.query.faskes_uuid = req.author.faskesUuid;
+            const result = await DatamasterItemMedisService.getForPengadaan(req.query);
+            res.status(200).json(successResponse("data berhasil didapat", result));
+        } catch (error) {
+            nextFunction(error);
+        }
+    }
 }

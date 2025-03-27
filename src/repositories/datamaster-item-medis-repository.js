@@ -411,4 +411,33 @@ export default class DataMasterItemMedisRepository {
             attributes : ["uuid", "name"],
         });
     }
+
+    static async getForPengadaan(req){
+        const where =  {
+            faskes_uuid: req.faskes_uuid,
+                deleted_at: {
+                [Op.is]: null,
+            },
+        }
+
+        if (req.jenis_item){
+            where.jenis_item = req.jenis_item;
+        }
+
+        return await ItemMedisModel.findAll({
+            where,
+            attributes : ["uuid", "name"],
+            include: [
+                {
+                    model: ConversionModel,
+                    as: "conversions",
+                    required: false,
+                    where: {deleted_at: {[Op.is]: null}},
+                    attributes: [
+                        "satuan_pembelian", "satuan_penggunaan", "konversi", "uuid"
+                    ]
+                }
+            ]
+        })
+    }
 }
