@@ -11,7 +11,7 @@ export default class ConversionSeeder {
                     "satuan_pembelian": "pcs",
                     "satuan_penggunaan_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
                     "satuan_penggunaan": "biji",
-                    "konversi": 1,
+                    "konversi": 2,
                     "status": true,
                 },
             ];

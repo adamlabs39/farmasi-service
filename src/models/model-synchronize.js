@@ -17,16 +17,19 @@ import {
     SatuanModel
 } from "@adameds/model-sdk/farmasi";
 import {
-    FaskesModel,
+    FaskesModel, KabupatenModel, KecamatanModel, KelurahanModel,
     LokasiModel,
     PegawaiModel,
-    PractitionerModel,
+    PractitionerModel, ProvinceModel,
     RoleModel,
     UserModel
 } from "@adameds/model-sdk/datamaster";
 import {StockMedisModel} from "@adameds/model-sdk/inventory";
 import {PatientModel} from "@adameds/model-sdk/admisi";
 import PractitionerSeeder from "../seeders/practitioner-seeder.js";
+import {InstalasiGawatDaruratModel, RawatInapModel, RawatJalanModel} from "@adameds/model-sdk/pelayanan";
+import {AddressModel, FaskesProfilesModel} from "@adameds/model-sdk/setting";
+import {OrderFisioModel} from "@adameds/model-sdk/rekam-medis";
 
 
 const MODELMERGE = [
@@ -36,36 +39,50 @@ const MODELMERGE = [
     // PractitionerModel,
     // UserModel,
     // PatientModel,
+    FaskesProfilesModel,
+    AddressModel,
 
     KonfigurasiHargaModel,
-    AturanPakaiModel,
-    CaraiPakaiModel,
-    LokasiStokModel,
-    ItemMedisModel,
-    SatuanModel,
-    BentukSediaanModel,
-    KategoriObatModel,
-    ManufactureModel,
+    // AturanPakaiModel,
+    // CaraiPakaiModel,
+    // LokasiStokModel,
+    // ItemMedisModel,
+    // SatuanModel,
+    // BentukSediaanModel,
+    // KategoriObatModel,
     JenisStokModel,
     ItemMedisJenisStokModel,
     ConversionModel,
+    // IngredientModel,
 
-    LokasiModel,
+    // ManufactureModel,
+    // ProvinceModel,
+    // KabupatenModel,
+    // KecamatanModel,
+    // KelurahanModel,
+    //
+    // // LokasiModel,
     PrescriptionModel,
     PrescriptionItemModel,
     PrescriptionItemRacikanModel,
-    BentukRacikanModel,
+    // BentukRacikanModel,
     StockMedisModel,
     HargaItemModel,
-
+    //
     PenjualanObatModel,
     ItemPenjualanObatModel,
-
+    //
     OrderAlkesModel,
     OrderAlkesItemModel,
-
-    ReturModel,
-    ReturItemModel,
+    //
+    // ReturModel,
+    // ReturItemModel,
+    //
+    RawatJalanModel,
+    RawatInapModel,
+    InstalasiGawatDaruratModel,
+    OrderFisioModel,
+    FpoPemberianModel
 ];
 
 export default MODELMERGE;

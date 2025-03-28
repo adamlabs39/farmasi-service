@@ -5,7 +5,10 @@ import InternalServerException from "../errors/internal-server-exception.js";
 
 const errorMiddleware = (error, request, response, nextFunction) => {
     if (error instanceof NotfoundException) {
-        response.status(error.code).json(errorResponse(error.message));
+        response.status(error.code).json(errorResponse(error.message, [{
+            message: "data tidak ditemukan",
+            type : "not found",
+        }]));
     } else if (error instanceof BadRequestException) {
         response.status(error.status).json(errorResponse(error.message));
     } else if (error instanceof InternalServerException) {

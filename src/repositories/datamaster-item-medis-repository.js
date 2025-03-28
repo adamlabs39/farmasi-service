@@ -12,7 +12,7 @@ import {
 } from "@adameds/model-sdk/farmasi";
 import moment from "moment";
 import {StockMedisModel} from "@adameds/model-sdk/inventory";
-import BadRequestException from "../errors/bad-request-exception.js";
+import NotfoundException from "../errors/notfound-exception.js";
 
 export default class DataMasterItemMedisRepository {
     static async create(req, transaction) {
@@ -129,7 +129,7 @@ export default class DataMasterItemMedisRepository {
         });
 
         if (affectedRow === 0) {
-            throw new BadRequestException("Data tidak ditemukan");
+            throw new NotfoundException("Data gagal diedit");
         }
 
         return affectedRow;
@@ -157,7 +157,7 @@ export default class DataMasterItemMedisRepository {
             });
 
             if (affectedRow === 0) {
-                throw new BadRequestException("Data tidak ditemukan");
+                throw new NotfoundException("Data gagal dihapus");
             }
 
             return affectedRow;
@@ -254,7 +254,7 @@ export default class DataMasterItemMedisRepository {
         });
 
         if (affectedRow === 0) {
-            throw new BadRequestException("Data tidak ditemukan");
+            throw new NotfoundException("Data gagal diedit");
         }
 
         return affectedRow;
@@ -271,7 +271,7 @@ export default class DataMasterItemMedisRepository {
         });
 
         if (affectedRow === 0) {
-            throw new BadRequestException("Data tidak ditemukan");
+            throw new NotfoundException("Data gagal dihapus");
         }
 
         return affectedRow;
