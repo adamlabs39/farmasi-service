@@ -16,9 +16,8 @@ export default class DatamasterKategoriObatController {
 
     static async getAll(req, res, nextFunction) {
         try {
-            req.body.faskes_uuid = req.author.faskesUuid;
-            req.body.name = req.query.name;
-            const result = await DatamasterKategoriObatService.getAll(req.body);
+            req.query.faskes_uuid = req.author.faskesUuid;
+            const result = await DatamasterKategoriObatService.getAll(req.query);
             res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
         } catch (error) {
             nextFunction(error);

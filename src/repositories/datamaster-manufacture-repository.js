@@ -3,7 +3,7 @@ import {Op} from "sequelize";
 import {toEpochDate} from "../helpers/date-helper.js";
 import {KabupatenModel, KecamatanModel, KelurahanModel, ProvinceModel} from "@adameds/model-sdk/datamaster";
 import {ManufactureModel} from "@adameds/model-sdk/farmasi";
-import BadRequestException from "../errors/bad-request-exception.js";
+import NotfoundException from "../errors/notfound-exception.js";
 
 export default class DataMasterManufactureRepository {
     static async create(req) {
@@ -66,7 +66,7 @@ export default class DataMasterManufactureRepository {
         });
 
         if (affectedRow === 0) {
-            throw new BadRequestException("Data tidak ditemukan");
+            throw new NotfoundException("Data gagal diedit");
         }
 
         return affectedRow;
@@ -82,7 +82,7 @@ export default class DataMasterManufactureRepository {
         });
 
         if (affectedRow === 0) {
-            throw new BadRequestException("Data tidak ditemukan");
+            throw new NotfoundException("Data gagal dihapus");
         }
 
         return affectedRow;

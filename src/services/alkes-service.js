@@ -13,12 +13,13 @@ import AlkesValidation from "../validations/alkes-validation.js";
 import AlkesRepository from "../repositories/alkes-repository.js";
 import axiosInstance from "../configurations/axios-instance.js";
 import {INVENTORY_URL} from "../helpers/constants.js";
+import NotfoundException from "../errors/notfound-exception.js";
 
 export default class AlkesService {
     static async getByUuid(req) {
         const alkes = await AlkesRepository.getByUuid(req.uuid);
         if (alkes === null) {
-            throw new BadRequestException("data tidak ditemukan");
+            throw new NotfoundException("data tidak ditemukan");
         }
 
         alkes.dataValues.payment_method = alkes.payment_method === 1 ? "Tunai" : "Asuransi";
