@@ -511,9 +511,11 @@ export default class PrescriptionService {
                     }
 
                     if (konfigurasiHarga.metode_hpp === "avg") {
-                        racikan.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_avg;
+                        // TODO : REMOVE THIS ?? 0 AFTER HARGA ITEM SETTED UP IN INVENTORY
+                        racikan.dataValues.harga_satuan = hargaItem.detail_harga[0]?.dataValues.harga_avg ?? 0;
                     } else {
-                        racikan.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
+                        // TODO : REMOVE THIS ?? 0 AFTER HARGA ITEM SETTED UP IN INVENTORY
+                        racikan.dataValues.harga_satuan = hargaItem.detail_harga[0]?.dataValues.harga_terakhir ?? 0;
                     }
 
                     totalHarga += racikan.harga_satuan * racikan.medication_qty;
@@ -558,9 +560,11 @@ export default class PrescriptionService {
                 }
 
                 if (konfigurasiHarga.metode_hpp === "avg") {
-                    item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_avg;
+                    // TODO : REMOVE THIS ?? 0 AFTER HARGA ITEM SETTED UP IN INVENTORY
+                    item.dataValues.harga_satuan = hargaItem.detail_harga[0]?.dataValues.harga_avg ?? 0;
                 } else {
-                    item.dataValues.harga_satuan = hargaItem.detail_harga[0].dataValues.harga_terakhir;
+                    // TODO : REMOVE THIS ?? 0 AFTER HARGA ITEM SETTED UP IN INVENTORY
+                    item.dataValues.harga_satuan = hargaItem.detail_harga[0]?.dataValues.harga_terakhir ?? 0;
                 }
 
                 totalHarga += item.harga_satuan * item.medication_qty;
