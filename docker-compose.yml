@@ -17,6 +17,7 @@ services:
       API_VERSION: ${API_VERSION}
       BASE_URL: ${BASE_URL}
       REKAM_MEDIS_URL : ${REKAM_MEDIS_URL}
+      INVENTORY_URL : ${INVENTORY_URL}
     volumes:
       - type: bind
         source: /home/engineer/adameds/.env.vault
