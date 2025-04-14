@@ -251,7 +251,7 @@ export default class ReturService {
                     "used_qty" : type === 'obat' ? (item.dataValues?.medication_qty - item.dataValues?.sisa_qty_order) : undefined,
                     "price" : item.dataValues?.harga_satuan,
                     "total" : 0,
-                    "exp_date" : item.dataValues?.stok_medis_uuides[0]?.expired_date,
+                    "exp_date" : item.dataValues?.stok_medis_uuides?.[0]?.expired_date,
                     "qty_retur" : 0,
                 }]
             }
