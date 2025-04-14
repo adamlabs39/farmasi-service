@@ -561,10 +561,10 @@ export default class PrescriptionService {
 
                 if (konfigurasiHarga.metode_hpp === "avg") {
                     // TODO : REMOVE THIS ?? 0 AFTER HARGA ITEM SETTED UP IN INVENTORY
-                    item.dataValues.harga_satuan = hargaItem.detail_harga[0]?.dataValues.harga_avg ?? 0;
+                    item.dataValues.harga_satuan = hargaItem.detail_harga?.[0]?.dataValues.harga_avg ?? 0;
                 } else {
                     // TODO : REMOVE THIS ?? 0 AFTER HARGA ITEM SETTED UP IN INVENTORY
-                    item.dataValues.harga_satuan = hargaItem.detail_harga[0]?.dataValues.harga_terakhir ?? 0;
+                    item.dataValues.harga_satuan = hargaItem.detail_harga?.[0]?.dataValues.harga_terakhir ?? 0;
                 }
 
                 totalHarga += item.harga_satuan * item.medication_qty;
