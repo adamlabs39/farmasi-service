@@ -21,19 +21,20 @@ export default class DataMasterLokasiStokRepository {
       where: {
         faskes_uuid: req.faskes_uuid,
         name: { [Op.iLike]: `%${req.name || ""}%` },
-        // default_tujuan_order_permintaan: {
-        //   [Op.iLike]: `%${req.kode_tujuan || ""}%`,
-        // },
+        ...(req.kode_tujuan && {
+          default_tujuan_order_permintaan: {
+            [Op.iLike]: `%${req.kode_tujuan || ""}%`,
+          },
+        }),
+        ...(req.jenis_lokasi && {
+          jenis_lokasi: req.jenis_lokasi,
+        }),
         deleted_at: {
           [Op.is]: null,
         },
       },
       order: [["created_at", "DESC"]],
     };
-
-    // if (req.jenis_lokasi) {
-    //   option.where.jenis_lokasi = req.jenis_lokasi;
-    // }
 
     return Pagination.init(LokasiStokModel, req, option);
   }
