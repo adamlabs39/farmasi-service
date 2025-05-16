@@ -19,6 +19,7 @@ export default class DataMasterSatuanRepository {
           [Op.is]: null,
         },
       },
+      order: [["created_at", "DESC"]],
     };
 
     return Pagination.init(SatuanModel, req, option);
