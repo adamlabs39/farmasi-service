@@ -315,6 +315,18 @@ export default class DataMasterItemMedisRepository {
     });
   }
 
+  static async findJenisStockByUuid(req) {
+    return await ItemMedisJenisStokModel.findOne({
+      where: {
+        uuid: req.uuid,
+        faskes_uuid: req.faskes_uuid,
+        deleted_at: {
+          [Op.is]: null,
+        },
+      },
+    });
+  }
+
   static async getAvailableJenisStok(req, isAvg = false) {
     return await ItemMedisJenisStokModel.findAll({
       where: {
