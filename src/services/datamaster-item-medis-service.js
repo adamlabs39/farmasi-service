@@ -82,7 +82,12 @@ export default class DatamasterItemMedisService {
               jenisStock
             );
             const Uuids =
-              DataMasterItemMedisRepository.findJenisStockByUuid(req);
+              await DataMasterItemMedisRepository.findJenisStockByUuid(
+                req.uuid,
+                jenisStock,
+                req.faskes_uuid
+              );
+            // console.log("uuids item ==> ", JSON.stringify(Uuids));
             if (!Uuids) {
               await DataMasterItemMedisRepository.insertJenisStok(
                 {

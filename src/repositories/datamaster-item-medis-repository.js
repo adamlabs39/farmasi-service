@@ -315,11 +315,12 @@ export default class DataMasterItemMedisRepository {
     });
   }
 
-  static async findJenisStockByUuid(req) {
+  static async findJenisStockByUuid(uuid, jenisStock, faskes_uuid) {
     return await ItemMedisJenisStokModel.findOne({
       where: {
-        uuid: req.uuid,
-        faskes_uuid: req.faskes_uuid,
+        item_medis_uuid: uuid,
+        jenis_stok_uuid: jenisStock.jenis_stok_uuid,
+        faskes_uuid: faskes_uuid,
         deleted_at: {
           [Op.is]: null,
         },
