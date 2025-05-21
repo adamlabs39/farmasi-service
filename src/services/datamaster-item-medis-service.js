@@ -81,23 +81,14 @@ export default class DatamasterItemMedisService {
               DatamasterValidation.INSERT_JENIS_STOK_ITEM_MEDIS,
               jenisStock
             );
-            const Uuids =
-              await DataMasterItemMedisRepository.findJenisStockByUuid(
-                req.uuid,
-                jenisStock,
-                req.faskes_uuid
-              );
-            // console.log("uuids item ==> ", JSON.stringify(Uuids));
-            if (!Uuids) {
-              await DataMasterItemMedisRepository.insertJenisStok(
-                {
-                  item_medis_uuid: req.uuid,
-                  jenis_stok_uuid: jenisStock.jenis_stok_uuid,
-                  faskes_uuid: req.faskes_uuid,
-                },
-                tr
-              );
-            }
+            await DataMasterItemMedisRepository.insertJenisStok(
+              {
+                item_medis_uuid: req.uuid,
+                jenis_stok_uuid: jenisStock.jenis_stok_uuid,
+                faskes_uuid: req.faskes_uuid,
+              },
+              tr
+            );
           } else if (!!jenisStock.is_updated) {
             ZodValidator.validate(
               DatamasterValidation.UPDATE_JENIS_STOK_ITEM_MEDIS,
