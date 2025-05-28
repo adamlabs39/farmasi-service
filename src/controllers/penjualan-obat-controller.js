@@ -2,63 +2,75 @@ import successResponse from "../responses/success-response.js";
 import PenjualanObatService from "../services/penjualan-obat-service.js";
 
 export default class PenjualanObatController {
-    static async create(req, res, nextFunction) {
-        try {
-            req.body.faskes_uuid = req.author.faskesUuid;
-            req.body.token =req.get("Authorization");
+  static async create(req, res, nextFunction) {
+    try {
+      req.body.faskes_uuid = req.author.faskesUuid;
+      req.body.token = req.get("Authorization");
 
-            const result = await PenjualanObatService.create(req.body);
+      const result = await PenjualanObatService.create(req.body);
 
-            res.status(200).json(successResponse("data berhasil dibuat", result));
-        } catch (error) {
-            nextFunction(error);
-        }
+      res.status(200).json(successResponse("Data berhasil disimpan", result));
+    } catch (error) {
+      nextFunction(error);
     }
+  }
 
-    static async batalOtc(req, res, nextFunction) {
-        try {
-            const { uuid } = req.params;
-            req.body.uuid = uuid;
-            req.body.token =req.get("Authorization");
+  static async batalOtc(req, res, nextFunction) {
+    try {
+      const { uuid } = req.params;
+      req.body.uuid = uuid;
+      req.body.token = req.get("Authorization");
 
-            const result = await PenjualanObatService.batalOtc(req.body);
+      const result = await PenjualanObatService.batalOtc(req.body);
 
-            res.status(200).json(successResponse("data berhasil dibatalkan", result));
-        } catch (error) {
-            nextFunction(error);
-        }
+      res.status(200).json(successResponse("data berhasil dibatalkan", result));
+    } catch (error) {
+      nextFunction(error);
     }
+  }
 
-    static async getAll(req, res, nextFunction) {
-        try {
-            req.query.faskes_uuid = req.author.faskesUuid;
+  static async getAll(req, res, nextFunction) {
+    try {
+      req.query.faskes_uuid = req.author.faskesUuid;
 
-            const result = await PenjualanObatService.getAll(req.query);
-            res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
-        } catch (error) {
-            nextFunction(error);
-        }
+      const result = await PenjualanObatService.getAll(req.query);
+      res
+        .status(200)
+        .json(
+          successResponse(
+            "Data berhasil ditampilkan",
+            result.data,
+            result.pagination
+          )
+        );
+    } catch (error) {
+      nextFunction(error);
     }
+  }
 
-    static async getDetail(req, res, nextFunction) {
-        try {
-            const { uuid } = req.params;
-            req.query.uuid = uuid;
+  static async getDetail(req, res, nextFunction) {
+    try {
+      const { uuid } = req.params;
+      req.query.uuid = uuid;
 
-            const result = await PenjualanObatService.getByUuid(req.query);
-            res.status(200).json(successResponse("data berhasil didapat", result));
-        } catch (error) {
-            nextFunction(error);
-        }
+      const result = await PenjualanObatService.getByUuid(req.query);
+      res
+        .status(200)
+        .json(successResponse("Data berhasil ditampilkan", result));
+    } catch (error) {
+      nextFunction(error);
     }
+  }
 
-    static async getCode(req, res, nextFunction) {
-        try {
-            req.query.faskes_uuid = req.author.faskesUuid;
-            const result = await PenjualanObatService.generateCode(req.query);
-            res.status(200).json(successResponse("data berhasil didapat", result));
-        } catch (error) {
-            nextFunction(error);
-        }
+  static async getCode(req, res, nextFunction) {
+    try {
+      req.query.faskes_uuid = req.author.faskesUuid;
+      const result = await PenjualanObatService.generateCode(req.query);
+      res
+        .status(200)
+        .json(successResponse("Data berhasil ditampilkan", result));
+    } catch (error) {
+      nextFunction(error);
     }
+  }
 }

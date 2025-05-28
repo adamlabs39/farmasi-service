@@ -11,7 +11,7 @@ export default class DatamasterLokasiStokController {
     try {
       req.body.faskes_uuid = req.author.faskesUuid;
       await DatamasterLokasiStokService.create(req.body);
-      res.status(201).json(successResponse("data berhasil dibuat"));
+      res.status(201).json(successResponse("Data berhasil disimpan"));
     } catch (error) {
       nextFunction(error);
     }
@@ -31,7 +31,7 @@ export default class DatamasterLokasiStokController {
           .status(200)
           .json(
             successResponse(
-              "data berhasil didapat",
+              "Data berhasil ditampilkan",
               result.data,
               result.pagination
             )
@@ -85,7 +85,7 @@ export default class DatamasterLokasiStokController {
         .status(200)
         .json(
           successResponse(
-            "data berhasil didapat",
+            "Data berhasil ditampilkan",
             result.data,
             result.pagination
           )

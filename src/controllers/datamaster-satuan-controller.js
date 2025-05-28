@@ -5,58 +5,67 @@ import * as XLSX from "xlsx";
 import Utils from "../helpers/utils.js";
 
 export default class DatamasterSatuanController {
-    static async create(req, res, nextFunction) {
-        try {
-            req.body.faskes_uuid = req.author.faskesUuid;
-            await DatamasterSatuanService.create(req.body);
-            res.status(201).json(successResponse("data berhasil dibuat"));
-        } catch (error) {
-            nextFunction(error);
-        }
+  static async create(req, res, nextFunction) {
+    try {
+      req.body.faskes_uuid = req.author.faskesUuid;
+      await DatamasterSatuanService.create(req.body);
+      res.status(201).json(successResponse("Data berhasil disimpan"));
+    } catch (error) {
+      console.log("error => ", error);
+      nextFunction(error);
     }
+  }
 
-    static async getAll(req, res, nextFunction) {
-        try {
-            req.query.faskes_uuid = req.author.faskesUuid;
-            const result = await DatamasterSatuanService.getAll(req.query);
-            res.status(200).json(successResponse("data berhasil didapat", result.data, result.pagination));
-        } catch (error) {
-            nextFunction(error);
-        }
+  static async getAll(req, res, nextFunction) {
+    try {
+      req.query.faskes_uuid = req.author.faskesUuid;
+      const result = await DatamasterSatuanService.getAll(req.query);
+      res
+        .status(200)
+        .json(
+          successResponse(
+            "Data berhasil ditampilkan",
+            result.data,
+            result.pagination
+          )
+        );
+    } catch (error) {
+      nextFunction(error);
     }
+  }
 
-    static async update(req, res, nextFunction) {
-        try {
-            const { uuid } = req.params;
-            req.body.uuid = uuid;
-            await DatamasterSatuanService.update(req.body);
-            res.status(200).json(successResponse("data berhasil diupdate"));
-        } catch (error) {
-            nextFunction(error);
-        }
+  static async update(req, res, nextFunction) {
+    try {
+      const { uuid } = req.params;
+      req.body.uuid = uuid;
+      await DatamasterSatuanService.update(req.body);
+      res.status(200).json(successResponse("data berhasil diupdate"));
+    } catch (error) {
+      nextFunction(error);
     }
+  }
 
-    static async delete(req, res, nextFunction) {
-        try {
-            const { uuid } = req.params;
-            req.body.uuid = uuid;
-            await DatamasterSatuanService.delete(req.body);
-            res.status(200).json(successResponse("data berhasil dihapus"));
-        } catch (error) {
-            nextFunction(error);
-        }
+  static async delete(req, res, nextFunction) {
+    try {
+      const { uuid } = req.params;
+      req.body.uuid = uuid;
+      await DatamasterSatuanService.delete(req.body);
+      res.status(200).json(successResponse("Data berhasil dihapus"));
+    } catch (error) {
+      nextFunction(error);
     }
+  }
 
-    static async import(req, res, nextFunction) {
-        try {
-            req.body.data = Utils.parseExcelToJSON(req);
-            req.body.faskes_uuid = req.author.faskesUuid;
+  static async import(req, res, nextFunction) {
+    try {
+      req.body.data = Utils.parseExcelToJSON(req);
+      req.body.faskes_uuid = req.author.faskesUuid;
 
-            const result = await DatamasterSatuanService.import(req.body);
+      const result = await DatamasterSatuanService.import(req.body);
 
-            res.status(200).json(successResponse("data berhasil diimport"));
-        } catch (error) {
-            nextFunction(error);
-        }
+      res.status(200).json(successResponse("data berhasil diimport"));
+    } catch (error) {
+      nextFunction(error);
     }
+  }
 }
