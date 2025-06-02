@@ -33,7 +33,7 @@ export default class AlkesController {
   static async deleteAlkesItem(req, res, nextFunction) {
     try {
       await AlkesService.deleteAlkes(req.params);
-      res.status(200).json(successResponse("data berhasil dihapus"));
+      res.status(200).json(successResponse("Data berhasil dihapus"));
     } catch (error) {
       nextFunction(error);
     }
@@ -44,7 +44,9 @@ export default class AlkesController {
       req.query.uuid = req.params.uuid;
       req.query.user_uuid = req.user_uuid ?? null;
       const result = await AlkesService.getByUuid(req.query);
-      res.status(200).json(successResponse("data berhasil ditemukan", result));
+      res
+        .status(200)
+        .json(successResponse("Data berhasil ditampilkan", result));
     } catch (error) {
       nextFunction(error);
     }
@@ -74,7 +76,9 @@ export default class AlkesController {
   static async getOrderByRekamMedis(req, res, nextFunction) {
     try {
       const result = await AlkesService.getOrderBySomeUuid(req.query);
-      res.status(200).json(successResponse("data berhasil ditemukan", result));
+      res
+        .status(200)
+        .json(successResponse("Data berhasil ditampilkan", result));
     } catch (error) {
       nextFunction(error);
     }

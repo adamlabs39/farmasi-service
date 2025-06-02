@@ -32,7 +32,7 @@ export default class PrescriptionController {
     try {
       req.body.prescription_item_uuid = req.params.prescription_item_uuid;
       await PrescriptionService.deleteObat(req.body);
-      res.status(200).json(successResponse("data berhasil dihapus"));
+      res.status(200).json(successResponse("Data berhasil dihapus"));
     } catch (error) {
       nextFunction(error);
     }
@@ -41,7 +41,9 @@ export default class PrescriptionController {
   static async getByUuid(req, res, nextFunction) {
     try {
       const result = await PrescriptionService.getByUuid(req.params.uuid);
-      res.status(200).json(successResponse("data berhasil ditemukan", result));
+      res
+        .status(200)
+        .json(successResponse("Data berhasil ditampilkan", result));
     } catch (error) {
       nextFunction(error);
     }
@@ -79,7 +81,7 @@ export default class PrescriptionController {
         .status(200)
         .json(
           successResponse(
-            "data berhasil ditemukan",
+            "Data berhasil ditampilkan",
             result.data,
             result.metadata
           )
@@ -92,7 +94,9 @@ export default class PrescriptionController {
   static async getOrderBySomeUuid(req, res, nextFunction) {
     try {
       const result = await PrescriptionService.getOrderBySomeUuid(req.body);
-      res.status(200).json(successResponse("data berhasil ditemukan", result));
+      res
+        .status(200)
+        .json(successResponse("Data berhasil ditampilkan", result));
     } catch (error) {
       nextFunction(error);
     }
@@ -202,7 +206,9 @@ export default class PrescriptionController {
   static async getEticketData(req, res, nextFunction) {
     try {
       const result = await PrescriptionService.getEticketData(req.params.uuid);
-      res.status(200).json(successResponse("data berhasil ditemukan", result));
+      res
+        .status(200)
+        .json(successResponse("Data berhasil ditampilkan", result));
     } catch (error) {
       nextFunction(error);
     }
@@ -213,7 +219,9 @@ export default class PrescriptionController {
       const result = await PrescriptionService.getPrintPrescription(
         req.params.uuid
       );
-      res.status(200).json(successResponse("data berhasil ditemukan", result));
+      res
+        .status(200)
+        .json(successResponse("Data berhasil ditampilkan", result));
     } catch (error) {
       nextFunction(error);
     }
@@ -224,7 +232,9 @@ export default class PrescriptionController {
       const result = await PrescriptionService.getForInvoicePrint(
         req.params.uuid
       );
-      res.status(200).json(successResponse("data berhasil ditemukan", result));
+      res
+        .status(200)
+        .json(successResponse("Data berhasil ditampilkan", result));
     } catch (error) {
       nextFunction(error);
     }
