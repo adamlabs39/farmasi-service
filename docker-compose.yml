@@ -12,16 +12,16 @@ services:
     networks:
       - farmasi-network
     environment:
-      DOTENV_KEY: ${DOTENV_KEY}
+      INFISICAL_TOKEN: ${INFISICAL_TOKEN}
       API_BASE: ${API_BASE}
       API_VERSION: ${API_VERSION}
       BASE_URL: ${BASE_URL}
-      REKAM_MEDIS_URL : ${REKAM_MEDIS_URL}
-      INVENTORY_URL : ${INVENTORY_URL}
-    volumes:
-      - type: bind
-        source: /home/engineer/adameds/.env.vault
-        target: /adameds-farmasi/.env.vault
+      REKAM_MEDIS_URL: ${REKAM_MEDIS_URL}
+      INVENTORY_URL: ${INVENTORY_URL}
+    # volumes:
+    #   - type: bind
+    #     source: /home/engineer/adameds/.env.vault
+    #     target: /adameds-farmasi/.env.vault
 networks:
-    farmasi-network:
-        driver: bridge
+  farmasi-network:
+    driver: bridge
