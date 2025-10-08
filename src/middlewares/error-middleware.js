@@ -5,6 +5,7 @@ import InternalServerException from "../errors/internal-server-exception.js";
 import { UniqueConstraintError } from "sequelize";
 
 const errorMiddleware = (error, request, response, nextFunction) => {
+    console.error(error);
   if (error instanceof NotfoundException) {
     response.status(error.code).json(
       errorResponse(error.message, [

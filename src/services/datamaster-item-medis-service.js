@@ -167,8 +167,9 @@ export default class DatamasterItemMedisService {
       await tr.commit();
       return itemMedis;
     } catch (e) {
-      await tr.rollback();
-      throw new InternalServerException(e.message);
+      // await tr.rollback();
+      // throw new InternalServerException(e.message);
+      throw e;
     }
   }
 

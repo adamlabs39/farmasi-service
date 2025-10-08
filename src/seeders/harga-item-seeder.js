@@ -1,52 +1,57 @@
-import HargaItemModel from "../models/harga-item-model.js";
+import { v7 as uuidv7 } from "uuid";
+import { HargaItemModel } from "@adameds/model-sdk/farmasi";
+
+// 1. IMPOR UUID dari seeder 'item-medis-jenis-stok'
+import {
+  paracetamolUmumUuid,
+  amoxicillinBpjsUuid,
+  jarumSuntikUmumUuid,
+} from "./item-medis-jenis-stok-seeder.js";
 
 export default class HargaItemSeeder {
-    static async seed(transaction) {
-        const item = [
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475w",
-                "item_medis_jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "harga_terakhir" : 5780,
-                "harga_avg" : 6000,
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475j",
-                "item_medis_jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "harga_terakhir" : 8000,
-                "harga_avg" : 6000,
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "item_medis_jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "harga_terakhir" : 5780,
-                "harga_avg" : 6000,
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "alkes1-365d-731c-8b16-3a4565c9475q",
-                "item_medis_jenis_stok_uuid" : "alkes-365d-731c-8b16-3a4565c9475e",
-                "harga_terakhir" : 5780,
-                "harga_avg" : 6000,
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "alkes-365d-731c-8b16-3a4565c9475z",
-                "item_medis_jenis_stok_uuid" : "alkes1-365d-731c-8b16-3a4565c9475e",
-                "harga_terakhir" : 5780,
-                "harga_avg" : 6000,
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "hargaparadential-365d-731c-8b16-3a4565c9475z",
-                "item_medis_jenis_stok_uuid" : "paradential-365d-731c-8b16-3a4565c9475e",
-                "harga_terakhir" : 5780,
-                "harga_avg" : 6000,
-            },
-        ];
+  static async seed(transaction) {
+    await HargaItemModel.destroy({
+      where: {},
+      truncate: true,
+      cascade: true,
+      transaction,
+    });
 
-        await HargaItemModel.bulkCreate(item, { transaction });
-    }
+    const faskesUuid = "01981726-d5cf-7bc4-97ca-9804168283f7";
+
+    const hargaItemsToSeed = [
+      // Harga untuk Paracetamol jenis Umum
+      {
+        uuid: uuidv7(),
+        faskes_uuid: faskesUuid,
+        item_medis_jenis_stok_uuid: paracetamolUmumUuid, // Gunakan UUID dari tabel penghubung
+        harga_terakhir: 52000,
+        harga_avg: 51500,
+        hna: 55000,
+        harga_dasar: 50000,
+      },
+      // Harga untuk Amoxicillin jenis BPJS
+      {
+        uuid: uuidv7(),
+        faskes_uuid: faskesUuid,
+        item_medis_jenis_stok_uuid: amoxicillinBpjsUuid, // Gunakan UUID dari tabel penghubung
+        harga_terakhir: 75000,
+        harga_avg: 74000,
+        hna: 80000,
+        harga_dasar: 72000,
+      },
+      // Harga untuk Jarum Suntik jenis Umum
+      {
+        uuid: uuidv7(),
+        faskes_uuid: faskesUuid,
+        item_medis_jenis_stok_uuid: jarumSuntikUmumUuid, // Gunakan UUID dari tabel penghubung
+        harga_terakhir: 1500,
+        harga_avg: 1450,
+        hna: 1700,
+        harga_dasar: 1400,
+      },
+    ];
+
+    await HargaItemModel.bulkCreate(hargaItemsToSeed, { transaction });
+  }
 }

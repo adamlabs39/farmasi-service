@@ -46,6 +46,7 @@ export default class DataMasterAturanPakaiRepository {
       {
         where: {
           uuid: req.uuid,
+          deleted_at: null,
         },
       }
     );

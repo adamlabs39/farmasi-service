@@ -39,18 +39,17 @@ const MODELMERGE = [
     // PractitionerModel,
     // UserModel,
     // PatientModel,
-    FaskesProfilesModel,
-    AddressModel,
+    // FaskesProfilesModel,
 
-    KonfigurasiHargaModel,
+    // KonfigurasiHargaModel,
     // AturanPakaiModel,
     // CaraiPakaiModel,
-    // LokasiStokModel,
-    // ItemMedisModel,
-    // SatuanModel,
-    // BentukSediaanModel,
-    // KategoriObatModel,
+    LokasiStokModel,
     JenisStokModel,
+    KategoriObatModel,
+    BentukSediaanModel,
+    SatuanModel,
+    ItemMedisModel,
     ItemMedisJenisStokModel,
     ConversionModel,
     // IngredientModel,
@@ -62,27 +61,24 @@ const MODELMERGE = [
     // KelurahanModel,
     //
     // // LokasiModel,
-    PrescriptionModel,
-    PrescriptionItemModel,
-    PrescriptionItemRacikanModel,
+    // PrescriptionModel,
+    // PrescriptionItemModel,
+    // PrescriptionItemRacikanModel,
     // BentukRacikanModel,
     StockMedisModel,
     HargaItemModel,
     //
-    PenjualanObatModel,
-    ItemPenjualanObatModel,
+    // PenjualanObatModel,
+    // ItemPenjualanObatModel,
     //
-    OrderAlkesModel,
-    OrderAlkesItemModel,
+    // OrderAlkesModel,
+    // OrderAlkesItemModel,
     //
     // ReturModel,
     // ReturItemModel,
     //
-    RawatJalanModel,
-    RawatInapModel,
-    InstalasiGawatDaruratModel,
-    OrderFisioModel,
-    FpoPemberianModel
+    // OrderFisioModel,
+    // FpoPemberianModel
 ];
 
 export default MODELMERGE;

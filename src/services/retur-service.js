@@ -82,7 +82,6 @@ export default class ReturService {
                 // bring back stock
                 if (req.jenis_retur === "obat") {
                     const prescriptionItem = await PrescriptionRepository.getPrescriptionByUuid(item.prescription_item_uuid);
-
                     if (!prescriptionItem.stok_medis_uuides) {
                         throw new BadRequestException("Stock medis uuides not found");
                     }
@@ -206,8 +205,7 @@ export default class ReturService {
         return result;
     }
 
-    static
-    async getAll(req) {
+    static async getAll(req) {
         ZodValidator.validate(ReturValidation.GET_ALL, req);
 
         setRangeDate(req);

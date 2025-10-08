@@ -1,88 +1,82 @@
-import {StockMedisModel} from "@adameds/model-sdk/inventory";
+// stok-medis-seeder.js
+import { v7 as uuidv7 } from "uuid";
+import { StockMedisModel } from "@adameds/model-sdk/inventory";
 
+// 1. IMPOR UUID kombinasi dari item-medis-jenis-stok-seeder
+import {
+  paracetamolUmumUuid,
+  amoxicillinBpjsUuid,
+  jarumSuntikUmumUuid,
+  paracetamolBpjsUuid, // Impor juga ini jika perlu membuat stoknya
+} from "./item-medis-jenis-stok-seeder.js";
+
+// Impor UUID lain yang dibutuhkan
+import {
+  lokasiGudangFarmasiUuid,
+  lokasiApotekInternalUuid,
+} from "./lokasi-stok-seeder.js";
+import {
+  konversiParacetamolBoxUuid,
+  konversiAmoxicillinStripUuid,
+  konversiJarumSuntikPcsUuid,
+} from "./conversion-seeder.js"; // Ganti dengan nama file seeder konversi Anda
 
 export default class StokMedisSeeder {
-    static async seed(transaction) {
-        const item = [
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "exp_date" : "2025-12-12",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "stok" : 5000,
-                "sisa_stok" : 5000,
-                "konversi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "harga_satuan" : 5000,
-                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "item_medis_jenis_stok_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "exp_date" : "2025-12-12",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "stok" : 5000,
-                "sisa_stok" : 5000,
-                "konversi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "harga_satuan" : 5000,
-                "item_medis_jenis_stok_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "exp_date" : "2025-12-12",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475t",
-                "stok" : 5000,
-                "sisa_stok" : 5000,
-                "konversi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "harga_satuan" : 5000,
-                "item_medis_jenis_stok_uuid": "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "exp_date" : "2025-12-12",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475y",
-                "stok" : 5000,
-                "sisa_stok" : 5000,
-                "konversi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "harga_satuan" : 5000,
-                "item_medis_jenis_stok_uuid": "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "exp_date" : "2025-12-12",
-                "uuid": "alkes1-365d-731c-8b16-3a4565c9475e",
-                "stok" : 5000,
-                "sisa_stok" : 5000,
-                "konversi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "harga_satuan" : 5000,
-                "item_medis_jenis_stok_uuid": "alkes1-365d-731c-8b16-3a4565c9475e",
-                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "exp_date" : "2025-12-12",
-                "uuid": "alkes-365d-731c-8b16-3a4565c9475e",
-                "stok" : 5000,
-                "sisa_stok" : 5000,
-                "konversi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "harga_satuan" : 5000,
-                "item_medis_jenis_stok_uuid": "alkes-365d-731c-8b16-3a4565c9475e",
-                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "exp_date" : "2025-12-12",
-                "uuid": "stokparadential-365d-731c-8b16-3a4565c9475e",
-                "stok" : 5000,
-                "sisa_stok" : 5000,
-                "konversi_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "harga_satuan" : 5000,
-                "item_medis_jenis_stok_uuid": "paradential-365d-731c-8b16-3a4565c9475e",
-                "lokasi_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-        ];
+  static async seed(transaction) {
+    await StockMedisModel.destroy({
+      where: {},
+      truncate: true,
+      cascade: true,
+      transaction,
+    });
+    const faskesUuid = "01981726-d5cf-7bc4-97ca-9804168283f7";
 
-        await StockMedisModel.bulkCreate(item, { transaction });
-    }
+    const itemsToSeed = [
+      {
+        uuid: uuidv7(),
+        faskes_uuid: faskesUuid,
+        exp_date: new Date("2026-12-31"),
+        stok: 1000,
+        sisa_stok: 1000,
+        harga_satuan: 50000,
+        konversi_uuid: konversiParacetamolBoxUuid,
+        lokasi_stok_uuid: lokasiGudangFarmasiUuid,
+        item_medis_jenis_stok_uuid: paracetamolUmumUuid, // 2. Gunakan UUID kombinasi
+      },
+      {
+        uuid: uuidv7(),
+        faskes_uuid: faskesUuid,
+        exp_date: new Date("2027-05-20"),
+        stok: 500,
+        sisa_stok: 500,
+        harga_satuan: 75000,
+        konversi_uuid: konversiAmoxicillinStripUuid,
+        lokasi_stok_uuid: lokasiGudangFarmasiUuid,
+        item_medis_jenis_stok_uuid: amoxicillinBpjsUuid, // Gunakan UUID kombinasi
+      },
+      {
+        uuid: uuidv7(),
+        faskes_uuid: faskesUuid,
+        exp_date: new Date("2026-12-31"),
+        stok: 50,
+        sisa_stok: 50,
+        harga_satuan: 52000,
+        konversi_uuid: konversiParacetamolBoxUuid,
+        lokasi_stok_uuid: lokasiApotekInternalUuid,
+        item_medis_jenis_stok_uuid: paracetamolUmumUuid, // Gunakan UUID kombinasi
+      },
+      {
+        uuid: uuidv7(),
+        faskes_uuid: faskesUuid,
+        exp_date: null,
+        stok: 2000,
+        sisa_stok: 2000,
+        harga_satuan: 1500,
+        konversi_uuid: konversiJarumSuntikPcsUuid,
+        lokasi_stok_uuid: lokasiGudangFarmasiUuid,
+        item_medis_jenis_stok_uuid: jarumSuntikUmumUuid, // Gunakan UUID kombinasi
+      },
+    ];
+    await StockMedisModel.bulkCreate(itemsToSeed, { transaction });
+  }
 }

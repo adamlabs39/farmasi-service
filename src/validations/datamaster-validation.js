@@ -9,6 +9,8 @@ export default class DatamasterValidation {
   static CREATE_SATUAN = z.object({
     faskes_uuid: z.string().min(1, faskesUuidRequired),
     status: z.boolean(),
+    satuan_dosis: z.boolean().optional(),
+    editable: z.boolean().optional(),
     name: z
       .string({
         required_error: required,
@@ -136,17 +138,11 @@ export default class DatamasterValidation {
 
   static UPDATE_SATUAN = z.object({
     uuid: z.string().min(1, uuidRequired),
-    status: z.boolean(),
-    name: z
-      .string({
-        required_error: required,
-      })
-      .min(1, required),
-    code: z
-      .string({
-        required_error: required,
-      })
-      .min(1, required),
+    status: z.boolean().optional(),
+    satuan_dosis: z.boolean().optional(),
+    editable: z.boolean().optional(),
+    name: z.string().optional(),
+    code:z.string().optional()
   });
 
   static UPDATE_BENTUK_RACIKAN = z.object({
@@ -221,11 +217,11 @@ export default class DatamasterValidation {
         required_error: required,
       })
       .min(1, required),
-    demografi_wilayah_code: z
-      .string({
-        required_error: required,
-      })
-      .min(1, required),
+    // demografi_wilayah_code: z
+    //   .string({
+    //     required_error: required,
+    //   })
+    //   .min(1, required),
   });
 
   static GET_ALL_SATUAN = z.object({

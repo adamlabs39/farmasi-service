@@ -1,46 +1,40 @@
-import {LokasiStokModel} from "@adameds/model-sdk/farmasi";
+// lokasi-stok-seeder.js
+import { v7 as uuidv7 } from "uuid";
+import { LokasiStokModel } from "@adameds/model-sdk/farmasi";
+
+// 1. Definisikan dan EKSPOR UUID dinamis
+export const lokasiGudangFarmasiUuid = uuidv7();
+export const lokasiApotekInternalUuid = uuidv7();
 
 export default class LokasiStokSeeder {
-    static async seed(transaction) {
-        const lokasiStok = [
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "code" : "LOKASI1",
-                "name" : "Lokasi 1",
-                "status" : true,
-                "jenis_lokasi" : "depo",
-                "default_tujuan_order_permintaan" : "0",
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475t",
-                "code" : "LOKASI2",
-                "name" : "Lokasi 2",
-                "status" : true,
-                "jenis_lokasi" : "depo",
-                "default_tujuan_order_permintaan" : "01",
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "code" : "LOKASI3",
-                "name" : "Lokasi 3",
-                "status" : true,
-                "jenis_lokasi" : "depo",
-                "default_tujuan_order_permintaan" : "012",
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475c",
-                "code" : "LOKASI4",
-                "name" : "Lokasi 4",
-                "status" : true,
-                "jenis_lokasi" : "depo",
-                "default_tujuan_order_permintaan" : "0123",
-            },
-        ];
+  static async seed(transaction) {
+    await LokasiStokModel.destroy({
+      where: {},
+      truncate: true,
+      cascade: true, // Tambahkan cascade untuk keamanan
+      transaction,
+    });
+    const faskesUuid = "01981726-d5cf-7bc4-97ca-9804168283f7";
 
-        await LokasiStokModel.bulkCreate(lokasiStok, { transaction });
-    }
+    const lokasiStokToSeed = [
+      {
+        uuid: lokasiGudangFarmasiUuid, // 2. Gunakan UUID yang diekspor
+        faskes_uuid: faskesUuid,
+        code: "GDU",
+        name: "Gudang Farmasi Utama",
+        status: true,
+        jenis_lokasi: "gudang",
+      },
+      {
+        uuid: lokasiApotekInternalUuid, // Gunakan UUID yang diekspor
+        faskes_uuid: faskesUuid,
+        code: "DEPO-RJ",
+        name: "Depo Farmasi Rawat Jalan",
+        status: true,
+        jenis_lokasi: "depo",
+      },
+      // ... lokasi lain bisa menggunakan uuidv7() jika tidak perlu direferensikan
+    ];
+    await LokasiStokModel.bulkCreate(lokasiStokToSeed, { transaction });
+  }
 }
