@@ -1,7 +1,6 @@
 import { v7 as uuidv7 } from "uuid";
 import { ItemMedisModel } from "@adameds/model-sdk/farmasi";
 
-// 1. IMPOR UUID dari seeder data master
 import {
   bentukSediaanTabletUuid,
   bentukSediaanAlkesUuid,
@@ -13,7 +12,6 @@ import {
 } from "./kategori-obat-seeder.js";
 import { satuanDosisMgUuid, satuanPenggunaanPcsUuid } from "./satuan-seeder.js";
 
-// 2. EKSPOR UUID miliknya sendiri untuk digunakan seeder lain
 export const itemParacetamolUuid = uuidv7();
 export const itemAmoxicillinUuid = uuidv7();
 export const itemJarumSuntikUuid = uuidv7();
@@ -31,20 +29,20 @@ export default class ItemMedisSeeder {
 
     const itemsToSeed = [
       {
-        uuid: itemParacetamolUuid, // Gunakan UUID dinamis yang diekspor
+        uuid: itemParacetamolUuid,
         faskes_uuid: faskesUuid,
         code: "PCT500",
         name: "Paracetamol 500mg",
-        bentuk_sediaan_uuid: bentukSediaanTabletUuid, // Gunakan UUID yang diimpor
+        bentuk_sediaan_uuid: bentukSediaanTabletUuid, 
         dosis: 500,
-        satuan_dosis_uuid: satuanDosisMgUuid, // Gunakan UUID yang diimpor
-        satuan_penggunaan_uuid: satuanPenggunaanPcsUuid, // Gunakan UUID yang diimpor
+        satuan_dosis_uuid: satuanDosisMgUuid, 
+        satuan_penggunaan_uuid: satuanPenggunaanPcsUuid, 
         jenis_item: "obat",
-        kategori_obat_uuid: kategoriObatAnalgesikUuid, // Gunakan UUID yang diimpor
+        kategori_obat_uuid: kategoriObatAnalgesikUuid, 
         status: true,
       },
       {
-        uuid: itemAmoxicillinUuid, // Gunakan UUID dinamis yang diekspor
+        uuid: itemAmoxicillinUuid, 
         faskes_uuid: faskesUuid,
         code: "AMX500",
         name: "Amoxicillin 500mg",
@@ -57,7 +55,7 @@ export default class ItemMedisSeeder {
         status: true,
       },
       {
-        uuid: itemJarumSuntikUuid, // Gunakan UUID dinamis yang diekspor
+        uuid: itemJarumSuntikUuid, 
         faskes_uuid: faskesUuid,
         code: "JRM-3ML",
         name: "Jarum Suntik 3ml",

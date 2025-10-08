@@ -19,7 +19,7 @@ import {
   konversiParacetamolBoxUuid,
   konversiAmoxicillinStripUuid,
   konversiJarumSuntikPcsUuid,
-} from "./conversion-seeder.js"; // Ganti dengan nama file seeder konversi Anda
+} from "./conversion-seeder.js"; 
 
 export default class StokMedisSeeder {
   static async seed(transaction) {
@@ -41,7 +41,7 @@ export default class StokMedisSeeder {
         harga_satuan: 50000,
         konversi_uuid: konversiParacetamolBoxUuid,
         lokasi_stok_uuid: lokasiGudangFarmasiUuid,
-        item_medis_jenis_stok_uuid: paracetamolUmumUuid, // 2. Gunakan UUID kombinasi
+        item_medis_jenis_stok_uuid: paracetamolUmumUuid, 
       },
       {
         uuid: uuidv7(),
@@ -52,7 +52,7 @@ export default class StokMedisSeeder {
         harga_satuan: 75000,
         konversi_uuid: konversiAmoxicillinStripUuid,
         lokasi_stok_uuid: lokasiGudangFarmasiUuid,
-        item_medis_jenis_stok_uuid: amoxicillinBpjsUuid, // Gunakan UUID kombinasi
+        item_medis_jenis_stok_uuid: amoxicillinBpjsUuid,
       },
       {
         uuid: uuidv7(),
@@ -63,7 +63,7 @@ export default class StokMedisSeeder {
         harga_satuan: 52000,
         konversi_uuid: konversiParacetamolBoxUuid,
         lokasi_stok_uuid: lokasiApotekInternalUuid,
-        item_medis_jenis_stok_uuid: paracetamolUmumUuid, // Gunakan UUID kombinasi
+        item_medis_jenis_stok_uuid: paracetamolUmumUuid, 
       },
       {
         uuid: uuidv7(),
@@ -74,7 +74,7 @@ export default class StokMedisSeeder {
         harga_satuan: 1500,
         konversi_uuid: konversiJarumSuntikPcsUuid,
         lokasi_stok_uuid: lokasiGudangFarmasiUuid,
-        item_medis_jenis_stok_uuid: jarumSuntikUmumUuid, // Gunakan UUID kombinasi
+        item_medis_jenis_stok_uuid: jarumSuntikUmumUuid, 
       },
     ];
     await StockMedisModel.bulkCreate(itemsToSeed, { transaction });

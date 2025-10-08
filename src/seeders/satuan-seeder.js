@@ -1,7 +1,6 @@
 import { v7 as uuidv7 } from "uuid";
-import { SatuanModel } from "@adameds/model-sdk/farmasi"; // Pastikan path import benar
+import { SatuanModel } from "@adameds/model-sdk/farmasi"; 
 
-// Definisikan dan EKSPOR semua UUID yang akan direferensikan oleh seeder lain
 export const satuanDosisMgUuid = uuidv7();
 export const satuanPenggunaanPcsUuid = uuidv7();
 export const satuanBoxUuid = uuidv7();
@@ -20,7 +19,7 @@ export default class SatuanSeeder {
 
     const satuanToSeed = [
       {
-        uuid: satuanDosisMgUuid, // Gunakan UUID yang diekspor
+        uuid: satuanDosisMgUuid, 
         faskes_uuid: faskesUuid,
         code: "MG",
         name: "Miligram",
@@ -29,7 +28,7 @@ export default class SatuanSeeder {
         editable: false,
       },
       {
-        uuid: satuanPenggunaanPcsUuid, // Gunakan UUID yang diekspor
+        uuid: satuanPenggunaanPcsUuid, 
         faskes_uuid: faskesUuid,
         code: "PCS",
         name: "Pieces",
@@ -38,7 +37,7 @@ export default class SatuanSeeder {
         editable: false,
       },
       {
-        uuid: satuanBoxUuid, // Gunakan UUID yang diekspor
+        uuid: satuanBoxUuid, 
         faskes_uuid: faskesUuid,
         code: "BOX",
         name: "Box",
@@ -47,7 +46,7 @@ export default class SatuanSeeder {
         editable: false,
       },
       {
-        uuid: satuanStripUuid, // Gunakan UUID yang diekspor
+        uuid: satuanStripUuid, 
         faskes_uuid: faskesUuid,
         code: "STRIP",
         name: "Strip",
