@@ -1,70 +1,74 @@
-import {ItemMedisModel} from "@adameds/model-sdk/farmasi";
+import { v7 as uuidv7 } from "uuid";
+import { ItemMedisModel } from "@adameds/model-sdk/farmasi";
+
+import {
+  bentukSediaanTabletUuid,
+  bentukSediaanAlkesUuid,
+} from "./bentuk-sediaan-seeder.js";
+import {
+  kategoriObatAnalgesikUuid,
+  kategoriObatAntibiotikUuid,
+  kategoriObatAlkesUuid,
+} from "./kategori-obat-seeder.js";
+import { satuanDosisMgUuid, satuanPenggunaanPcsUuid } from "./satuan-seeder.js";
+
+export const itemParacetamolUuid = uuidv7();
+export const itemAmoxicillinUuid = uuidv7();
+export const itemJarumSuntikUuid = uuidv7();
 
 export default class ItemMedisSeeder {
-    static async seed(transaction) {
-        const item = [
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "bentuk_sediaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "code" : "prcm",
-                "name" : "paracetamol",
-                "status" : true,
-                "dosis" : 500,
-                "satuan_dosis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "satuan_penggunaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "jenis_item" : "obat",
-                "kategori_obat_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "satuan_kemasan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "manufacture_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e"
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "bentuk_sediaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "code" : "dpt",
-                "name" : "diapet",
-                "status" : true,
-                "dosis" : 500,
-                "satuan_dosis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "satuan_penggunaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "satuan_kemasan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "jenis_item" : "obat",
-                "kategori_obat_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "manufacture_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e"
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "bentuk_sediaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "alkes-365d-731c-8b16-3a4565c9475r",
-                "code" : "btdn",
-                "name" : "betadine",
-                "status" : true,
-                "dosis" : 500,
-                "satuan_dosis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "satuan_penggunaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "satuan_kemasan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "jenis_item" : "alkes",
-                "kategori_obat_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "manufacture_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e"
-            },
-            {
-                "faskes_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "bentuk_sediaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "alkes1-365d-731c-8b16-3a4565c9475r",
-                "code" : "prbn",
-                "name" : "perban",
-                "status" : true,
-                "dosis" : 500,
-                "satuan_dosis_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "satuan_penggunaan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "satuan_kemasan_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "jenis_item" : "alkes",
-                "kategori_obat_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "manufacture_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e"
-            },
-        ];
+  static async seed(transaction) {
+    await ItemMedisModel.destroy({
+      where: {},
+      truncate: true,
+      cascade: true,
+      transaction,
+    });
 
-        await ItemMedisModel.bulkCreate(item, { transaction });
-    }
+    const faskesUuid = "01981726-d5cf-7bc4-97ca-9804168283f7";
+
+    const itemsToSeed = [
+      {
+        uuid: itemParacetamolUuid,
+        faskes_uuid: faskesUuid,
+        code: "PCT500",
+        name: "Paracetamol 500mg",
+        bentuk_sediaan_uuid: bentukSediaanTabletUuid, 
+        dosis: 500,
+        satuan_dosis_uuid: satuanDosisMgUuid, 
+        satuan_penggunaan_uuid: satuanPenggunaanPcsUuid, 
+        jenis_item: "obat",
+        kategori_obat_uuid: kategoriObatAnalgesikUuid, 
+        status: true,
+      },
+      {
+        uuid: itemAmoxicillinUuid, 
+        faskes_uuid: faskesUuid,
+        code: "AMX500",
+        name: "Amoxicillin 500mg",
+        bentuk_sediaan_uuid: bentukSediaanTabletUuid,
+        dosis: 500,
+        satuan_dosis_uuid: satuanDosisMgUuid,
+        satuan_penggunaan_uuid: satuanPenggunaanPcsUuid,
+        jenis_item: "obat",
+        kategori_obat_uuid: kategoriObatAntibiotikUuid,
+        status: true,
+      },
+      {
+        uuid: itemJarumSuntikUuid, 
+        faskes_uuid: faskesUuid,
+        code: "JRM-3ML",
+        name: "Jarum Suntik 3ml",
+        bentuk_sediaan_uuid: bentukSediaanAlkesUuid,
+        dosis: 0,
+        satuan_dosis_uuid: satuanPenggunaanPcsUuid,
+        satuan_penggunaan_uuid: satuanPenggunaanPcsUuid,
+        jenis_item: "alkes",
+        kategori_obat_uuid: kategoriObatAlkesUuid,
+        status: true,
+      },
+    ];
+
+    await ItemMedisModel.bulkCreate(itemsToSeed, { transaction });
+  }
 }

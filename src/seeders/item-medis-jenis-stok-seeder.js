@@ -1,47 +1,53 @@
-import ItemMedisJenisStokModel from "../models/item-medis-jenis-stok-model.js";
+import { v7 as uuidv7 } from "uuid";
+import { ItemMedisJenisStokModel } from "@adameds/model-sdk/farmasi";
+import { jenisStokBpjsUuid, jenisStokUmumUuid } from "./jenis-stok-seeder.js";
+import {
+  itemParacetamolUuid,
+  itemAmoxicillinUuid,
+  itemJarumSuntikUuid,
+} from "./item-medis-seeder.js";
+
+export const paracetamolBpjsUuid = uuidv7();
+export const paracetamolUmumUuid = uuidv7();
+export const amoxicillinBpjsUuid = uuidv7();
+export const jarumSuntikUmumUuid = uuidv7();
 
 export default class ItemMedisJenisStokSeeder {
-    static async seed(transaction) {
-        const item = [
-            {
-                "faskes_uuid" : "192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475r",
-            },
-            {
-                "faskes_uuid" : "192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "0192b31f-365d-731c-8b16-3a4565c9475s",
-                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475r",
-                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "alkes-365d-731c-8b16-3a4565c9475e",
-                "item_medis_uuid": "alkes-365d-731c-8b16-3a4565c9475r",
-                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "alkes1-365d-731c-8b16-3a4565c9475e",
-                "item_medis_uuid": "alkes1-365d-731c-8b16-3a4565c9475r",
-                "jenis_stok_uuid" : "0192b31f-365d-731c-8b16-3a4565c9475e",
-            },
-            {
-                "faskes_uuid" : "192b31f-365d-731c-8b16-3a4565c9475e",
-                "uuid": "paradential-365d-731c-8b16-3a4565c9475e",
-                "item_medis_uuid": "0192b31f-365d-731c-8b16-3a4565c9475e",
-                "jenis_stok_uuid" : "prudential-365d-731c-8b16-3a4565c9475e",
-            },
-        ];
+  static async seed(transaction) {
+    await ItemMedisJenisStokModel.destroy({
+      where: {},
+      truncate: true,
+      cascade: true,
+      transaction,
+    });
+    const faskesUuid = "01981726-d5cf-7bc4-97ca-9804168283f7";
 
-        await ItemMedisJenisStokModel.bulkCreate(item, { transaction });
-
-    }
+    const itemsToSeed = [
+      {
+        uuid: paracetamolBpjsUuid, 
+        faskes_uuid: faskesUuid,
+        item_medis_uuid: itemParacetamolUuid,
+        jenis_stok_uuid: jenisStokBpjsUuid,
+      },
+      {
+        uuid: paracetamolUmumUuid, 
+        faskes_uuid: faskesUuid,
+        item_medis_uuid: itemParacetamolUuid,
+        jenis_stok_uuid: jenisStokUmumUuid,
+      },
+      {
+        uuid: amoxicillinBpjsUuid, 
+        faskes_uuid: faskesUuid,
+        item_medis_uuid: itemAmoxicillinUuid,
+        jenis_stok_uuid: jenisStokBpjsUuid,
+      },
+      {
+        uuid: jarumSuntikUmumUuid, 
+        faskes_uuid: faskesUuid,
+        item_medis_uuid: itemJarumSuntikUuid,
+        jenis_stok_uuid: jenisStokUmumUuid,
+      },
+    ];
+    await ItemMedisJenisStokModel.bulkCreate(itemsToSeed, { transaction });
+  }
 }

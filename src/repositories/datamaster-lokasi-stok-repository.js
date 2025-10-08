@@ -70,6 +70,7 @@ export default class DataMasterLokasiStokRepository {
       {
         where: {
           uuid: req.uuid,
+          deleted_at: null,
         },
       }
     );

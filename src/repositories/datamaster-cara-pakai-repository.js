@@ -58,6 +58,7 @@ export default class DataMasterCaraPakaiRepository {
       {
         where: {
           uuid: req.uuid,
+          deleted_at: null,
         },
       }
     );

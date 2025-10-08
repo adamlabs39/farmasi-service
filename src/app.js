@@ -6,6 +6,7 @@ import authorizationSdk from "@adameds/authorization-sdk";
 import efp from "express-fileupload";
 import { dbSeeder } from "./seeders/db-seeder.js";
 import MODELMERGE from "./models/model-synchronize.js";
+import morgan from "morgan";
 
 const APPLICATION_PORT = process.env.APPLICATION_PORT;
 const APPLICATION_HOST = process.env.APPLICATION_HOST;
@@ -25,9 +26,20 @@ app.use(
     methods: ["GET", "POST", "HEAD", "PUT", "DELETE", "PATCH", "OPTIONS"],
   })
 );
+
+const authConfig = {
+  publicKey: process.env.PUBLIC_KEY,
+  privateKey: process.env.PRIVATE_KEY,
+};
+
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms")
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(authorizationSdk([]));
+app.use(authorizationSdk([], authConfig));
 app.use(efp());
 app.use(routes);
 app.use(errorMiddleware);
@@ -42,6 +54,7 @@ app.listen(APPLICATION_PORT, APPLICATION_HOST, async () => {
     console.error("Failed to synchronize the database:", error);
   }
 
+  console.log(`Mencoba terhubung ke database: ${process.env.DB_NAME} di ${process.env.DB_HOST}`);
   console.log(
     `Server running on http://${APPLICATION_HOST}:${APPLICATION_PORT}`
   );

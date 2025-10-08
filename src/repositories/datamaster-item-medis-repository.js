@@ -163,6 +163,7 @@ export default class DataMasterItemMedisRepository {
         {
           where: {
             uuid: req.uuid,
+            deleted_at: null,
           },
           tr,
         }
@@ -341,7 +342,7 @@ export default class DataMasterItemMedisRepository {
         {
           model: JenisStokModel,
           as: "detail_stok",
-          required: true,
+          required: false,
           attributes: ["uuid", "name"],
           where: {
             deleted_at: {
@@ -353,14 +354,14 @@ export default class DataMasterItemMedisRepository {
         {
           model: StockMedisModel,
           as: "stocks",
-          required: true,
+          required: false,
           attributes: ["sisa_stok", "exp_date"],
           where: {
             deleted_at: {
               [Op.is]: null,
             },
             exp_date: {
-              [Op.gt]: new Date(),
+              [Op.gte]: new Date(),
             },
             lokasi_stok_uuid: { [Op.iLike]: `%${req.lokasi_stok_uuid || ""}%` },
           },

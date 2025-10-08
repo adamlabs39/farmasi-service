@@ -24,7 +24,7 @@ export default class PrescriptionRepository {
         return await PrescriptionModel.findOne(
             {
                 where: {
-                    uuid: uuid
+                    uuid: uuid,
                 },
                 attributes: {
                     exclude: ['deleted_at', 'created_at', 'faskes_uuid']
@@ -157,7 +157,7 @@ export default class PrescriptionRepository {
             },
             order_status: {
                 [Op.between]: [1, 4]
-            }
+            },
         }
 
         if (req.status.length > 0) {
@@ -350,7 +350,7 @@ export default class PrescriptionRepository {
 
         const prescriptions = await PrescriptionModel.findAll({
             where: filter,
-            order: [['created_at', 'DESC']],
+            order: [['created_at', 'ASC']],
             attributes: ['no_resep', 'dokter_order', 'jenis_pelayanan', 'order_date'],
             include: [
                 {
