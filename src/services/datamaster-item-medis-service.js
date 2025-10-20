@@ -13,6 +13,8 @@ import DatamasterBentukSediaanRepository from "../repositories/datamaster-bentuk
 import DataMasterManufactureRepository from "../repositories/datamaster-manufacture-repository.js";
 import DataMasterKategoriObatRepository from "../repositories/datamaster-kategori-obat-repository.js";
 import DataMasterJenisStokRepository from "../repositories/datamaster-jenis-stok-repository.js";
+import { HargaItemModel } from "@adameds/model-sdk/farmasi";
+import { Op } from "sequelize";
 
 export default class DatamasterItemMedisService {
   static async create(req) {
@@ -198,29 +200,54 @@ export default class DatamasterItemMedisService {
     ZodValidator.validate(DatamasterValidation.GET_AVAILABLE_JENIS_STOK, req);
 
     const configInfo = await KonfigurasiHargaRepository.get(req.faskes_uuid);
+    const isAvg = configInfo.metode_hpp === "avg";
 
-    const result = await DataMasterItemMedisRepository.getAvailableJenisStok(
-      req,
-      configInfo.metode_hpp === "avg"
+    const results = await DataMasterItemMedisRepository.getAvailableJenisStok(
+      req
     );
-    if (result.length === 0) {
-      throw new BadRequestException("Tidak ada jenis stok yang tersedia");
+
+    if (results.length === 0) {
+      throw new BadRequestException(
+        "Tidak ada jenis stok yang tersedia untuk item ini."
+      );
     }
 
-    for (const item of result) {
-      let total_stock = 0;
+    const itemJenisStokUuids = results.map((item) => item.uuid);
+    const prices =
+      await DataMasterItemMedisRepository.findLatestPricesForItemJenisStok(
+        itemJenisStokUuids,
+        isAvg
+      );
 
-      for (const stock of item.stocks) {
-        total_stock += stock.sisa_stok;
-      }
+    const formattedResults = results
+      .map((item, index) => {
+        const priceInfo = prices[index];
 
-      item.dataValues.harga = item.detail_harga[0].dataValues.harga;
-      item.dataValues.total_stok = total_stock;
-      item.dataValues.detail_harga = undefined;
-      item.dataValues.stocks = undefined;
+        if (!priceInfo) {
+          return null;
+        }
+
+        const total_stock = item.stocks.reduce(
+          (sum, stock) => sum + stock.sisa_stok,
+          0
+        );
+
+        return {
+          uuid: item.uuid,
+          detail_stok: item.detail_stok,
+          harga: priceInfo.dataValues.harga,
+          total_stok: total_stock,
+        };
+      })
+      .filter(Boolean);
+
+    if (formattedResults.length === 0) {
+      throw new BadRequestException(
+        "Tidak ada jenis stok yang memiliki harga yang tersedia."
+      );
     }
 
-    return result;
+    return formattedResults;
   }
 
   static async import(req) {
