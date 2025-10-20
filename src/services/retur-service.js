@@ -153,29 +153,29 @@ export default class ReturService {
             const retur = await ReturRepository.create(req, transaction);
 
             // region UPLOAD TO INVENTORY
-            try {
-                await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
-                    sumber_mutasi: "pelayanan",
-                    with_check_stock: true,
-                    code: req.no_order_alkes ? req.no_order_alkes : req.no_resep,
-                    keterangan: {
-                        description: `Retur ${req.jenis_retur === "obat" ? "Obat" : "Farmasi Ruangan"}`,
-                    },
-                    items: mutasiItems,
-                }, {
-                    headers: {
-                        Authorization: req.token
-                    }
-                });
-            } catch (error) {
-                if (error.response) {
-                    throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
-                } else if (error.request) {
-                    throw new InternalServerException("Tidak ada respons dari server inventory");
-                } else {
-                    throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
-                }
-            }
+            // try {
+            //     await axiosInstance.post(`${INVENTORY_URL}/inventory/stok/increase`, {
+            //         sumber_mutasi: "pelayanan",
+            //         with_check_stock: true,
+            //         kode_referensi: req.no_order_alkes ? req.no_order_alkes : req.no_resep,
+            //         keterangan: {
+            //             description: `Retur ${req.jenis_retur === "obat" ? "Obat" : "Farmasi Ruangan"}`,
+            //         },
+            //         items: mutasiItems,
+            //     }, {
+            //         headers: {
+            //             Authorization: req.token
+            //         }
+            //     });
+            // } catch (error) {
+            //     if (error.response) {
+            //         throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
+            //     } else if (error.request) {
+            //         throw new InternalServerException("Tidak ada respons dari server inventory");
+            //     } else {
+            //         throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
+            //     }
+            // }
             // endregion
 
             await transaction.commit();

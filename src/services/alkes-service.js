@@ -230,29 +230,29 @@ export default class AlkesService {
             await AlkesRepository.editAlkes(req, transaction);
 
             // region UPLOAD TO INVENTORY
-            try {
-                await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
-                    sumber_mutasi: "pelayanan",
-                    with_check_stock: true,
-                    code: alkes.dataValues.no_order_alkes,
-                    keterangan: {
-                        description: "Order Farmasi Ruangan",
-                    },
-                    items: mutasiItems,
-                }, {
-                    headers: {
-                        Authorization: req.token
-                    }
-                });
-            } catch (error) {
-                if (error.response) {
-                    throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
-                } else if (error.request) {
-                    throw new InternalServerException("Tidak ada respons dari server inventory");
-                } else {
-                    throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
-                }
-            }
+            // try {
+            //     await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
+            //         sumber_mutasi: "pelayanan",
+            //         with_check_stock: true,
+            //         code: alkes.dataValues.no_order_alkes,
+            //         keterangan: {
+            //             description: "Order Farmasi Ruangan",
+            //         },
+            //         items: mutasiItems,
+            //     }, {
+            //         headers: {
+            //             Authorization: req.token
+            //         }
+            //     });
+            // } catch (error) {
+            //     if (error.response) {
+            //         throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
+            //     } else if (error.request) {
+            //         throw new InternalServerException("Tidak ada respons dari server inventory");
+            //     } else {
+            //         throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
+            //     }
+            // }
             // endregion
 
             await transaction.commit();
@@ -279,6 +279,7 @@ export default class AlkesService {
 
     static async updateDiserahkan(req) {
         ZodValidator.validate(AlkesValidation.UPDATE_SERAHKAN, req);
+        console.log(req);
         req.order_status = 4;
         req.waktu_pemberian = toEpochDate(new Date());
         return await AlkesRepository.editAlkes(req);

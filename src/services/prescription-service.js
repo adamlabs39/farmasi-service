@@ -450,40 +450,40 @@ console.log("req", req);
       await PrescriptionRepository.editPrescription(req, transaction);
 
       // region UPLOAD TO INVENTORY
-      try {
-        console.log(mutasiItems);
-        await axiosInstance.post(
-          `${INVENTORY_URL}/mutasi`,
-          {
-            sumber_mutasi: "pelayanan",
-            with_check_stock: true,
-            code: prescription.dataValues.no_resep,
-            keterangan: {
-              description: "Resep Dokter",
-            },
-            items: mutasiItems,
-          },
-          {
-            headers: {
-              Authorization: req.token,
-            },
-          }
-        );
-      } catch (error) {
-        if (error.response) {
-          throw new InternalServerException(
-            "[SERVER INVENTORY]: " + error.response.data.message
-          );
-        } else if (error.request) {
-          throw new InternalServerException(
-            "Tidak ada respons dari server inventory"
-          );
-        } else {
-          throw new InternalServerException(
-            "Kesalahan saat menyiapkan permintaan inventory"
-          );
-        }
-      }
+      // try {
+      //   console.log(mutasiItems);
+      //   await axiosInstance.post(
+      //     `${INVENTORY_URL}/mutasi`,
+      //     {
+      //       sumber_mutasi: "pelayanan",
+      //       with_check_stock: true,
+      //       code: prescription.dataValues.no_resep,
+      //       keterangan: {
+      //         description: "Resep Dokter",
+      //       },
+      //       items: mutasiItems,
+      //     },
+      //     {
+      //       headers: {
+      //         Authorization: req.token,
+      //       },
+      //     }
+      //   );
+      // } catch (error) {
+      //   if (error.response) {
+      //     throw new InternalServerException(
+      //       "[SERVER INVENTORY]: " + error.response.data.message
+      //     );
+      //   } else if (error.request) {
+      //     throw new InternalServerException(
+      //       "Tidak ada respons dari server inventory"
+      //     );
+      //   } else {
+      //     throw new InternalServerException(
+      //       "Kesalahan saat menyiapkan permintaan inventory"
+      //     );
+      //   }
+      // }
       // endregion
 
       await transaction.commit();

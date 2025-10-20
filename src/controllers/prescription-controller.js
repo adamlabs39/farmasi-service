@@ -115,7 +115,7 @@ export default class PrescriptionController {
     try {
       req.body.petugas_pembatalan = req.author.username;
       await PrescriptionService.batalOrder(req.body);
-      res.status(200).json(successResponse("data berhasil diupdate"));
+      res.status(200).json(successResponse("data berhasil dibatalkan"));
     } catch (error) {
       nextFunction(error);
     }
@@ -157,7 +157,7 @@ export default class PrescriptionController {
   static async batalSiapDiserahkan(req, res, nextFunction) {
     try {
       await PrescriptionService.batalSiapDiserahkan(req.body);
-      res.status(200).json(successResponse("data berhasil diupdate"));
+      res.status(200).json(successResponse("data berhasil dibatalkan"));
     } catch (error) {
       nextFunction(error);
     }
@@ -176,7 +176,9 @@ export default class PrescriptionController {
     try {
       req.body.faskes_uuid = req.author.faskesUuid;
       const result = await PrescriptionService.getAll(req.body);
-      res.status(200).json(successResponse("data berhasil diupdate", result));
+      res
+        .status(200)
+        .json(successResponse("data berhasil ditampilkan", result));
     } catch (error) {
       nextFunction(error);
     }

@@ -89,7 +89,7 @@ export default class AlkesController {
       req.body.petugas_pembatalan = req.author.username;
       req.body.uuid = req.params.uuid;
       await AlkesService.batalOrder(req.body);
-      res.status(200).json(successResponse("data berhasil diupdate"));
+      res.status(200).json(successResponse("data berhasil dibatalkan"));
     } catch (error) {
       nextFunction(error);
     }
@@ -131,7 +131,7 @@ export default class AlkesController {
   static async batalSiapDiserahkan(req, res, nextFunction) {
     try {
       await AlkesService.batalSiapDiserahkan(req.body);
-      res.status(200).json(successResponse("data berhasil diupdate"));
+      res.status(200).json(successResponse("data berhasil dibatalkan"));
     } catch (error) {
       nextFunction(error);
     }
@@ -150,7 +150,7 @@ export default class AlkesController {
     try {
       req.body.faskes_uuid = req.author.faskesUuid;
       const result = await AlkesService.getAllForFarmacy(req.body);
-      res.status(200).json(successResponse("data berhasil diupdate", result));
+      res.status(200).json(successResponse("data berhasil ditampilkan", result));
     } catch (error) {
       nextFunction(error);
     }
