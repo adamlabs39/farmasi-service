@@ -3,7 +3,7 @@ import {required} from "./message-validation-error.js";
 
 export default class PenjualanObatValidation {
     static CREATE_OTC = z.object({
-        faskes_uuid: z.string().min(1, required),
+        // faskes_uuid: z.string().min(1, required),
         lokasi_stok_uuid: z.string().min(1, required),
         dokter_pemberi_resep: z.string().min(1, required),
         nama_pembeli: z.string().min(1, required),

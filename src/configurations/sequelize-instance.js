@@ -11,8 +11,8 @@ const sequelizeInstance = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
   port: DB_PORT,
   dialect: "postgres",
   pool: {
-    min: 5,
-    max: 10,
+    min: 10,
+    max: 30,
   },
 });
 

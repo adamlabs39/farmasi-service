@@ -342,7 +342,7 @@ export default class DataMasterItemMedisRepository {
         {
           model: JenisStokModel,
           as: "detail_stok",
-          required: false,
+          required: true,
           attributes: ["uuid", "name"],
           where: {
             deleted_at: {
@@ -360,30 +360,39 @@ export default class DataMasterItemMedisRepository {
             deleted_at: {
               [Op.is]: null,
             },
+            sisa_stok: { [Op.gt]: 0 },
             exp_date: {
               [Op.gte]: new Date(),
             },
             lokasi_stok_uuid: { [Op.iLike]: `%${req.lokasi_stok_uuid || ""}%` },
           },
         },
-        {
-          model: HargaItemModel,
-          as: "detail_harga",
-          required: false,
-          limit: 1,
-          order: [["created_at", "DESC"]],
-          where: { deleted_at: { [Op.is]: null } },
-          attributes: [
-            [
-              sequelizeInstance.literal(
-                `CASE WHEN ${isAvg} THEN harga_avg ELSE harga_terakhir END`
-              ),
-              "harga",
-            ],
-          ],
-        },
       ],
     });
+  }
+
+  static async findLatestPricesForItemJenisStok(
+    itemJenisStokUuids,
+    isAvg = false
+  ) {
+    const pricePromises = itemJenisStokUuids.map((uuid) =>
+      HargaItemModel.findOne({
+        where: {
+          item_medis_jenis_stok_uuid: uuid,
+          deleted_at: { [Op.is]: null },
+        },
+        order: [["created_at", "DESC"]],
+        attributes: [
+          [
+            sequelizeInstance.literal(
+              `CASE WHEN ${isAvg} THEN harga_avg ELSE harga_terakhir END`
+            ),
+            "harga",
+          ],
+        ],
+      })
+    );
+    return Promise.all(pricePromises);
   }
 
   static async getPrice(req) {

@@ -4,10 +4,10 @@ import PenjualanObatService from "../services/penjualan-obat-service.js";
 export default class PenjualanObatController {
   static async create(req, res, nextFunction) {
     try {
-      req.body.faskes_uuid = req.author.faskesUuid;
-      req.body.token = req.get("Authorization");
-
-      const result = await PenjualanObatService.create(req.body);
+     const token = req.headers.authorization;
+     const author = req.author;
+     const data = req.body;
+      const result = await PenjualanObatService.create(data, author, token);
 
       res.status(200).json(successResponse("Data berhasil disimpan", result));
     } catch (error) {
