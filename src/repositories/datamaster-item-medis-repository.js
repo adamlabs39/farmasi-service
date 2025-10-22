@@ -329,15 +329,15 @@ export default class DataMasterItemMedisRepository {
     });
   }
 
-  static async getAvailableJenisStok(req, isAvg = false) {
-    return await ItemMedisJenisStokModel.findAll({
+  static async getAvailableJenisStok(params) {
+    return await ItemMedisJenisStokModel.findOne({
       where: {
-        item_medis_uuid: req.item_medis_uuid,
+        uuid: params.item_medis_jenis_stok_uuid,
         deleted_at: {
           [Op.is]: null,
         },
       },
-      attributes: ["uuid"],
+      attributes: ["uuid", "item_medis_uuid", "jenis_stok_uuid"],
       include: [
         {
           model: JenisStokModel,
@@ -348,14 +348,13 @@ export default class DataMasterItemMedisRepository {
             deleted_at: {
               [Op.is]: null,
             },
-            status: true,
           },
         },
         {
           model: StockMedisModel,
           as: "stocks",
           required: false,
-          attributes: ["sisa_stok", "exp_date"],
+          attributes: ["sisa_stok"],
           where: {
             deleted_at: {
               [Op.is]: null,
@@ -364,7 +363,7 @@ export default class DataMasterItemMedisRepository {
             exp_date: {
               [Op.gte]: new Date(),
             },
-            lokasi_stok_uuid: { [Op.iLike]: `%${req.lokasi_stok_uuid || ""}%` },
+            lokasi_stok_uuid: params.lokasi_stok_uuid,
           },
         },
       ],
@@ -372,27 +371,24 @@ export default class DataMasterItemMedisRepository {
   }
 
   static async findLatestPricesForItemJenisStok(
-    itemJenisStokUuids,
+    itemJenisStokUuid,
     isAvg = false
   ) {
-    const pricePromises = itemJenisStokUuids.map((uuid) =>
-      HargaItemModel.findOne({
-        where: {
-          item_medis_jenis_stok_uuid: uuid,
-          deleted_at: { [Op.is]: null },
-        },
-        order: [["created_at", "DESC"]],
-        attributes: [
-          [
-            sequelizeInstance.literal(
-              `CASE WHEN ${isAvg} THEN harga_avg ELSE harga_terakhir END`
-            ),
-            "harga",
-          ],
+    return HargaItemModel.findOne({
+      where: {
+        item_medis_jenis_stok_uuid: itemJenisStokUuid,
+        deleted_at: { [Op.is]: null },
+      },
+      order: [["created_at", "DESC"]],
+      attributes: [
+        [
+          sequelizeInstance.literal(
+            `CASE WHEN ${isAvg} THEN harga_avg ELSE harga_terakhir END`
+          ),
+          "harga",
         ],
-      })
-    );
-    return Promise.all(pricePromises);
+      ],
+    });
   }
 
   static async getPrice(req) {

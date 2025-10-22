@@ -82,10 +82,24 @@ export default class DatamasterItemMedisController {
 
   static async getAvailableJenisStok(req, res, nextFunction) {
     try {
-      req.query.item_medis_uuid = req.params.uuid;
-      req.query.faskes_uuid = req.author.faskesUuid;
+      const { item_medis_jenis_stok_uuid } = req.params;
+      const { lokasi_stok_uuid } = req.query;
+      const faskesUuid = req.author.faskesUuid;
+      if (!lokasi_stok_uuid) {
+        throw new BadRequestException(
+          "Parameter query 'lokasi_stok_uuid' wajib diisi."
+        );
+      }
+
+      const params = {
+        item_medis_jenis_stok_uuid,
+        lokasi_stok_uuid,
+      };
+      console.log("params", params);
+
       const result = await DatamasterItemMedisService.getAvailableJenisStok(
-        req.query
+        params,
+        faskesUuid
       );
       res
         .status(200)

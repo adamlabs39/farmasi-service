@@ -14,6 +14,7 @@ export default class DataMasterAturanPakaiRepository {
       where: {
         faskes_uuid: req.faskes_uuid,
         name: { [Op.iLike]: `%${req.name || ""}%` },
+        code: { [Op.iLike]: `%${req.code ?? ""}%` },
         deleted_at: {
           [Op.is]: null,
         },
