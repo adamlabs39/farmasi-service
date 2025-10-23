@@ -12,6 +12,7 @@ import axiosInstance from "../configurations/axios-instance.js";
 import { INVENTORY_URL, REKAM_MEDIS_URL } from "../helpers/constants.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import { uuidv7 } from "uuidv7";
+import NotfoundException from "../errors/notfound-exception.js";
 
 export default class PenjualanObatService {
   static async create(data, author, token) {
@@ -22,13 +23,21 @@ export default class PenjualanObatService {
     let inventoryReducedItems = [];
 
     try {
-      const penjualanUuid = uuidv7();
-      const itemMedisUuids = data.items.map((item) => item.item_medis_uuid);
+      const stockUuids = data.items.map((item) => item.stock_uuid);
+      if (stockUuids.length === 0) {
+        throw new BadRequestException("Item obat tidak ditemukan di stok.");
+      }
 
-      const [itemMedises, konfigurasiHarga] = await Promise.all([
-        DataMasterItemMedisRepository.getSome(itemMedisUuids),
-        KonfigurasiHargaRepository.get(faskesUuid),
-      ]);
+      const stockDetails = await StockMedisRepository.findStocksWithDetails(
+        stockUuids
+      );
+
+      const stockMap = new Map(
+        stockDetails.map((stock) => [stock.uuid, stock])
+      );
+
+      const penjualanUuid = uuidv7();
+      const konfigurasiHarga = await KonfigurasiHargaRepository.get(faskesUuid);
 
       let totalHargaCalculated = 0;
       const processedItems = [];
@@ -36,41 +45,54 @@ export default class PenjualanObatService {
       for (const item of data.items) {
         ZodValidator.validate(PenjualanObatValidation.CREATE_OTC_ITEM, item);
 
-        const itemMedisInfo =
-          await DataMasterItemMedisRepository.getItemMedisJenisStok({
-            item_medis_uuid: item.item_medis_uuid,
-            jenis_stok_uuid: item.jenis_stok_uuid,
-          });
-
-        if (!itemMedisInfo)
-          throw new BadRequestException(
-            `Item medis ${item.item_medis_uuid} tidak cocok dengan jenis stok.`
-          );
+        const stockDetail = stockMap.get(item.stock_uuid);
         if (
-          !itemMedisInfo.detail_harga ||
-          itemMedisInfo.detail_harga.length === 0
+          !stockDetail ||
+          !stockDetail.item_medis_jenis_stok ||
+          !stockDetail.item_medis_jenis_stok.item_medis
         ) {
-          throw new BadRequestException(
-            `Item medis ${item.item_medis_uuid} tidak memiliki detail harga.`
+          throw new NotfoundException(
+            `Stok dengan UUID ${item.stock_uuid} tidak ditemukan atau tidak memiliki item medis terkait.`
           );
         }
 
-        const hargaSatuan =
-          konfigurasiHarga.metode_hpp === "last"
-            ? itemMedisInfo.detail_harga[0].harga_terakhir
-            : itemMedisInfo.detail_harga[0].harga_avg;
+        if (stockDetail.sisa_stok < item.qty) {
+          throw new BadRequestException(
+            `Stok untuk ${stockDetail.item_medis_jenis_stok.item_medis.name} (Batch UUID: ${item.stock_uuid}) tidak mencukupi. Sisa: ${stockDetail.sisa_stok}, diminta: ${item.qty}`
+          );
+        }
+
+        const itemMedisJenisStokUuid = stockDetail.item_medis_jenis_stok_uuid;
+        const itemMedisUuid = stockDetail.item_medis_jenis_stok.item_medis_uuid;
+        const itemMedisData = stockDetail.item_medis_jenis_stok.item_medis;
+
+        const hargaInfo =
+          await DataMasterItemMedisRepository.findLatestPricesForItemJenisStok(
+            itemMedisJenisStokUuid,
+            konfigurasiHarga.metode_hpp === "avg"
+          );
+        if (!hargaInfo) {
+          throw new BadRequestException(
+            `Harga untuk item medis ${itemMedisUuid} tidak ditemukan.`
+          );
+        }
+        const hargaSatuan = hargaInfo.dataValues.harga;
 
         totalHargaCalculated += (hargaSatuan - (item.diskon || 0)) * item.qty;
 
         processedItems.push({
-          ...item,
+          stock_uuid: item.stock_uuid,
+          item_medis_uuid: itemMedisUuid,
+          jenis_stok_uuid: stockDetail.item_medis_jenis_stok.jenis_stok_uuid,
+          qty: item.qty,
+          diskon: item.diskon || 0,
           uuid: uuidv7(),
           penjualan_obat_uuid: penjualanUuid,
           faskes_uuid: faskesUuid,
           harga_satuan: hargaSatuan,
-          satuan_uuid:
-            itemMedises.find((im) => im.uuid === item.item_medis_uuid)
-              ?.satuan_penggunaan?.name || null,
+          satuan_uuid: itemMedisData.satuan_penggunaan_uuid,
+          satuan_name: itemMedisData.satuan_penggunaan?.name || null,
+          exp_date: stockDetail.exp_date,
         });
       }
 
@@ -123,7 +145,7 @@ export default class PenjualanObatService {
         try {
           const compensationPayload = {
             sumber_mutasi: "pelayanan",
-            kode_referensi: `${data.no_transaksi || `COMP-${Date.now()}`}-COMP`,
+            kode_referensi: data.no_transaksi,
             items: inventoryReducedItems.map((item) => ({
               item_uuid: item.item_medis_uuid,
               lokasi_stok_uuid: data.lokasi_stok_uuid,
@@ -180,30 +202,6 @@ export default class PenjualanObatService {
           }
         }
       }
-
-      // try {
-      //     await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
-      //         sumber_mutasi: "pelayanan",
-      //         with_check_stock: true,
-      //         code: req.no_transaksi,
-      //         keterangan: {
-      //             description: "Penjualan Obat (OTC)",
-      //         },
-      //         items: mutasiItems,
-      //     }, {
-      //         headers: {
-      //             Authorization: req.token
-      //         }
-      //     });
-      // } catch (error) {
-      //     if (error.response) {
-      //         throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
-      //     } else if (error.request) {
-      //         throw new InternalServerException("Tidak ada respons dari server inventory");
-      //     } else {
-      //         throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
-      //     }
-      // }
 
       await transaction.commit();
     } catch (e) {
