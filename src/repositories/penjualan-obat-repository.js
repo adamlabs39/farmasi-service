@@ -51,73 +51,154 @@ export default class PenjualanObatRepository {
     return Pagination.init(PenjualanObatModel, req, option);
   }
 
-  static async updateOtc(req, transaction) {
-    const fieldsToUpdate = {};
-    if (req.status !== undefined) fieldsToUpdate.status = req.status;
-    if (req.alasan_batal !== undefined)
-      fieldsToUpdate.alasan_batal = req.alasan_batal;
-    if (req.total_item !== undefined)
-      fieldsToUpdate.total_item = req.total_item;
-    if (req.total_harga !== undefined)
-      fieldsToUpdate.total_harga = req.total_harga;
+  static async updateOtc(dataToUpdate, uuid, transaction) {
+    // Terima 3 argumen
+    // Hapus data yang tidak perlu di-update
+    delete dataToUpdate.uuid;
+    delete dataToUpdate.alasan_batal; // Hapus ini jika alasan_batal ada di 'fieldsToUpdate'
 
-    const [affectedRows] = await PenjualanObatModel.update(fieldsToUpdate, {
-      where: { uuid: req.uuid },
+    // Gunakan 'dataToUpdate' langsung
+    const [affectedRows] = await PenjualanObatModel.update(dataToUpdate, {
+      where: { uuid: uuid }, // Gunakan 'uuid' dari argumen terpisah
       transaction,
     });
     return affectedRows;
   }
 
-  static async getOtcByUuid(req) {
-    return await PenjualanObatModel.findOne({
-      where: {
-        uuid: req.uuid,
-      },
-      attributes: {
-        exclude: [
-          "deleted_at",
-          "created_at",
-          "updated_at",
-          "status",
-          "faskes_uuid",
-          "id",
+  static async getOtcByUuid({ uuid }, transaction = null) {
+    const includeOptions = [
+      {
+        model: ItemPenjualanObatModel,
+        as: "items",
+        attributes: {
+          exclude: ["deleted_at", "created_at", "updated_at", "id"],
+        },
+        include: [
+          {
+            model: JenisStokModel,
+            as: "jenis_stok",
+            attributes: ["uuid", "name"],
+          },
+          {
+            model: ItemMedisModel,
+            as: "item_medis",
+            attributes: ["uuid", "name", "satuan_penggunaan_uuid"],
+            include: [
+              {
+                model: SatuanModel,
+                as: "satuan_penggunaan",
+                attributes: ["name"],
+              },
+            ],
+          },
         ],
       },
-      include: [
-        {
-          model: ItemPenjualanObatModel,
-          as: "items",
-          attributes: {
-            exclude: ["deleted_at", "created_at", "updated_at", "catatan_stok"],
+      {
+        model: LokasiStokModel,
+        as: "lokasi_stok",
+        attributes: ["uuid", "name"],
+      },
+    ];
+
+    if (transaction) {
+      // Ambil dan LOCK header-nya dulu
+      const penjualanHeader = await PenjualanObatModel.findOne({
+        where: { uuid },
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+
+      if (!penjualanHeader) return null;
+
+      // Ambil relasinya secara terpisah
+      const items = await penjualanHeader.getItems({
+        attributes: {
+          exclude: ["deleted_at", "created_at", "updated_at", "id"],
+        },
+        include: [
+          {
+            model: JenisStokModel,
+            as: "jenis_stok",
+            attributes: ["uuid", "name"],
           },
-          include: [
-            {
-              model: JenisStokModel,
-              as: "jenis_stok",
-              attributes: ["uuid", "name"],
-            },
-            {
-              model: ItemMedisModel,
-              as: "item_medis",
-              attributes: ["uuid", "name", "satuan_penggunaan_uuid"],
-              include: [
-                {
-                  model: SatuanModel,
-                  as: "satuan_penggunaan",
-                  attributes: ["name"],
-                },
-              ],
-            },
-          ],
+          {
+            model: ItemMedisModel,
+            as: "item_medis",
+            attributes: ["uuid", "name"],
+          },
+        ],
+        transaction,
+      });
+      const lokasiStok = await penjualanHeader.getLokasi_stok({ transaction });
+
+      // Gabungkan hasilnya
+      const result = penjualanHeader.toJSON();
+      result.items = items.map((i) => i.toJSON());
+      result.lokasi_stok = lokasiStok ? lokasiStok.toJSON() : null;
+
+      return result;
+    } else {
+      // Alur normal (tanpa lock)
+      return await PenjualanObatModel.findOne({
+        where: { uuid: uuid },
+        attributes: {
+          exclude: ["id", "deleted_at", "created_at", "updated_at"],
         },
-        {
-          model: LokasiStokModel,
-          as: "lokasi_stok",
-          attributes: ["uuid", "name"],
-        },
-      ],
-    });
+        include: includeOptions,
+      });
+    }
   }
+
+  //   static async getOtcByUuid(req) {
+  //     return await PenjualanObatModel.findOne({
+  //       where: {
+  //         uuid: req.uuid,
+  //       },
+  //       attributes: {
+  //         exclude: [
+  //           "deleted_at",
+  //           "created_at",
+  //           "updated_at",
+  //         //   "status",
+  //           "faskes_uuid",
+  //           "id",
+  //         ],
+  //       },
+  //       include: [
+  //         {
+  //           model: ItemPenjualanObatModel,
+  //           as: "items",
+  //           attributes: {
+  //             exclude: ["deleted_at", "created_at", "updated_at"],
+  //           },
+  //           include: [
+  //             {
+  //               model: JenisStokModel,
+  //               as: "jenis_stok",
+  //               attributes: ["uuid", "name"],
+  //             },
+  //             {
+  //               model: ItemMedisModel,
+  //               as: "item_medis",
+  //               attributes: ["uuid", "name", "satuan_penggunaan_uuid"],
+  //               include: [
+  //                 {
+  //                   model: SatuanModel,
+  //                   as: "satuan_penggunaan",
+  //                   attributes: ["name"],
+  //                 },
+  //               ],
+  //             },
+  //           ],
+  //         },
+  //         {
+  //           model: LokasiStokModel,
+  //           as: "lokasi_stok",
+  //           attributes: ["uuid", "name"],
+  //         },
+  //       ],
+  //     });
+  //   }
 
   static async getAllCatatanStok(req) {
     return await ItemPenjualanObatModel.findAll({

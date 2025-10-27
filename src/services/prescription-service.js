@@ -50,7 +50,7 @@ export default class PrescriptionService {
   static async orderObat(req) {
     req.order_status = 1;
     const transaction = await sequelizeInstance.transaction();
-console.log("req", req);
+    console.log("req", req);
     // generate no prescription
     req.no_resep = Utils.generate4Code("RSP");
 
@@ -92,6 +92,7 @@ console.log("req", req);
         req,
         transaction
       );
+      console.log("prescription from service", prescription);
       const prescription_uuid = prescription.dataValues.uuid;
       prescription.dataValues.obat = [];
 
@@ -134,9 +135,12 @@ console.log("req", req);
           }
         }
       }
-
+      console.log("presception", prescription_uuid);
+      console.log("session", req.session_uuid);
       // insert into rekam medis
       try {
+        console.log("presception", prescription_uuid);
+        console.log("session", req.session_uuid);
         await axiosInstance.post(
           `${REKAM_MEDIS_URL}/rekam-medis/order-obat`,
           {
@@ -151,14 +155,17 @@ console.log("req", req);
         );
       } catch (error) {
         if (error.response) {
+          console.error("error response rekam medis", error.response);
           throw new InternalServerException(
             "[SERVER REKAM MEDIS]: " + error.response.data.message
           );
         } else if (error.request) {
+          console.error("error response rekam medis", error.response);
           throw new InternalServerException(
             "Tidak ada respons dari server rekam medis"
           );
         } else {
+          console.error("error response rekam medis", error.response);
           throw new InternalServerException(
             "Kesalahan saat menyiapkan permintaan rekam medis"
           );

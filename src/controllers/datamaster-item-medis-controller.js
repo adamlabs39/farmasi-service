@@ -95,7 +95,6 @@ export default class DatamasterItemMedisController {
         item_medis_jenis_stok_uuid,
         lokasi_stok_uuid,
       };
-      console.log("params", params);
 
       const result = await DatamasterItemMedisService.getAvailableJenisStok(
         params,

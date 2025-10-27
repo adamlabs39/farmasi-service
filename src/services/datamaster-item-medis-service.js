@@ -197,7 +197,6 @@ export default class DatamasterItemMedisService {
   }
 
   static async getAvailableJenisStok(params, faskesUuid) {
-console.log("params dari serice", params);
     const configInfo = await KonfigurasiHargaRepository.get(faskesUuid);
     const isAvg = configInfo.metode_hpp === "avg";
 

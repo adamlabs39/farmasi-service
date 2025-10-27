@@ -13,6 +13,10 @@ import { INVENTORY_URL, REKAM_MEDIS_URL } from "../helpers/constants.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import { uuidv7 } from "uuidv7";
 import NotfoundException from "../errors/notfound-exception.js";
+import {
+  ItemPenjualanObatModel,
+  PenjualanObatModel,
+} from "@adameds/model-sdk/farmasi";
 
 export default class PenjualanObatService {
   static async create(data, author, token) {
@@ -170,45 +174,168 @@ export default class PenjualanObatService {
     }
   }
 
-  static async batalOtc(req) {
-    const transaction = await sequelizeInstance.transaction();
+  static async batalOtc(data, author, token) {
+    ZodValidator.validate(PenjualanObatValidation.BATAL_OTC, data);
+
+    const { uuid, alasan_batal } = data;
+    let transaction;
+    let penjualanDibatalkan;
 
     try {
-      ZodValidator.validate(PenjualanObatValidation.BATAL_OTC, req);
-      req.status = "cancel";
-      await PenjualanObatRepository.updateOtc(req);
+      transaction = await sequelizeInstance.transaction();
 
-      // bring back the stock
-      const items = await PenjualanObatRepository.getAllCatatanStok(req);
-      const mutasiItems = [];
+      const penjualan = await PenjualanObatRepository.getOtcByUuid(
+        { uuid },
+        transaction
+      );
 
-      for (const item of items) {
-        if (item.catatan_stok) {
+      if (!penjualan) {
+        throw new NotFoundError(
+          `Penjualan obat dengan UUID ${uuid} tidak ditemukan.`
+        );
+      }
+
+      if (penjualan.status !== "belum_lunas") {
+        throw new BadRequestException(
+          `Penjualan obat tidak dapat dibatalkan karena statusnya sudah '${penjualan.status}'.`
+        );
+      }
+
+      penjualanDibatalkan = penjualan;
+
+      console.info(
+        `Mengembalikan stok lokal untuk penjualan ${penjualan.no_transaksi}...`
+      );
+
+      const addStockPromises = [];
+      for (const item of penjualan.items) {
+        if (item.catatan_stok && Array.isArray(item.catatan_stok)) {
           for (const catatan of item.catatan_stok) {
-            const stockMedis = await StockMedisRepository.addQuantity(
-              catatan,
-              transaction
-            );
-
-            mutasiItems.push({
-              item_uuid: item.item_medis_uuid,
-              exp_date: stockMedis.exp_date,
-              stok_awal: stockMedis.sisa_stok,
-              stok_mutasi: stockMedis.sisa_stok + catatan.quantity,
-              jenis_stok_uuid: item.jenis_stok_uuid,
-              lokasi_stok_uuid: stockMedis.lokasi_stok_uuid,
-              type: "surplus",
-            });
+            if (catatan.stock_medis_uuid && catatan.quantity) {
+              addStockPromises.push(
+                StockMedisRepository.addQuantity(catatan, transaction)
+              );
+            }
           }
+        } else {
+          console.warn(
+            `Tidak ada/format catatan_stok salah untuk item ${item.uuid}, stok lokal mungkin tidak dikembalikan.`
+          );
         }
+      }
+      await Promise.all(addStockPromises);
+      console.info(
+        `Stok lokal berhasil dikembalikan (jika ada catatan valid).`
+      );
+
+      const dataUpdate = {
+        status: "cancel",
+        alasan_batal: alasan_batal,
+      };
+      const updatedRows = await PenjualanObatRepository.updateOtc(
+        dataUpdate,
+        uuid,
+        transaction
+      );
+      if (updatedRows === 0) {
+        throw new InternalServerException(
+          "Gagal memperbarui status penjualan menjadi cancel."
+        );
       }
 
       await transaction.commit();
-    } catch (e) {
-      await transaction.rollback();
-      throw e;
+      console.info(
+        `Penjualan obat ${penjualanDibatalkan.no_transaksi} berhasil dibatalkan di sistem lokal.`
+      );
+    } catch (dbError) {
+      if (transaction) await transaction.rollback();
+      console.error(
+        `Gagal membatalkan penjualan obat ${uuid} di database lokal:`,
+        dbError
+      );
+      throw dbError;
     }
+    try {
+      const increasePayload = {
+        sumber_mutasi: "pelayanan",
+        kode_referensi: `${penjualanDibatalkan.no_transaksi}`,
+        items: penjualanDibatalkan.items.map((item) => ({
+          item_uuid: item.item_medis.uuid,
+          lokasi_stok_uuid: penjualanDibatalkan.lokasi_stok.uuid,
+          jenis_stok_uuid: item.jenis_stok.uuid,
+          quantity: item.qty,
+          exp_date: item.exp_date || "2026-04-03",
+          harga_satuan: item.harga_satuan || 0,
+        })),
+      };
+      console.log("Increase Payload:", increasePayload);
+
+      if (increasePayload.items.length > 0) {
+        await axiosInstance.post(
+          `${INVENTORY_URL}/inventory/stok/increase`,
+          increasePayload,
+          {
+            headers: { Authorization: token },
+          }
+        );
+        console.warn(
+          `Penambahan stok (pembatalan) di Inventory untuk ${penjualanDibatalkan.no_transaksi} BERHASIL.`
+        );
+      } else {
+        console.warn(
+          `Tidak ada item valid untuk penambahan stok di Inventory pada pembatalan ${penjualanDibatalkan.no_transaksi}.`
+        );
+      }
+    } catch (apiError) {
+      console.error(
+        `!!! KRITIS: Pembatalan lokal berhasil, TAPI GAGAL mengembalikan stok di Inventory untuk ${penjualanDibatalkan.no_transaksi}:`,
+        apiError.response?.data || apiError.message
+      );
+    }
+
+    return penjualanDibatalkan;
   }
+
+  // static async batalOtc(req) {
+
+  //   const transaction = await sequelizeInstance.transaction();
+
+  //   try {
+  //     ZodValidator.validate(PenjualanObatValidation.BATAL_OTC, req);
+  //     req.status = "cancel";
+  //     await PenjualanObatRepository.updateOtc(req);
+
+  //     // bring back the stock
+  //     const items = await PenjualanObatRepository.getAllCatatanStok(req);
+  //     const mutasiItems = [];
+
+  //     for (const item of items) {
+  //       if (item.catatan_stok) {
+  //         for (const catatan of item.catatan_stok) {
+  //           const stockMedis = await StockMedisRepository.addQuantity(
+  //             catatan,
+  //             transaction
+  //           );
+
+  //           mutasiItems.push({
+  //             item_uuid: item.item_medis_uuid,
+  //             exp_date: stockMedis.exp_date,
+  //             stok_awal: stockMedis.sisa_stok,
+  //             stok_mutasi: stockMedis.sisa_stok + catatan.quantity,
+  //             jenis_stok_uuid: item.jenis_stok_uuid,
+  //             lokasi_stok_uuid: stockMedis.lokasi_stok_uuid,
+  //             type: "surplus",
+  //           });
+  //         }
+  //       }
+  //     }
+
+  //     await transaction.commit();
+  //   } catch (e) {
+  //     await transaction.rollback();
+  //     throw e;
+  //   }
+  // }
 
   static async getAll(req) {
     setRangeDate(req);
