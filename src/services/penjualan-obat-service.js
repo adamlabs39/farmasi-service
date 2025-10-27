@@ -12,6 +12,11 @@ import axiosInstance from "../configurations/axios-instance.js";
 import { INVENTORY_URL, REKAM_MEDIS_URL } from "../helpers/constants.js";
 import InternalServerException from "../errors/internal-server-exception.js";
 import { uuidv7 } from "uuidv7";
+import NotfoundException from "../errors/notfound-exception.js";
+import {
+  ItemPenjualanObatModel,
+  PenjualanObatModel,
+} from "@adameds/model-sdk/farmasi";
 
 export default class PenjualanObatService {
   static async create(data, author, token) {
@@ -22,13 +27,21 @@ export default class PenjualanObatService {
     let inventoryReducedItems = [];
 
     try {
-      const penjualanUuid = uuidv7();
-      const itemMedisUuids = data.items.map((item) => item.item_medis_uuid);
+      const stockUuids = data.items.map((item) => item.stock_uuid);
+      if (stockUuids.length === 0) {
+        throw new BadRequestException("Item obat tidak ditemukan di stok.");
+      }
 
-      const [itemMedises, konfigurasiHarga] = await Promise.all([
-        DataMasterItemMedisRepository.getSome(itemMedisUuids),
-        KonfigurasiHargaRepository.get(faskesUuid),
-      ]);
+      const stockDetails = await StockMedisRepository.findStocksWithDetails(
+        stockUuids
+      );
+
+      const stockMap = new Map(
+        stockDetails.map((stock) => [stock.uuid, stock])
+      );
+
+      const penjualanUuid = uuidv7();
+      const konfigurasiHarga = await KonfigurasiHargaRepository.get(faskesUuid);
 
       let totalHargaCalculated = 0;
       const processedItems = [];
@@ -36,41 +49,54 @@ export default class PenjualanObatService {
       for (const item of data.items) {
         ZodValidator.validate(PenjualanObatValidation.CREATE_OTC_ITEM, item);
 
-        const itemMedisInfo =
-          await DataMasterItemMedisRepository.getItemMedisJenisStok({
-            item_medis_uuid: item.item_medis_uuid,
-            jenis_stok_uuid: item.jenis_stok_uuid,
-          });
-
-        if (!itemMedisInfo)
-          throw new BadRequestException(
-            `Item medis ${item.item_medis_uuid} tidak cocok dengan jenis stok.`
-          );
+        const stockDetail = stockMap.get(item.stock_uuid);
         if (
-          !itemMedisInfo.detail_harga ||
-          itemMedisInfo.detail_harga.length === 0
+          !stockDetail ||
+          !stockDetail.item_medis_jenis_stok ||
+          !stockDetail.item_medis_jenis_stok.item_medis
         ) {
-          throw new BadRequestException(
-            `Item medis ${item.item_medis_uuid} tidak memiliki detail harga.`
+          throw new NotfoundException(
+            `Stok dengan UUID ${item.stock_uuid} tidak ditemukan atau tidak memiliki item medis terkait.`
           );
         }
 
-        const hargaSatuan =
-          konfigurasiHarga.metode_hpp === "last"
-            ? itemMedisInfo.detail_harga[0].harga_terakhir
-            : itemMedisInfo.detail_harga[0].harga_avg;
+        if (stockDetail.sisa_stok < item.qty) {
+          throw new BadRequestException(
+            `Stok untuk ${stockDetail.item_medis_jenis_stok.item_medis.name} (Batch UUID: ${item.stock_uuid}) tidak mencukupi. Sisa: ${stockDetail.sisa_stok}, diminta: ${item.qty}`
+          );
+        }
+
+        const itemMedisJenisStokUuid = stockDetail.item_medis_jenis_stok_uuid;
+        const itemMedisUuid = stockDetail.item_medis_jenis_stok.item_medis_uuid;
+        const itemMedisData = stockDetail.item_medis_jenis_stok.item_medis;
+
+        const hargaInfo =
+          await DataMasterItemMedisRepository.findLatestPricesForItemJenisStok(
+            itemMedisJenisStokUuid,
+            konfigurasiHarga.metode_hpp === "avg"
+          );
+        if (!hargaInfo) {
+          throw new BadRequestException(
+            `Harga untuk item medis ${itemMedisUuid} tidak ditemukan.`
+          );
+        }
+        const hargaSatuan = hargaInfo.dataValues.harga;
 
         totalHargaCalculated += (hargaSatuan - (item.diskon || 0)) * item.qty;
 
         processedItems.push({
-          ...item,
+          stock_uuid: item.stock_uuid,
+          item_medis_uuid: itemMedisUuid,
+          jenis_stok_uuid: stockDetail.item_medis_jenis_stok.jenis_stok_uuid,
+          qty: item.qty,
+          diskon: item.diskon || 0,
           uuid: uuidv7(),
           penjualan_obat_uuid: penjualanUuid,
           faskes_uuid: faskesUuid,
           harga_satuan: hargaSatuan,
-          satuan_uuid:
-            itemMedises.find((im) => im.uuid === item.item_medis_uuid)
-              ?.satuan_penggunaan?.name || null,
+          satuan_uuid: itemMedisData.satuan_penggunaan_uuid,
+          satuan_name: itemMedisData.satuan_penggunaan?.name || null,
+          exp_date: stockDetail.exp_date,
         });
       }
 
@@ -123,7 +149,7 @@ export default class PenjualanObatService {
         try {
           const compensationPayload = {
             sumber_mutasi: "pelayanan",
-            kode_referensi: `${data.no_transaksi || `COMP-${Date.now()}`}-COMP`,
+            kode_referensi: data.no_transaksi,
             items: inventoryReducedItems.map((item) => ({
               item_uuid: item.item_medis_uuid,
               lokasi_stok_uuid: data.lokasi_stok_uuid,
@@ -148,69 +174,168 @@ export default class PenjualanObatService {
     }
   }
 
-  static async batalOtc(req) {
-    const transaction = await sequelizeInstance.transaction();
+  static async batalOtc(data, author, token) {
+    ZodValidator.validate(PenjualanObatValidation.BATAL_OTC, data);
+
+    const { uuid, alasan_batal } = data;
+    let transaction;
+    let penjualanDibatalkan;
 
     try {
-      ZodValidator.validate(PenjualanObatValidation.BATAL_OTC, req);
-      req.status = "cancel";
-      await PenjualanObatRepository.updateOtc(req);
+      transaction = await sequelizeInstance.transaction();
 
-      // bring back the stock
-      const items = await PenjualanObatRepository.getAllCatatanStok(req);
-      const mutasiItems = [];
+      const penjualan = await PenjualanObatRepository.getOtcByUuid(
+        { uuid },
+        transaction
+      );
 
-      for (const item of items) {
-        if (item.catatan_stok) {
-          for (const catatan of item.catatan_stok) {
-            const stockMedis = await StockMedisRepository.addQuantity(
-              catatan,
-              transaction
-            );
-
-            mutasiItems.push({
-              item_uuid: item.item_medis_uuid,
-              exp_date: stockMedis.exp_date,
-              stok_awal: stockMedis.sisa_stok,
-              stok_mutasi: stockMedis.sisa_stok + catatan.quantity,
-              jenis_stok_uuid: item.jenis_stok_uuid,
-              lokasi_stok_uuid: stockMedis.lokasi_stok_uuid,
-              type: "surplus",
-            });
-          }
-        }
+      if (!penjualan) {
+        throw new NotFoundError(
+          `Penjualan obat dengan UUID ${uuid} tidak ditemukan.`
+        );
       }
 
-      // try {
-      //     await axiosInstance.post(`${INVENTORY_URL}/mutasi`, {
-      //         sumber_mutasi: "pelayanan",
-      //         with_check_stock: true,
-      //         code: req.no_transaksi,
-      //         keterangan: {
-      //             description: "Penjualan Obat (OTC)",
-      //         },
-      //         items: mutasiItems,
-      //     }, {
-      //         headers: {
-      //             Authorization: req.token
-      //         }
-      //     });
-      // } catch (error) {
-      //     if (error.response) {
-      //         throw new InternalServerException("[SERVER INVENTORY]: " + error.response.data.message);
-      //     } else if (error.request) {
-      //         throw new InternalServerException("Tidak ada respons dari server inventory");
-      //     } else {
-      //         throw new InternalServerException("Kesalahan saat menyiapkan permintaan inventory");
-      //     }
-      // }
+      if (penjualan.status !== "belum_lunas") {
+        throw new BadRequestException(
+          `Penjualan obat tidak dapat dibatalkan karena statusnya sudah '${penjualan.status}'.`
+        );
+      }
+
+      penjualanDibatalkan = penjualan;
+
+      console.info(
+        `Mengembalikan stok lokal untuk penjualan ${penjualan.no_transaksi}...`
+      );
+
+      const addStockPromises = [];
+      for (const item of penjualan.items) {
+        if (item.catatan_stok && Array.isArray(item.catatan_stok)) {
+          for (const catatan of item.catatan_stok) {
+            if (catatan.stock_medis_uuid && catatan.quantity) {
+              addStockPromises.push(
+                StockMedisRepository.addQuantity(catatan, transaction)
+              );
+            }
+          }
+        } else {
+          console.warn(
+            `Tidak ada/format catatan_stok salah untuk item ${item.uuid}, stok lokal mungkin tidak dikembalikan.`
+          );
+        }
+      }
+      await Promise.all(addStockPromises);
+      console.info(
+        `Stok lokal berhasil dikembalikan (jika ada catatan valid).`
+      );
+
+      const dataUpdate = {
+        status: "cancel",
+        alasan_batal: alasan_batal,
+      };
+      const updatedRows = await PenjualanObatRepository.updateOtc(
+        dataUpdate,
+        uuid,
+        transaction
+      );
+      if (updatedRows === 0) {
+        throw new InternalServerException(
+          "Gagal memperbarui status penjualan menjadi cancel."
+        );
+      }
 
       await transaction.commit();
-    } catch (e) {
-      await transaction.rollback();
-      throw e;
+      console.info(
+        `Penjualan obat ${penjualanDibatalkan.no_transaksi} berhasil dibatalkan di sistem lokal.`
+      );
+    } catch (dbError) {
+      if (transaction) await transaction.rollback();
+      console.error(
+        `Gagal membatalkan penjualan obat ${uuid} di database lokal:`,
+        dbError
+      );
+      throw dbError;
     }
+    try {
+      const increasePayload = {
+        sumber_mutasi: "pelayanan",
+        kode_referensi: `${penjualanDibatalkan.no_transaksi}`,
+        items: penjualanDibatalkan.items.map((item) => ({
+          item_uuid: item.item_medis.uuid,
+          lokasi_stok_uuid: penjualanDibatalkan.lokasi_stok.uuid,
+          jenis_stok_uuid: item.jenis_stok.uuid,
+          quantity: item.qty,
+          exp_date: item.exp_date || "2026-04-03",
+          harga_satuan: item.harga_satuan || 0,
+        })),
+      };
+      console.log("Increase Payload:", increasePayload);
+
+      if (increasePayload.items.length > 0) {
+        await axiosInstance.post(
+          `${INVENTORY_URL}/inventory/stok/increase`,
+          increasePayload,
+          {
+            headers: { Authorization: token },
+          }
+        );
+        console.warn(
+          `Penambahan stok (pembatalan) di Inventory untuk ${penjualanDibatalkan.no_transaksi} BERHASIL.`
+        );
+      } else {
+        console.warn(
+          `Tidak ada item valid untuk penambahan stok di Inventory pada pembatalan ${penjualanDibatalkan.no_transaksi}.`
+        );
+      }
+    } catch (apiError) {
+      console.error(
+        `!!! KRITIS: Pembatalan lokal berhasil, TAPI GAGAL mengembalikan stok di Inventory untuk ${penjualanDibatalkan.no_transaksi}:`,
+        apiError.response?.data || apiError.message
+      );
+    }
+
+    return penjualanDibatalkan;
   }
+
+  // static async batalOtc(req) {
+
+  //   const transaction = await sequelizeInstance.transaction();
+
+  //   try {
+  //     ZodValidator.validate(PenjualanObatValidation.BATAL_OTC, req);
+  //     req.status = "cancel";
+  //     await PenjualanObatRepository.updateOtc(req);
+
+  //     // bring back the stock
+  //     const items = await PenjualanObatRepository.getAllCatatanStok(req);
+  //     const mutasiItems = [];
+
+  //     for (const item of items) {
+  //       if (item.catatan_stok) {
+  //         for (const catatan of item.catatan_stok) {
+  //           const stockMedis = await StockMedisRepository.addQuantity(
+  //             catatan,
+  //             transaction
+  //           );
+
+  //           mutasiItems.push({
+  //             item_uuid: item.item_medis_uuid,
+  //             exp_date: stockMedis.exp_date,
+  //             stok_awal: stockMedis.sisa_stok,
+  //             stok_mutasi: stockMedis.sisa_stok + catatan.quantity,
+  //             jenis_stok_uuid: item.jenis_stok_uuid,
+  //             lokasi_stok_uuid: stockMedis.lokasi_stok_uuid,
+  //             type: "surplus",
+  //           });
+  //         }
+  //       }
+  //     }
+
+  //     await transaction.commit();
+  //   } catch (e) {
+  //     await transaction.rollback();
+  //     throw e;
+  //   }
+  // }
 
   static async getAll(req) {
     setRangeDate(req);

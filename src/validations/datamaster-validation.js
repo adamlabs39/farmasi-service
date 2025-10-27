@@ -400,11 +400,4 @@ export default class DatamasterValidation {
       .min(1, required),
   });
 
-  static GET_AVAILABLE_JENIS_STOK = z.object({
-    item_medis_uuid: z
-      .string({
-        required_error: required,
-      })
-      .min(1, required),
-  });
 }

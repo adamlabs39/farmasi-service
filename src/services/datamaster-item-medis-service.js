@@ -196,59 +196,50 @@ export default class DatamasterItemMedisService {
     );
   }
 
-  static async getAvailableJenisStok(req) {
-    ZodValidator.validate(DatamasterValidation.GET_AVAILABLE_JENIS_STOK, req);
-
-    const configInfo = await KonfigurasiHargaRepository.get(req.faskes_uuid);
+  static async getAvailableJenisStok(params, faskesUuid) {
+    const configInfo = await KonfigurasiHargaRepository.get(faskesUuid);
     const isAvg = configInfo.metode_hpp === "avg";
 
     const results = await DataMasterItemMedisRepository.getAvailableJenisStok(
-      req
+      params
     );
 
-    if (results.length === 0) {
-      throw new BadRequestException(
-        "Tidak ada jenis stok yang tersedia untuk item ini."
+    if (!results) {
+      throw new NotFoundError(
+        `Data Item Medis Jenis Stok dengan UUID ${req.item_medis_jenis_stok_uuid} tidak ditemukan.`
       );
     }
 
-    const itemJenisStokUuids = results.map((item) => item.uuid);
-    const prices =
+    const priceInfo =
       await DataMasterItemMedisRepository.findLatestPricesForItemJenisStok(
-        itemJenisStokUuids,
+        results.uuid,
         isAvg
       );
 
-    const formattedResults = results
-      .map((item, index) => {
-        const priceInfo = prices[index];
-
-        if (!priceInfo) {
-          return null;
-        }
-
-        const total_stock = item.stocks.reduce(
-          (sum, stock) => sum + stock.sisa_stok,
-          0
-        );
-
-        return {
-          uuid: item.uuid,
-          detail_stok: item.detail_stok,
-          harga: priceInfo.dataValues.harga,
-          total_stok: total_stock,
-        };
-      })
-      .filter(Boolean);
-
-    if (formattedResults.length === 0) {
-      throw new BadRequestException(
-        "Tidak ada jenis stok yang memiliki harga yang tersedia."
+    const harga = priceInfo?.dataValues?.harga ?? 0;
+    if (!priceInfo) {
+      console.warn(
+        `Harga tidak ditemukan untuk item_medis_jenis_stok_uuid: ${results.uuid}`
       );
     }
 
-    return formattedResults;
+    const total_stock = results.stocks.reduce(
+      (sum, stock) => sum + stock.sisa_stok,
+      0
+    );
+
+    const formattedResult = {
+      uuid: results.uuid,
+      detail_stok: {
+        uuid: results.detail_stok.uuid,
+        name: results.detail_stok.name,
+      },
+      harga: harga,
+      total_stok: total_stock,
+    };
+    return formattedResult;
   }
+
 
   static async import(req) {
     const itemMedisRequest = ExcelMapper.mapDatamasterItemMedis(

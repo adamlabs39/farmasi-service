@@ -4,12 +4,11 @@ import PenjualanObatService from "../services/penjualan-obat-service.js";
 export default class PenjualanObatController {
   static async create(req, res, nextFunction) {
     try {
-     const token = req.headers.authorization;
-     const author = req.author;
-     const data = req.body;
-      const result = await PenjualanObatService.create(data, author, token);
+      const author = req.author;
+      const data = req.body;
+      const result = await PenjualanObatService.create(data, author);
 
-      res.status(200).json(successResponse("Data berhasil disimpan", result));
+      res.status(200).json(successResponse("Data berhasil disimpan"));
     } catch (error) {
       nextFunction(error);
     }
@@ -18,12 +17,26 @@ export default class PenjualanObatController {
   static async batalOtc(req, res, nextFunction) {
     try {
       const { uuid } = req.params;
-      req.body.uuid = uuid;
-      req.body.token = req.get("Authorization");
+      const { alasan_batal } = req.body;
+      const author = req.author;
+      const token = req.headers.authorization;
 
-      const result = await PenjualanObatService.batalOtc(req.body);
+      if (!alasan_batal) {
+        throw new BadRequestException(
+          "Properti 'alasan_batal' wajib diisi dalam body request."
+        );
+      }
 
-      res.status(200).json(successResponse("data berhasil dibatalkan", result));
+      const data = {
+        uuid: uuid,
+        alasan_batal: alasan_batal,
+      };
+
+      const result = await PenjualanObatService.batalOtc(data, author, token);
+
+      res
+        .status(200)
+        .json(successResponse("Penjualan obat berhasil dibatalkan", result));
     } catch (error) {
       nextFunction(error);
     }
